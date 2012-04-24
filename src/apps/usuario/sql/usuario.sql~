@@ -1,0 +1,3 @@
+ALTER TABLE `redesogcs`.`usuario` DROP PRIMARY KEY,
+ ADD PRIMARY KEY  USING BTREE(`codigo`, `numero`);
+
