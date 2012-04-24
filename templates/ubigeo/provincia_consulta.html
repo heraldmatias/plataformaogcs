@@ -1,0 +1,41 @@
+  {% extends 'base.html' %}
+  {% load static %}
+  {% block title %} Plataforma Intersectorial de Comunicaci&oacute;n OGCS {% endblock %}
+  {% block content %}
+  {% include 'include/header.html' %}
+  {% load render_table from django_tables2 %}
+<ul class="nav nav-tabs">
+<li><a href="/ubigeo/provincia/add/">{%if not opcion %} Nuevo {% else %} {% if opcion == "add" %}Nuevo {% else %} Modificar {% endif %}{% endif %}</a></li>
+<li class="active"><a href="/ubigeo/provincia/consulta/" >Consultar</a></li>
+</ul>
+<div class="tab-content" id="contenido">
+<div id="nuevo" class="tab-pane fade in active">
+<form class="form-inline" name="frmreg" method="post" action="/ubigeo/provincia/consulta/"><!--data-toggle="modal"-->
+<div id="frmregion" class="modal" style="position: relative; top: auto; left: auto; margin: 0 auto; z-index: 1"><!--class="modal hide fade">-->
+    <div class="modal-header">
+      <a class="close" data-dismiss="modal" href="javascript: cerrarformulario('contenido');">&times;</a>
+      <h3>Consulta de Provincia</h3>
+    </div>
+    <div class="modal-body">
+      {% csrf_token %}
+      {{ consultaprovinciaform.as_p }}
+      <br>
+      <fieldset>
+	<legend><h4>Lista de provincias</h4></legend>
+      {% render_table tabla %}    
+      </fieldset>
+    </div>
+    <div class="modal-footer">
+     <input class="btn" name="grabar" value="Cerrar" type="button" onclick="cerrarformulario('contenido');">
+      <input class="btn-primary" name="grabar" value="Consultar Provincias" type="submit">
+    </div>
+</div>
+</form>
+</div></div>
+  {% endblock %}
+  {% block scriptjs %}    
+<script>
+$(document).ready(function() {
+});
+</script>
+  {% endblock %}

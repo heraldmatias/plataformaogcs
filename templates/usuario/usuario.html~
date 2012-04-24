@@ -1,0 +1,35 @@
+ {% extends 'base.html' %}
+  {% load static %}
+  {% block title %} Plataforma Intersectorial de Comunicaci&oacute;n OGCS {% endblock %}
+  {% block content %}
+  {% include 'include/header.html' %}
+<ul class="nav nav-tabs">
+<li class="active"><a href="/usuario/{{ opcion }}/{% if codigo %}{{ codigo }}/{% endif %}">{% if opcion == "add" %}Nuevo {% else %} Modificar {% endif %}</a></li>
+<li><a href="/usuario/consulta/" >Consultar</a></li>
+</ul>
+<div class="tab-content" id="contenido">
+<div id="nuevo" class="tab-pane fade in active">
+<form class="form-inline" name="frminfo" method="post" action="/usuario/add/" onSubmit="return confirmar('¿Desea grabar el registro?'); "><!--data-toggle="modal"-->
+<div id="frminformacion" class="modal" style="position: relative; top: auto; left: auto; margin: 0 auto; z-index: 1"><!--class="modal hide fade">-->
+    <div class="modal-header">
+      <a class="close" data-dismiss="modal" >&times;</a>
+      <h3>Registro de Usuario</h3>
+    </div>
+    <div class="modal-body">
+      {% csrf_token %}              
+      {{ frmusuario.as_p }}
+    </div>
+    <div class="modal-footer">
+     <input class="btn" name="grabar" value="Cerrar" type="button" onclick="javascript: $('#frmregion').modal('hide')">
+      <input class="btn-primary" name="grabar" value="Guardar Cambios" type="submit">
+    </div>
+</div>
+</form></div></div>
+  {% endblock %}
+  {% block scriptjs %}    
+<script>
+$(document).ready(function() {
+  dependencias();  
+});
+</script>
+  {% endblock %}

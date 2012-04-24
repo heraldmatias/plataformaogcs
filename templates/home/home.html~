@@ -1,0 +1,33 @@
+  {% extends 'base.html' %}
+  {% load static %}
+  {% block title %} Plataforma Intersectorial de Comunicaci&oacute;n OGCS {% endblock %}
+  {% block content %}
+  {% include 'include/header.html' %}
+  <br><br>
+  {% if m == "userr" %}
+    <h3><div class="span6"><div class="alert alert-error"><a class="close" data-dismiss="alert">×</a><strong>Mensaje:</strong>
+    <p>Usuario creado correctamente,pero no se ha podido enviar el email con los datos del registro.</p>  </div></div></h3>
+  {% endif %}
+  {% if m == "usadd" %}
+    <h3><div class="span6"><div class="alert alert-success"><a class="close" data-dismiss="alert">×</a><strong>Mensaje:</strong>
+    <p>Usuario creado correctamente, se ha enviado un email con los datos del registro.</p>  </div></div></h3>
+  {% endif %}
+	<? php
+	phpinfo();
+	?>
+  {% endblock %}
+  {% block scriptjs %}	
+	<script>
+	$('#id_fechacreac_tw').datepicker({
+	    format: 'mm-dd-yyyy',
+            language: 'es',
+            autoclose: true
+	});
+        $('#id_fechacreac_fb').datepicker({
+	    format: 'mm-dd-yyyy',
+            language: 'es',
+            autoclose: true
+	});		
+	</script>
+  {% endblock %}
+
