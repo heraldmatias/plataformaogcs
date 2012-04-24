@@ -1,0 +1,11 @@
+------------------------
+Instalación
+------------------------
+- sudo apt-get install python-dev
+- python bootstrap.py -d
+- bin/buildout -vvv
+- bin/ogcs collectstatic
+- Recuerda que usamos grappelli
+	http://readthedocs.org/docs/django-grappelli/en/latest/quickstart.html#installation
+
+------------------------
