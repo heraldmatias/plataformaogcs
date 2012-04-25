@@ -1,13 +1,12 @@
-
+# -*- coding: utf-8 -*-
 # Django settings for project project.
-
 from os.path import dirname, join, realpath, split
 
 SYSTEM_PATH, PROJECT_DIR = split(realpath(dirname(__file__)))
 
 ADMINS = (
     ('Herald Olivares', 'heraldmatias.oz@gmail.com'),
-    ('Moises Ibañez', 'moics30@gmail.com'),
+    ('Moises Ibanez', 'moics30@gmail.com'),
 )
 
 FCGI_OPTIONS = {
@@ -18,11 +17,11 @@ MANAGERS = ADMINS
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.', # Add 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
-        'NAME': '',                      # Or path to database file if using sqlite3.
-        'USER': '',                      # Not used with sqlite3.
-        'PASSWORD': '',                  # Not used with sqlite3.
-        'HOST': '',                      # Set to empty string for localhost. Not used with sqlite3.
+        'ENGINE': 'django.db.backends.mysql', # Add 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
+        'NAME': 'dbplataformaogcs',                      # Or path to database file if using sqlite3.
+        'USER': 'root',                      # Not used with sqlite3.
+        'PASSWORD': 'ollanta2011',                  # Not used with sqlite3.
+        'HOST': 'localhost',                      # Set to empty string for localhost. Not used with sqlite3.
         'PORT': '',                      # Set to empty string for default. Not used with sqlite3.
         'OPTIONS': {
 	    'init_command': 'SET storage_engine=INNODB',
@@ -139,6 +138,8 @@ INSTALLED_APPS = (
     'usuario',
     'dependencia',
     'home',
+    'comunicacion',
+    'extras',  
 )
 
 GRAPPELLI_ADMIN_TITLE = 'Sitio Administrativo de la Plataforma Intersectorial de Comunicaión Social'
