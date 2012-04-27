@@ -19,15 +19,23 @@
       {% csrf_token %}
       {% if opcion == "add" %}
       {{ frmodp.non_field_errors }}
-      <p>{{ frmodp.nummin.errors }}
-      {{ frmodp.nummin.label_tag }}: {{ frmodp.nummin }}</p>
-      <p>{{ frmodp.odp.errors }}
-      {{ frmodp.odp.label_tag }}: {{ frmodp.odp }}</p>
-      <p>{{ frmodp.iniciales.errors }}
-      {{ frmodp.iniciales.label_tag }}: {{ frmodp.iniciales }}</p>
+      {{ frmodp.nummin.errors }}
+      <div class="row-fluid">
+      <div class="span3">{{ frmodp.nummin.label_tag }}:</div><div class="span4"> {{ frmodp.nummin }}</div></div><p></p>
+      {{ frmodp.odp.errors }}
+      <div class="row-fluid">
+      <div class="span3">{{ frmodp.odp.label_tag }}:</div><div class="span4"> {{ frmodp.odp }}</div></div><p></p>
+      {{ frmodp.iniciales.errors }}
+      <div class="row-fluid">
+      <div class="span3">{{ frmodp.iniciales.label_tag }}:</div><div class="span4">{{ frmodp.iniciales }}</div></div>
       <p><input type="hidden" name="estado" id="id_estado" value="1"></p>
       {% else %}
-      {{ frmodp.as_p }}
+      {{ frmodp.non_field_errors }}
+      {% for campo in frmodp %}
+      <div class="row-fluid">
+      {{ campo.errors }}
+      <div class="span3"> {{ campo.label_tag }} </div><div class="span5">{{ campo }}</div></div><p></p>
+      {% endfor %}
       {% endif %}      
     </div>
     <div class="modal-footer">
@@ -40,8 +48,7 @@
   {% endblock %}
   {% block scriptjs %}    
 <script>
-$(document).ready(function() {
- //$('#frmregion').modal({show: true,});  
-});
+validaletra('id_odp');
+validaletra('id_iniciales');
 </script>
   {% endblock %}

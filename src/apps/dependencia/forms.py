@@ -5,6 +5,14 @@ from models import Ministerio, Odp, Gobernacion
 from ubigeo.models import Region, Provincia
 import django_tables2 as tables
 from django_tables2.utils import A
+from ubigeo.forms import REGIONES
+from ubigeo.models import Provincia
+
+PROVINCIAS = list(Provincia.objects.all().values_list('numpro','provincia'))
+PROVINCIAS.append(('','TODOS'))
+
+MINISTERIOS = list(Ministerio.objects.all().values_list('nummin','ministerio'))
+MINISTERIOS.append(('','TODOS'))
 
 class MinisterioForm(forms.ModelForm):
     class Meta:
@@ -35,16 +43,13 @@ class OdpForm(forms.ModelForm):
         fields = ('nummin','odp','iniciales','estado')
 
 class ConsultaOdpForm(forms.Form):#CORREGIR
-    nummin = forms.ModelChoiceField(queryset=Ministerio.objects.all(),label='Ministerio',required=False)#.values_list('ministerio','ministerio',)
+    nummin = forms.ChoiceField(choices=MINISTERIOS,label='Ministerio',required=False,initial='')
     odp = forms.CharField(label='Nombre de Odp', max_length=70,required=False)
-    #class Meta:
-    #    model = Odp
-    #    fields = ('nummin','odp',)
 
 class OdpTable(tables.Table):
     item = tables.Column()
     nummin = tables.Column()
-    odp = tables.LinkColumn('ogcs-mantenimiento-odp-edit', args=[A('numodp')],orderable=True)
+    odp = tables.LinkColumn('ogcs-mantenimiento-odp-edit', args=[A('numodp')],orderable=True,)
     iniciales = tables.Column()
     estado = tables.Column()    
 
@@ -58,22 +63,18 @@ class OdpTable(tables.Table):
         orderable = False
 
 class GobernacionForm(forms.ModelForm):
+    region= forms.ChoiceField(choices=REGIONES,widget=forms.Select(attrs={'onChange':'provincias();',}))
     class Meta:
         model = Gobernacion
-        fields = ('region','provincia','gobernacion','iniciales','estado')
+        fields = ('provincia','gobernacion','iniciales','estado')
         widgets = {
             'region': forms.Select(attrs={'onChange':'provincias();',}),
         }
 
-class ConsultaGobernacionForm(forms.ModelForm):
-#    region = forms.ModelChoiceField(queryset=Region.objects.all(),label='Region',required=False,widget=forms.Select(attrs={'onChange':'provincias();',}))
- #   provincia = forms.ModelChoiceField(queryset=Provincia.objects.filter(region=0),label='Provincia',required=False)
-    class Meta:
-        model = Gobernacion
-        fields = ('region','provincia',)
-        widgets = {
-            'region': forms.Select(attrs={'onChange':'provincias();',}),
-        }
+class ConsultaGobernacionForm(forms.Form):
+    region = forms.ChoiceField(choices=REGIONES,label='Region',required=False,widget=forms.Select(attrs={'onChange':'provincias();',}))
+    provincia = forms.ChoiceField(choices=PROVINCIAS,label='Provincia',required=False)
+    
 
 class GobernacionTable(tables.Table):
     item = tables.Column()

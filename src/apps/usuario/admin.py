@@ -17,7 +17,7 @@ class ModelUsuario(admin.ModelAdmin):
         ('Datos Adicionales', {
             'classes': ('collapse',),
 	    'description':'Rellene la informacion adicional del alumno, algunos campos son opcionales', 	
-            'fields': (('estado','organismo','dependencia',),('email','emailalt'), ('fono','anexo','celular',),)
+            'fields': (('estado','organismo','dependencia',),('email','emailalt'), ('fono','anexo','rpm','rpc','nextel'),)
         }),        
     )
 

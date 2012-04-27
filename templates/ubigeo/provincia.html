@@ -17,16 +17,25 @@
     </div>
     <div class="modal-body">
       {% csrf_token %}
+      <div class="row-fluid">
       {% if opcion == "add" %}
-      {{ frmprovincia.non_field_errors }}
-      <p>{{ frmprovincia.region.errors }}
-      {{ frmprovincia.region.label_tag }}: {{ frmprovincia.region }}</p>
-      <p>{{ frmprovincia.provincia.errors }}
-      {{ frmprovincia.provincia.label_tag }}: {{ frmprovincia.provincia }}</p>
-      <p><input type="hidden" name="estado" id="id_estado" value="1"></p>
+      {{ frmprovincia.non_field_errors }} 
+      {{ frmprovincia.region.errors }}
+      <div class="row-fluid">
+      <div class="span2">{{ frmprovincia.region.label_tag }}:</div> {{ frmprovincia.region }}</div><p></p>
+      {{ frmprovincia.provincia.errors }}
+      <div class="row-fluid">
+      <div class="span2">{{ frmprovincia.provincia.label_tag }}:</div> {{ frmprovincia.provincia }}</div>
+      <p><input type="hidden" name="estado" id="id_estado" value="1"></p>      
       {% else %}
-      {{ frmprovincia.as_p }}
+      {{ frmprovincia.non_field_errors }} 
+      {% for campo in frmprovincia %}
+      {{ campo.errors }}
+      <div class="row-fluid">
+      <div class="span2">{{ campo.label_tag }}:</div> {{ campo }}</div><p></p>
+      {% endfor %}
       {% endif %}
+    </div>
     </div>
     <div class="modal-footer">
      <input class="btn" name="grabar" value="Cerrar" type="button" onclick="cerrarformulario('contenido');">
@@ -38,7 +47,6 @@
   {% endblock %}
   {% block scriptjs %}    
 <script>
-$(document).ready(function() {
-});
+validaletra('id_provincia');
 </script>
   {% endblock %}

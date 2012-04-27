@@ -17,14 +17,19 @@
     </div>
     <div class="modal-body">
       {% csrf_token %}
+      <div class="row-fluid">
       {% if opcion == "add" %}
       {{ frmregion.region.errors }}
       {{ frmregion.region.label_tag }}: {{ frmregion.region }}
       <input type="hidden" name="estado" id="id_estado" value="1">
       {% else %}
-      {{ frmregion.as_p }}
+      {% for campo in frmregion %}
+      {{ campo.errors }}
+      <div class="row-fluid">
+      <div class="span2">{{ campo.label_tag }}:</div> {{ campo }}</div><p></p>
+      {% endfor %}
       {% endif %}	
-    </div>
+    </div></div>
     <div class="modal-footer">
      <input class="btn" name="grabar" value="Cerrar" type="button" onclick="cerrarformulario('contenido');">
       <input class="btn-primary" name="grabar" value="Guardar Cambios" type="submit">
@@ -35,6 +40,6 @@
   {% endblock %}
   {% block scriptjs %}    
 <script>
-
+validaletra('id_region');
 </script>
   {% endblock %}

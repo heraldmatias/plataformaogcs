@@ -4,8 +4,8 @@ from django.db import models
 from django.contrib.auth.models import User
 
 SEXO = (
-        ('FE','Femenino'),
-        ('MA','Masculino'),
+        ('FE','FEMENINO'),
+        ('MA','MASCULINO'),
         )
 
 class Estado(models.Model):
@@ -51,7 +51,7 @@ class Usuario(models.Model):
     nombres = models.CharField(verbose_name='Nombres', max_length=25,)
     apellidos = models.CharField(verbose_name='Apellidos', max_length=50,)
     sexo = models.CharField(verbose_name='sexo', max_length=2,choices = SEXO, default='MA')
-    usuario = models.CharField(verbose_name='sexo', max_length=15,)
+    usuario = models.CharField(verbose_name='usuario', max_length=15,)
     email = models.EmailField(verbose_name='Email', max_length=135, unique=True)
     contrasena = models.CharField(verbose_name='contraseña', max_length=32)
     emailalt = models.EmailField(verbose_name='Email Alternativo', max_length=135,blank=True, null=True)

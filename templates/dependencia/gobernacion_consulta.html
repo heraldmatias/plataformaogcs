@@ -10,16 +10,15 @@
 </ul>
 <div class="tab-content" id="contenido">
 <div id="nuevo" class="tab-pane fade in active">
-<form class="form-inline" name="frmreg" method="post" action="/dependencia/gobernacion/consulta/"><!--data-toggle="modal"-->
+<form class="form-inline" name="frmreg" method="get" action="/dependencia/gobernacion/consulta/"><!--data-toggle="modal"-->
 <div id="frmregion" class="modal" style="position: relative; top: auto; left: auto; margin: 0 auto; z-index: 1"><!--class="modal hide fade">-->
     <div class="modal-header">
       <a class="close" data-dismiss="modal" href="javascript: cerrarformulario('contenido');">&times;</a>
       <h3>Consulta de Gobernacion</h3>
     </div>
     <div class="modal-body">
-      {% csrf_token %}
-      <p>{{ consultagobernacionform.region.label_tag }}: {{ consultagobernacionform.region }}</p>
-      <p>{{ consultagobernacionform.provincia.label_tag }}: {{ consultagobernacionform.provincia }}</p>
+      <div class="row-fluid"><div class="span2">{{ consultagobernacionform.region.label_tag }}:</div><div class="span4"> {{ consultagobernacionform.region }}</div></div><p></p>
+      <div class="row-fluid"><div class="span2">{{ consultagobernacionform.provincia.label_tag }}:</div><div class="span4"> {{ consultagobernacionform.provincia }}</div></div><p></p>
       <br>
       <fieldset>
 	<legend><h4>Lista de Gobernaciones</h4></legend>
@@ -39,5 +38,11 @@
 $(document).ready(function() {
 provincias();
 });
+function imprimir(){
+var ministerio=$('#id_nummin').val();
+var odp=$('#id_odp').val();
+var url="/dependencia/odp/imprimir/?odp="+odp+"&nummin="+ministerio;
+location.href=url;
+}
 </script>
   {% endblock %}

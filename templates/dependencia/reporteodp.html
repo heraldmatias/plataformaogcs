@@ -1,0 +1,7 @@
+"Reporte del ODP"
+"Item","Ministerio","ODP","Iniciales","Estado"
+{% for row in data %}{{ forloop.counter }},{{ row.nummin|addslashes }},{{ row.odp|addslashes }},{{ row.iniciales|addslashes }},{{ row.estado|addslashes }}
+{% endfor %}
+Fecha: {{ fecha }},Hora: {{ hora }},Usuario: {{ usuario }}
+
+

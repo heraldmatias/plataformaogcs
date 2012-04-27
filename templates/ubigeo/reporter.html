@@ -1,0 +1,5 @@
+"Reporte de la Región"
+"Item","Región","Estado"
+{% for row in data %}{{ forloop.counter }},{{ row.region|addslashes }}, {{ row.estado|addslashes }}
+{% endfor %}
+Fecha: {{ fecha }},Hora: {{ hora }},Usuario: {{ usuario }}

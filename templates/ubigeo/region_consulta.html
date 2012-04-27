@@ -10,16 +10,17 @@
 </ul>
 <div class="tab-content" id="contenido">
 <div id="consulta" class="tab-pane fade in active">
-<form class="form-inline" name="frmreg" method="post" action="/ubigeo/region/consulta/"><!--data-toggle="modal"-->
-<div id="frmregion" class="modal" style="position: relative; top: auto; left: auto; margin: 0 auto; z-index: 1"><!--class="modal hide fade">-->
+<form class="form-inline span5" name="frmreg" method="get" action="/ubigeo/region/consulta/"><!--data-toggle="modal"-->
+<div id="frmregion" class="modal span7" style="position: relative; top: auto; left: absolute; margin: 0 auto; z-index: 1"><!--class="modal hide fade">-->
     <div class="modal-header">
       <a class="close" data-dismiss="modal" href="javascript: cerrarformulario('contenido');">&times;</a>
-      <h3>Consulta de Región</h3>
+      <h3>Consulta de Región {{ URL_INIT }}</h3>
     </div>
     <div class="modal-body">
-      {% csrf_token %}
-      {{ consultaregionform.as_p }}
-      <br>
+
+      <div class="row-fluid">
+      <div class="span8">{{ consultaregionform }}</div><div class="span2"><input  class="btn-primary" name="grabar" value="Consultar" type="submit"></div><div class="span2"><a class="btn btn-primary" href="javascript: imprimir();">Imprimir</a> </div></div>
+      <br><!---->
       <fieldset>
 	<legend><h4>Lista de regiones</h4></legend>
       {% render_table tblregiones %}    
@@ -27,7 +28,6 @@
     </div>
     <div class="modal-footer">
      <input class="btn" name="grabar" value="Cerrar" type="button" onclick="cerrarformulario('contenido');">
-      <input class="btn-primary" name="grabar" value="Consultar Regiones" type="submit">
     </div>
 </div>
 </form>
@@ -35,6 +35,10 @@
   {% endblock %}
   {% block scriptjs %}    
 <script>
-
+function imprimir(){
+var region=$('#id_region').val();
+var url="/ubigeo/region/imprimir/?region="+region;
+location.href=url;
+}
 </script>
   {% endblock %}

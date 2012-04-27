@@ -12,6 +12,8 @@ import django_tables2 as tables
 from django_tables2.config import RequestConfig
 from ubigeo.models import Provincia
 from django.db.models import Q
+from datetime import datetime
+from scripts.scripts import imprimirToExcel
 
 @login_required(login_url='/')
 def ministerioadd(request):
@@ -95,30 +97,46 @@ def odpedit(request, codigo):
 def odpquery(request):
     col = "-odp"
     if "2-sort" in request.GET:
-        col = request.GET['2-sort']
-    odps = Odp.objects.all()
+        col = request.GET['2-sort']    
     config = RequestConfig(request)
-    if request.method == "POST":
-        consultaodpform = ConsultaOdpForm(request.POST)        
-        if consultaodpform.is_valid():
-            if request.POST['nummin']!='':
-                odps = odps.filter(odp__icontains=request.POST['odp'],nummin__nummin=request.POST['nummin']).order_by(col)
-            else:
-                odps = odps.filter(odp__icontains=request.POST['odp']).order_by(col)
+    consultaodpform = ConsultaOdpForm(request.GET)
+    if 'nummin' in request.GET and 'odp' in request.GET:   
+       if (request.GET['nummin'] and request.GET['odp']) or request.GET['nummin']:
+          odps = Odp.objects.filter(odp__icontains=request.GET['odp'],nummin=request.GET['nummin']).order_by(col)
+       elif request.GET['odp']:
+          odps = Odp.objects.filter(odp__icontains=request.GET['odp']).order_by(col)
+       else:
+          odps = Odp.objects.all()
     else:
-        consultaodpform = ConsultaOdpForm()
+       odps = Odp.objects.all()
     tblodps = OdpTable(odps.order_by(col))
     config.configure(tblodps)
     tblodps.paginate(page=request.GET.get('page', 1), per_page=6)
     return render_to_response('dependencia/odp_consulta.html', {'consultaodpform':consultaodpform,'tabla':tblodps,'usuario':request.session['nombres'],'fecha':request.session['login_date']}, context_instance=RequestContext(request),)
 
 @login_required(login_url='/')
+def odpprint(request):
+    col = 'odp'
+    if (request.GET['nummin'] and request.GET['odp']) or request.GET['nummin']:
+        query = Odp.objects.filter(odp__icontains=request.GET['odp'],nummin=request.POST['nummin']).order_by(col)
+    elif request.GET['odp']:
+        query = Odp.objects.filter(odp__icontains=request.GET['odp']).order_by(col)
+    else:
+        query = Odp.objects.all().order_by(col)
+    filename= "odp_%s.xls" % datetime.today().strftime("%Y%m%d")
+    return imprimirToExcel('dependencia/reporteodp.html', {'data': query,'fecha':datetime.today().date(),'hora':datetime.today().time(),'usuario':request.session['nombres']},filename)
+
+@login_required(login_url='/')
 def gobernacionadd(request):
     profile = Usuario.objects.get(user = request.user)
     if request.method == 'POST':
+        from ubigeo.models import Region
         num = Gobernacion.objects.values("numgob").order_by("-numgob",)[:1]
         num = 1 if len(num)==0 else int(num[0]["numgob"])+1
-        igobernacion = Gobernacion(numgob=num,estado=Estado.objects.get(pk=1),idusuario_creac=profile.numero)
+        region = None
+        if request.POST['region']:
+            region = Region.objects.get(numreg= request.POST['region'])
+        igobernacion = Gobernacion(numgob=num,estado=Estado.objects.get(pk=1),region= region,idusuario_creac=profile.numero)
         frmgobernacion = GobernacionForm(request.POST, instance=igobernacion) # A form bound to the POST data
         if frmgobernacion.is_valid():
             frmgobernacion.save()
@@ -148,21 +166,33 @@ def gobernacionquery(request):
     col = "-gobernacion"
     if "2-sort" in request.GET:
         col = request.GET['2-sort']
-    gobernaciones = Gobernacion.objects.all()
     config = RequestConfig(request)
-    if request.method == "POST":
-        consultagobernacionform = ConsultaGobernacionForm(request.POST)        
-        #if consultagobernacionform.is_valid():
-	if request.POST['region']!='':
-	    gobernaciones = gobernaciones.filter(region__numreg=request.POST['region'],).order_by(col)
-	if request.POST['region']!='' and request.POST['provincia']!='':
-	    gobernaciones = gobernaciones.filter(region=request.POST['region'], provincia=request.POST['provincia']).order_by(col)
+    consultagobernacionform = ConsultaGobernacionForm(request.GET)
+    if 'region' in request.GET and 'provincia' in request.GET:
+	if request.GET['region'] and request.GET['provincia']:
+	    gobernaciones = Gobernacion.objects.filter(region=request.GET['region'], provincia=request.GET['provincia']).order_by(col)
+	elif request.GET['region']:
+	    gobernaciones = Gobernacion.objects.filter(region=request.GET['region'],).order_by(col)
+        else:
+	    gobernaciones = Gobernacion.objects.all().order_by(col)
     else:
-        consultagobernacionform = ConsultaGobernacionForm()
+        gobernaciones = Gobernacion.objects.all().order_by(col)
     tblgobernaciones = GobernacionTable(gobernaciones.order_by(col))
     config.configure(tblgobernaciones)
     tblgobernaciones.paginate(page=request.GET.get('page', 1), per_page=6)
     return render_to_response('dependencia/gobernacion_consulta.html', {'consultagobernacionform':consultagobernacionform,'tabla':tblgobernaciones,'usuario':request.session['nombres'],'fecha':request.session['login_date']}, context_instance=RequestContext(request),)
+
+@login_required(login_url='/')
+def gobernacionprint(request):
+    col = 'gobernacion'
+    if (request.GET['region'] and request.GET['provincia']) or request.GET['region']:
+        query = Gobernacion.objects.filter(region=request.GET['region'], provincia=request.GET['provincia']).order_by(col)
+    elif request.GET['provincia']:
+        query = Gobernacion.objects.filter(provincia=request.GET['region']).order_by(col)
+    else:
+        query = Odp.objects.all().order_by(col)
+    filename= "odp_%s.xls" % datetime.today().strftime("%Y%m%d")
+    return imprimirToExcel('dependencia/reporteodp.html', {'data': query,'fecha':datetime.today().date(),'hora':datetime.today().time(),'usuario':request.session['nombres']},filename)
 
 @login_required(login_url='/')
 def jsondependencia(request):

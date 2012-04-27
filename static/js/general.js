@@ -11,17 +11,16 @@ function confirmar(mensaje){
 function provincias(){
         var id= $("#id_region").val();
 	var provincia = $("#id_provincia");
-        var idpro = provincia.val();        
+        var idpro = provincia.val();var select=true;    
 	provincia.find('option').remove();
-	provincia.append("<option value=''>---------</option>");
 	$.getJSON('/ubigeo/provincia/json/?r='+id, function(data){
 	$.each(data, function(key,value){
                 if(value.fields.numpro==idpro){
-		provincia.append("<option value='"+value.fields.numpro+"' selected='selected'>"+value.fields.provincia+"</option>");
+		provincia.append("<option value='"+value.fields.numpro+"' selected='selected'>"+value.fields.provincia+"</option>");select=false;
  		}else{
 		provincia.append("<option value='"+value.fields.numpro+"'>"+value.fields.provincia+"</option>");
 		}
-	});
+	});	if(select){provincia.append("<option selected='selected' value=''>TODOS</option>");}else{provincia.append("<option value=''>TODOS</option>");}
 	});
 }
 
@@ -41,3 +40,16 @@ function dependencias(){
 	});
 	});
 }
+
+function validaletra(campo){
+var l='';
+ $('#'+campo).keyup(function () {
+  this.value = this.value.replace(/[^A-Za-záéíóúÁÉÍÓÚÜü ]/g,'');
+  l = this.value.toUpperCase();
+  $('#'+campo).val(l);
+});
+}
+function validanumero(campo){
+ $('#'+campo).keyup(function () {
+  this.value = this.value.replace(/[^0-9]/g,'');
+});}

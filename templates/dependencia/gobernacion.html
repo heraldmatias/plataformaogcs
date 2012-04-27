@@ -19,14 +19,18 @@
       {% csrf_token %}
       {% if opcion == "add" %}
       {{ frmgobernacion.non_field_errors }}
-      <p>{{ frmgobernacion.region.errors }}
-      {{ frmgobernacion.region.label_tag }}: {{ frmgobernacion.region }}</p>
-      <p>{{ frmgobernacion.provincia.errors }}
-      {{ frmgobernacion.provincia.label_tag }}: {{ frmgobernacion.provincia }}</p>
-      <p>{{ frmgobernacion.gobernacion.errors }}
-      {{ frmgobernacion.gobernacion.label_tag }}: {{ frmgobernacion.gobernacion }}</p>
-      <p>{{ frmgobernacion.iniciales.errors }}
-      {{ frmgobernacion.iniciales.label_tag }}: {{ frmgobernacion.iniciales }}</p>
+      {{ frmgobernacion.region.errors }}
+      <div class="row-fluid">
+      <div class="span2"> {{ frmgobernacion.region.label_tag }}:</div><div class="span4"> {{ frmgobernacion.region }}</div></div><p></p>
+      {{ frmgobernacion.provincia.errors }}
+      <div class="row-fluid">
+      <div class="span2">{{ frmgobernacion.provincia.label_tag }}:</div><div class="span4"> {{ frmgobernacion.provincia }}</div></div><p></p>
+      {{ frmgobernacion.gobernacion.errors }}
+      <div class="row-fluid">
+      <div class="span2">{{ frmgobernacion.gobernacion.label_tag }}:</div><div class="span4"> {{ frmgobernacion.gobernacion }}</div></div><p></p>
+      {{ frmgobernacion.iniciales.errors }}
+      <div class="row-fluid">
+      <div class="span2">{{ frmgobernacion.iniciales.label_tag }}:</div><div class="span4"> {{ frmgobernacion.iniciales }}</div></div><p></p>
       <p><input type="hidden" name="estado" id="id_estado" value="1"></p>
       {% else %}
       {{ frmgobernacion.as_p }}
@@ -43,10 +47,9 @@
   {% block scriptjs %}
 <script>
 $(document).ready(function() {
-/*var provincia = $("#id_provincia");
-provincia.find('option').remove();
-provincia.append("<option value='' selected>---------</option>");*/
 provincias();
+validaletra('id_gobernacion');
+validaletra('id_iniciales');
 });
 </script>
   {% endblock %}

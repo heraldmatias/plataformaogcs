@@ -1,0 +1,5 @@
+"Reporte de la Provincia"
+"Item","Región","Provincia","Estado"
+{% for row in data %}{{ forloop.counter }},{{ row.region|addslashes }},{{ row.provincia|addslashes }},{{ row.estado|addslashes }}
+{% endfor %}
+Fecha: {{ fecha }},Hora: {{ hora }},Usuario: {{ usuario }}
