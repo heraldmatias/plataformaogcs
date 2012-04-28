@@ -10,15 +10,16 @@
 </ul>
 <div class="tab-content" id="contenido">
 <div id="nuevo" class="tab-pane fade in active">
-<form class="form-inline" name="frmreg" method="post" action="/dependencia/ministerio/consulta/"><!--data-toggle="modal"-->
-<div id="frmregion" class="modal" style="position: relative; top: auto; left: auto; margin: 0 auto; z-index: 1"><!--class="modal hide fade">-->
+<form class="form-inline span4" name="frmreg" method="get" action="/dependencia/ministerio/consulta/"><!--data-toggle="modal"-->
+<div id="frmregion" class="modal span7" style="position: relative; top: auto; left: absolute; margin: 0 auto; z-index: 1"><!--class="modal hide fade">-->
     <div class="modal-header">
       <a class="close" data-dismiss="modal" href="javascript: cerrarformulario('contenido');">&times;</a>
       <h3>Consulta de Ministerio</h3>
     </div>
     <div class="modal-body">
-      {% csrf_token %}
-      {{ consultaministerioform.as_p }}
+      <div class="row-fluid">
+      <div class="span3">{{ consultaministerioform.ministerio.label_tag }}</div><div class="span5"> {{ consultaministerioform.ministerio }}</div> <div class="span2 offset1"> <input class="btn-primary" name="grabar" value="Consultar" type="submit"></div><div class="span1"><a class="btn btn-primary" href="javascript: imprimir();">Imprimir</a></div>
+      </div>
       <br>
       <fieldset>
 	<legend><h4>Lista de Ministerios</h4></legend>
@@ -26,8 +27,7 @@
       </fieldset>
     </div>
     <div class="modal-footer">
-     <input class="btn" name="grabar" value="Cerrar" type="button" onclick="cerrarformulario('contenido');">
-      <input class="btn-primary" name="grabar" value="Consultar Ministerios" type="submit">
+    <input class="btn" name="grabar" value="Cerrar" type="button" onclick="cerrarformulario('contenido');">
     </div>
 </div>
 </form>
@@ -35,7 +35,10 @@
   {% endblock %}
   {% block scriptjs %}    
 <script>
-$(document).ready(function() {
-});
+function imprimir(){
+var ministerio=$('#id_ministerio').val();
+var url="/dependencia/ministerio/imprimir/?ministerio="+ministerio;
+location.href=url;
+}
 </script>
   {% endblock %}

@@ -5,4 +5,5 @@ urlpatterns = patterns('usuario.views',
     url(r'^add/$','useradd', name='ogcs-mantenimiento-usuario-add'),
     url(r'^edit/(?P<codigo>\d+)/$','useredit', name='ogcs-mantenimiento-usuario-edit'),
     url(r'^consulta/$','userquery', name='ogcs-mantenimiento-usuario-query'),
+    url(r'^imprimir/$','userprint', name='ogcs-mantenimiento-usuario-print'),
 )

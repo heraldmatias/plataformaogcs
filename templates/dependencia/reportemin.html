@@ -1,0 +1,7 @@
+"Reporte de la Gobernación"
+"Item","Ministerio","Iniciales","Estado"
+{% for row in data %}{{ forloop.counter }},{{ row.ministerio|addslashes }},{{ row.iniciales|addslashes }},{{ row.estado|addslashes }}
+{% endfor %}
+Fecha: {{ fecha }},Hora: {{ hora }},Usuario: {{ usuario }}
+
+

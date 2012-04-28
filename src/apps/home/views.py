@@ -32,6 +32,11 @@ def singin(request):
             nombres = Usuario.objects.get(user=request.user).nombres 
             request.session['nombres'] = nombres
             return redirect('/home/')
+        else:    
+            form = LoginForm()
+            return render(request,
+                        "home/index.html",
+                        {"error_message":"Su cuenta esta inactiva, porfavor consulte con su Administrador.",'form':form,})
     else:
         form = LoginForm()
         return render(request,
@@ -43,7 +48,7 @@ def main(request):
     if 'm' in request.GET:
         return render_to_response('home/home.html',{'m':request.GET['m'],'usuario':request.session['nombres'],'fecha':request.session['login_date']}, context_instance=RequestContext(request),)
     else: 
-        return render_to_response('home/home.html',{'usuario':request.session['nombres'],'fecha':request.session['login_date']}, context_instance=RequestContext(request),)
+        return render_to_response('home/home.html',{'usuario':request.session['nombres'],'fecha':request.session['login_date'],'user':request.user}, context_instance=RequestContext(request),)
 
 @login_required(login_url='/')
 def singout(request):

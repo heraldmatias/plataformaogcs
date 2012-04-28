@@ -9,7 +9,7 @@
 </ul>
 <div class="tab-content" id="contenido">
 <div id="nuevo" class="tab-pane fade in active">
-<form class="form-inline" name="frminfo" method="post" action="/usuario/{{ opcion }}/{% if codigo %}{{ codigo }}/{% endif %}" onSubmit="return confirmar('¿Desea grabar el registro?'); "><!--data-toggle="modal"-->
+<form class="form-inline" name="frmusu" id="frmusu" method="post" action="/usuario/{{ opcion }}/{% if codigo %}{{ codigo }}/{% endif %}" ><!--data-toggle="modal"-->
 <div id="frminformacion" class="modal" style="position: relative; top: auto; left: auto; margin: 0 auto; z-index: 1"><!--class="modal hide fade">-->
     <div class="modal-header">
       <a class="close" data-dismiss="modal" >&times;</a>
@@ -17,8 +17,23 @@
     </div>
     <div class="modal-body">
       {% csrf_token %}              
-      {{ frmusuario.as_p }}
-    </div>
+      {{ frmusuario.non_field_errors }}
+      {% if opcion == "add" %}
+      {% for campo in frmusuario %}      
+      {{ campo.errors }}      
+      {% if campo.label != "Estado" %} 
+      <div class="row-fluid">
+      <div class="span4">{{ campo.label_tag }}:</div><div class="span2">{{ campo }} </div></div><p></p>{% endif %}
+      <input type="hidden" name="estado" id="id_estado" value="2">
+      {% endfor %}
+      {% else %}
+      {% for campo in frmusuario %}      
+      {{ campo.errors }}      
+      <div class="row-fluid">
+      <div class="span4">{{ campo.label_tag }}:</div><div class="span2">{{ campo }} </div></div><p></p>
+      {% endfor %}        
+      {% endif %}
+    </div><input type="hidden" value="{{ dependencia }}" id="id_dep" name="id_dep">
     <div class="modal-footer">
      <input class="btn" name="grabar" value="Cerrar" type="button" onclick="javascript: $('#frmregion').modal('hide')">
       <input class="btn-primary" name="grabar" value="Guardar Cambios" type="submit">
@@ -28,8 +43,14 @@
   {% endblock %}
   {% block scriptjs %}    
 <script>
+$('#frmusu').submit(function() {
+if (!document.getElementById("id_politica").checked) {
+alert('Debe Aceptar las politicas de uso para poder registrarse.'); return false;}
+else{
+return confirmar('¿Desea grabar el registro?');}
+});
 $(document).ready(function() {
-  dependencias();  
+  dependencias();
 });
 validaletra('id_nombres');
 validaletra('id_apellidos');

@@ -18,14 +18,19 @@
     <div class="modal-body">
       {% csrf_token %}
       {% if opcion == "add" %}
-      {{ frmprovincia.non_field_errors }}
-      <p>{{ frmministerio.ministerio.errors }}
-      {{ frmministerio.ministerio.label_tag }}: {{ frmministerio.ministerio }}</p>
-      <p>{{ frmministerio.iniciales.errors }}
-      {{ frmministerio.iniciales.label_tag }}: {{ frmministerio.iniciales }}</p>
+      {{ frmministerio.ministerio.errors }}
+      <div class="row-fluid"><div class="span2">
+      {{ frmministerio.ministerio.label_tag }}:</div> <div class="span2">{{ frmministerio.ministerio }}</div></div><p></p>
+      {{ frmministerio.iniciales.errors }}
+      <div class="row-fluid"><div class="span2">
+      {{ frmministerio.iniciales.label_tag }}:</div> <div class="span2">{{ frmministerio.iniciales }}</div></div><p></p>
       <p><input type="hidden" name="estado" id="id_estado" value="1"></p>
       {% else %}
-      {{ frmministerio.as_p }}
+      {% for campo in frmministerio %}
+      <div class="row-fluid"><div class="span2">
+      {{ campo.errors }}
+      {{ campo.label_tag }}:</div> <div class="span2">{{ campo }}</div></div><p></p>
+      {% endfor %}      
       {% endif %}
     </div>
     <div class="modal-footer">

@@ -5,11 +5,8 @@ from models import Ministerio, Odp, Gobernacion
 from ubigeo.models import Region, Provincia
 import django_tables2 as tables
 from django_tables2.utils import A
-from ubigeo.forms import REGIONES
 from ubigeo.models import Provincia
 
-PROVINCIAS = list(Provincia.objects.all().values_list('numpro','provincia'))
-PROVINCIAS.append(('','TODOS'))
 
 MINISTERIOS = list(Ministerio.objects.all().values_list('nummin','ministerio'))
 MINISTERIOS.append(('','TODOS'))
@@ -33,7 +30,7 @@ class MinisterioTable(tables.Table):
         return '%d' % value
 
     class Meta:
-        attrs = {"class": "table table-bordered table-condensed"}
+        attrs = {"class": "table table-bordered table-condensed table-striped"}
         orderable = False
 
 
@@ -42,9 +39,11 @@ class OdpForm(forms.ModelForm):
         model = Odp
         fields = ('nummin','odp','iniciales','estado')
 
-class ConsultaOdpForm(forms.Form):#CORREGIR
-    nummin = forms.ChoiceField(choices=MINISTERIOS,label='Ministerio',required=False,initial='')
-    odp = forms.CharField(label='Nombre de Odp', max_length=70,required=False)
+class ConsultaOdpForm(forms.ModelForm):#CORREGIR
+    odp = forms.CharField(label='Digite el texto de busqueda:', max_length=70,required=False)
+    class Meta:
+        model = Odp
+        fields = ('nummin','odp',)
 
 class OdpTable(tables.Table):
     item = tables.Column()
@@ -59,22 +58,24 @@ class OdpTable(tables.Table):
         return '%d' % value
 
     class Meta:
-        attrs = {"class": "table table-bordered table-condensed"}
+        attrs = {"class": "table table-bordered table-condensed table-striped"}
         orderable = False
 
 class GobernacionForm(forms.ModelForm):
-    region= forms.ChoiceField(choices=REGIONES,widget=forms.Select(attrs={'onChange':'provincias();',}))
     class Meta:
         model = Gobernacion
-        fields = ('provincia','gobernacion','iniciales','estado')
+        fields = ('region','provincia','gobernacion','iniciales','estado')
         widgets = {
             'region': forms.Select(attrs={'onChange':'provincias();',}),
         }
 
-class ConsultaGobernacionForm(forms.Form):
-    region = forms.ChoiceField(choices=REGIONES,label='Region',required=False,widget=forms.Select(attrs={'onChange':'provincias();',}))
-    provincia = forms.ChoiceField(choices=PROVINCIAS,label='Provincia',required=False)
-    
+class ConsultaGobernacionForm(forms.ModelForm):
+    class Meta:
+        model = Gobernacion
+        fields = ('region','provincia',)
+        widgets = {
+            'region': forms.Select(attrs={'onChange':'provincias();',}),
+        }     
 
 class GobernacionTable(tables.Table):
     item = tables.Column()
@@ -90,5 +91,5 @@ class GobernacionTable(tables.Table):
         return '%d' % value
 
     class Meta:
-        attrs = {"class": "table table-bordered table-condensed"}
+        attrs = {"class": "table table-bordered table-condensed table-striped"}
         orderable = False

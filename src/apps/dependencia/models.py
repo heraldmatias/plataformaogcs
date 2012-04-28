@@ -7,7 +7,7 @@ from ubigeo.models import Region, Provincia
 class Ministerio(models.Model):
     codigo = models.AutoField(verbose_name='Codigo', primary_key=True)
     nummin = models.IntegerField(verbose_name='Numero', unique=True)
-    ministerio = models.CharField(verbose_name='Nombre del Ministerio', max_length=70,unique=True)
+    ministerio = models.CharField(verbose_name='Ministerio', max_length=70,unique=True)
     iniciales = models.CharField(verbose_name='Iniciales', max_length=15,unique=True) 
     estado = models.ForeignKey(Estado, verbose_name='Estado')
     idusuario_creac = models.IntegerField(verbose_name='Numero del Usuario de creación', blank=True, null=True)

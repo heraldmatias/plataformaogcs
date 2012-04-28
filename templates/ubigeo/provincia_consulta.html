@@ -20,7 +20,7 @@
       <div class="row-fluid">
       {% for campo in consultaprovinciaform %}
       <div class="row-fluid">
-      <div class="span3" >{{ campo.label_tag }}:</div><div class="span4" > {{ campo }}</div>{% if campo.label == "Digite el texto de busqueda" %} <div class="span2"><input class="btn-primary" name="grabar" value="Consultar" type="submit"></div><div class="span1"><a class="btn btn-primary" href="javascript: imprimir();">Imprimir</a> </div>{% endif %}</div><p></p>
+      <div class="span3" >{% if campo.label == "Región" %}<label for="id_region">Elija la Región</label>:{% else %}{{ campo.label_tag }}:{% endif %}</div><div class="span4" > {{ campo }}</div>{% if campo.label == "Digite el texto de busqueda" %} <div class="span2"><input class="btn-primary" name="grabar" value="Consultar" type="submit"></div><div class="span1"><a class="btn btn-primary" href="javascript: imprimir();">Imprimir</a> </div>{% endif %}</div><p></p>
       {% endfor %} </div>
       <fieldset>
 	<legend><h4>Lista de provincias</h4></legend>

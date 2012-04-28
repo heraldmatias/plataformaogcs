@@ -1,6 +1,6 @@
 "Reporte de la Gobernación"
 "Item","Ministerio","ODP","Iniciales","Estado"
-{% for row in data %}{{ forloop.counter }},{{ row.nummin|addslashes }},{{ row.odp|addslashes }},{{ row.iniciales|addslashes }},{{ row.estado|addslashes }}
+{% for row in data %}{{ forloop.counter }},{{ row.region|addslashes }},{{ row.provincia|addslashes }},{{ row.gobernacion|addslashes }},{{ row.iniciales|addslashes }},{{ row.estado|addslashes }}
 {% endfor %}
 Fecha: {{ fecha }},Hora: {{ hora }},Usuario: {{ usuario }}
 

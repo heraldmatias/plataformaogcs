@@ -1,0 +1,5 @@
+"Reporte de los Usuarios"
+"Item","Organismo","Dependencia","Nombres","Apellidos","Sexo","usuario","Email","Estado"
+{% for row in data %}{{ forloop.counter }},{{ row.organismo|addslashes }},{{ row.dependencia|addslashes }},{{ row.nombres|addslashes }},{{ row.apellidos|addslashes }},{{ row.sexo|addslashes }},{{ row.usuario|addslashes }},{{ row.email|addslashes }},{{ row.estado|addslashes }}
+{% endfor %}
+Fecha: {{ fecha }},Hora: {{ hora }},Usuario: {{ usuario }}

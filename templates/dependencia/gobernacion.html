@@ -33,7 +33,10 @@
       <div class="span2">{{ frmgobernacion.iniciales.label_tag }}:</div><div class="span4"> {{ frmgobernacion.iniciales }}</div></div><p></p>
       <p><input type="hidden" name="estado" id="id_estado" value="1"></p>
       {% else %}
-      {{ frmgobernacion.as_p }}
+      {{ frmgobernacion.non_field_errors }}
+      {% for campo in frmgobernacion %}
+      <div class="row-fluid">{{ campo.errors }}<div class="span2"> {{ campo.label_tag }}:</div> <div class="span4">{{ campo }} </div></div><p></p>
+      {% endfor %}
       {% endif %}      
     </div>
     <div class="modal-footer">

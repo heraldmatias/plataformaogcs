@@ -50,18 +50,26 @@ def ministerioquery(request):
     col = "-ministerio"
     if "2-sort" in request.GET:
         col = request.GET['2-sort']
-    ministerios = Ministerio.objects.all()
     config = RequestConfig(request)
-    if request.method == "POST":
-        consultaministerioform = ConsultaMinisterioForm(request.POST)        
-        if consultaministerioform.is_valid():
-            ministerios = ministerios.filter(ministerio__icontains=request.POST['ministerio']).order_by(col)
+    consultaministerioform = ConsultaMinisterioForm(request.GET)
+    if 'ministerio' in request.GET:
+        ministerios = Ministerio.objects.filter(ministerio__icontains=request.GET['ministerio']).order_by(col)
     else:
-        consultaministerioform = ConsultaMinisterioForm()
+        ministerios = Ministerio.objects.all().order_by(col)
     tblministerios = MinisterioTable(ministerios.order_by(col))
     config.configure(tblministerios)
     tblministerios.paginate(page=request.GET.get('page', 1), per_page=6)
     return render_to_response('dependencia/ministerio_consulta.html', {'consultaministerioform':consultaministerioform,'tabla':tblministerios,'usuario':request.session['nombres'],'fecha':request.session['login_date']}, context_instance=RequestContext(request),)
+
+@login_required(login_url='/')
+def ministerioprint(request):
+    col = 'ministerio'
+    if 'ministerio' in request.GET:
+        query = Ministerio.objects.filter(ministerio__icontains=request.GET['ministerio']).order_by(col)
+    else:
+        query = Ministerio.objects.all().order_by(col)
+    filename= "ministerio_%s.xls" % datetime.today().strftime("%Y%m%d")
+    return imprimirToExcel('dependencia/reportemin.html', {'data': query,'fecha':datetime.today().date(),'hora':datetime.today().time(),'usuario':request.session['nombres']},filename)
 
 @login_required(login_url='/')
 def odpadd(request):
@@ -133,7 +141,7 @@ def gobernacionadd(request):
         from ubigeo.models import Region
         num = Gobernacion.objects.values("numgob").order_by("-numgob",)[:1]
         num = 1 if len(num)==0 else int(num[0]["numgob"])+1
-        region = None
+        region = Region()
         if request.POST['region']:
             region = Region.objects.get(numreg= request.POST['region'])
         igobernacion = Gobernacion(numgob=num,estado=Estado.objects.get(pk=1),region= region,idusuario_creac=profile.numero)
@@ -168,6 +176,7 @@ def gobernacionquery(request):
         col = request.GET['2-sort']
     config = RequestConfig(request)
     consultagobernacionform = ConsultaGobernacionForm(request.GET)
+    print consultagobernacionform
     if 'region' in request.GET and 'provincia' in request.GET:
 	if request.GET['region'] and request.GET['provincia']:
 	    gobernaciones = Gobernacion.objects.filter(region=request.GET['region'], provincia=request.GET['provincia']).order_by(col)
@@ -190,13 +199,15 @@ def gobernacionprint(request):
     elif request.GET['provincia']:
         query = Gobernacion.objects.filter(provincia=request.GET['region']).order_by(col)
     else:
-        query = Odp.objects.all().order_by(col)
-    filename= "odp_%s.xls" % datetime.today().strftime("%Y%m%d")
-    return imprimirToExcel('dependencia/reporteodp.html', {'data': query,'fecha':datetime.today().date(),'hora':datetime.today().time(),'usuario':request.session['nombres']},filename)
+        query = Gobernacion.objects.all().order_by(col)
+    filename= "gobernacion_%s.csv" % datetime.today().strftime("%Y%m%d")
+    return imprimirToExcel('dependencia/reportegob.html', {'data': query,'fecha':datetime.today().date(),'hora':datetime.today().time(),'usuario':request.session['nombres']},filename)
 
 @login_required(login_url='/')
 def jsondependencia(request):
-    if int(request.GET['r'])==1:
+    if not request.GET['r']:
+        dependencia ={}
+    elif int(request.GET['r'])==1:
         dependencia = Ministerio.objects.all().order_by('ministerio')
     elif int(request.GET['r'])==2:
         dependencia = Odp.objects.all().order_by('odp')

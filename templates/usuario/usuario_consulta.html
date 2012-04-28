@@ -10,16 +10,18 @@
 </ul>
 <div class="tab-content" id="contenido">
 <div id="consulta" class="tab-pane fade in active">
-<form class="form-inline span4" name="frmreg" method="post" action="/usuario/consulta/"><!--data-toggle="modal"-->
-<div id="frmregion" class="modal span8" style="position: relative; top: auto; left: absolute; margin: 0 auto; z-index: 1"><!--class="modal hide fade">-->
+<form class="form-inline span3" name="frmreg" method="get" action="/usuario/consulta/"><!--data-toggle="modal"-->
+<div id="frmregion" class="modal span9" style="position: relative; top: auto; left: absolute; margin: 0 auto; z-index: 1"><!--class="modal hide fade">-->
     <div class="modal-header">
       <a class="close" data-dismiss="modal" href="javascript: cerrarformulario('contenido');">&times;</a>
       <h3>Consulta de Usuario</h3>
     </div>
-    <div class="modal-body">
-      {% csrf_token %}
-      {{ consultausuarioform.as_p }}
-      <br>
+    <div class="modal-body">      
+      {% for campo in consultausuarioform %}
+      {% if forloop.counter == 1 or forloop.counter == 3 or forloop.counter == 5 %}<div class="row-fluid"> {% endif %}
+      <div class="span2">{{ campo.label_tag }}</div><div class="span4">{{ campo }}</div>{% if forloop.counter == 2 or forloop.counter == 4 %}</div><p></p>{% endif %}{% if forloop.counter == 5%}<div class="span2"><input class="btn-primary" name="grabar" value="Consultar" type="submit"></div> <div class="span2"><a class="btn btn-primary" href="javascript: imprimir();">Imprimir</a> </div></div><p></p>{% endif %}
+      {% endfor %}
+      <br><input type="hidden" value="{{ dependencia }}" id="id_dep" name="id_dep">
       <fieldset>
 	<legend><h4>Lista de usuarios</h4></legend>
       {% render_table tabla %}    
@@ -27,7 +29,7 @@
     </div>
     <div class="modal-footer">
      <input class="btn" name="grabar" value="Cerrar" type="button" onclick="cerrarformulario('contenido');">
-      <input class="btn-primary" name="grabar" value="Consultar usuarios" type="submit">
+     
     </div>
 </div>
 </form>
@@ -35,6 +37,17 @@
   {% endblock %}
   {% block scriptjs %}    
 <script>
-
+$(document).ready(function() {
+  dependencias();  
+});
+function imprimir(){
+var organismo=$('#id_organismo').val();
+var apellidos=$('#id_apellidos').val();
+var estado=$('#id_estado').val();
+var nombres=$('#id_nombres').val();
+var dependencia=$('#id_dependencia').val();
+var url="/usuario/imprimir/?organismo="+organismo+"&apellidos="+apellidos+"&estado="+estado+"&nombres="+nombres+"&dependencia"+dependencia;
+location.href=url;
+}
 </script>
   {% endblock %}

@@ -18,7 +18,7 @@
     </div>
     <div class="modal-body">
       <div class="row-fluid"><div class="span2">{{ consultagobernacionform.region.label_tag }}:</div><div class="span4"> {{ consultagobernacionform.region }}</div></div><p></p>
-      <div class="row-fluid"><div class="span2">{{ consultagobernacionform.provincia.label_tag }}:</div><div class="span4"> {{ consultagobernacionform.provincia }}</div></div><p></p>
+      <div class="row-fluid"><div class="span2">{{ consultagobernacionform.provincia.label_tag }}:</div><div class="span5"> {{ consultagobernacionform.provincia }}</div><div class="span2"><input class="btn-primary" name="grabar" value="Consultar" type="submit"></div><div class="span2"><a class="btn btn-primary" href="javascript: imprimir();">Imprimir</a></div></div><p></p>
       <br>
       <fieldset>
 	<legend><h4>Lista de Gobernaciones</h4></legend>
@@ -26,8 +26,7 @@
       </fieldset>
     </div>
     <div class="modal-footer">
-     <input class="btn" name="grabar" value="Cerrar" type="button" onclick="cerrarformulario('contenido');">
-      <input class="btn-primary" name="grabar" value="Consultar Gobernaciones" type="submit">
+     <input class="btn" name="grabar" value="Cerrar" type="button" onclick="cerrarformulario('contenido');">      
     </div>
 </div>
 </form>
@@ -39,9 +38,9 @@ $(document).ready(function() {
 provincias();
 });
 function imprimir(){
-var ministerio=$('#id_nummin').val();
-var odp=$('#id_odp').val();
-var url="/dependencia/odp/imprimir/?odp="+odp+"&nummin="+ministerio;
+var region=$('#id_region').val();
+var provincia=$('#id_provincia').val();
+var url="/dependencia/gobernacion/imprimir/?region="+region+"&provincia="+provincia;
 location.href=url;
 }
 </script>
