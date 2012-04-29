@@ -15,7 +15,7 @@ from django.db.models import Q
 from datetime import datetime
 from scripts.scripts import imprimirToExcel
 
-@login_required(login_url='/')
+@login_required()
 def ministerioadd(request):
     profile = Usuario.objects.get(user = request.user)
     if request.method == 'POST':
@@ -30,7 +30,7 @@ def ministerioadd(request):
         frmministerio = MinisterioForm()
     return render_to_response('dependencia/ministerio.html', {'frmministerio': frmministerio,'opcion':'add','usuario':request.session['nombres'],'fecha':request.session['login_date']}, context_instance=RequestContext(request),)
 
-@login_required(login_url='/')
+@login_required()
 def ministerioedit(request, codigo):
     if request.method == 'POST':
         profile = Usuario.objects.get(user = request.user)
@@ -45,7 +45,7 @@ def ministerioedit(request, codigo):
         frmministerio = MinisterioForm(instance=ministerio)
     return render_to_response('dependencia/ministerio.html', {'frmministerio': frmministerio,'opcion':'edit','codigo':codigo,'usuario':request.session['nombres'],'fecha':request.session['login_date']}, context_instance=RequestContext(request),)
 
-@login_required(login_url='/')
+@login_required()
 def ministerioquery(request):
     col = "-ministerio"
     if "2-sort" in request.GET:
@@ -61,7 +61,7 @@ def ministerioquery(request):
     tblministerios.paginate(page=request.GET.get('page', 1), per_page=6)
     return render_to_response('dependencia/ministerio_consulta.html', {'consultaministerioform':consultaministerioform,'tabla':tblministerios,'usuario':request.session['nombres'],'fecha':request.session['login_date']}, context_instance=RequestContext(request),)
 
-@login_required(login_url='/')
+@login_required()
 def ministerioprint(request):
     col = 'ministerio'
     if 'ministerio' in request.GET:
@@ -71,7 +71,7 @@ def ministerioprint(request):
     filename= "ministerio_%s.xls" % datetime.today().strftime("%Y%m%d")
     return imprimirToExcel('dependencia/reportemin.html', {'data': query,'fecha':datetime.today().date(),'hora':datetime.today().time(),'usuario':request.session['nombres']},filename)
 
-@login_required(login_url='/')
+@login_required()
 def odpadd(request):
     profile = Usuario.objects.get(user = request.user)
     if request.method == 'POST':
@@ -86,7 +86,7 @@ def odpadd(request):
         frmopd = OdpForm()
     return render_to_response('dependencia/odp.html', {'frmodp': frmopd,'opcion':'add','usuario':request.session['nombres'],'fecha':request.session['login_date']}, context_instance=RequestContext(request),)
 
-@login_required(login_url='/')
+@login_required()
 def odpedit(request, codigo):
     if request.method == 'POST':
         profile = Usuario.objects.get(user = request.user)
@@ -101,7 +101,7 @@ def odpedit(request, codigo):
         frmodp = OdpForm(instance=odp)
     return render_to_response('dependencia/odp.html', {'frmodp': frmodp,'opcion':'edit','codigo':codigo,'usuario':request.session['nombres'],'fecha':request.session['login_date']}, context_instance=RequestContext(request),)
 
-@login_required(login_url='/')
+@login_required()
 def odpquery(request):
     col = "-odp"
     if "2-sort" in request.GET:
@@ -122,7 +122,7 @@ def odpquery(request):
     tblodps.paginate(page=request.GET.get('page', 1), per_page=6)
     return render_to_response('dependencia/odp_consulta.html', {'consultaodpform':consultaodpform,'tabla':tblodps,'usuario':request.session['nombres'],'fecha':request.session['login_date']}, context_instance=RequestContext(request),)
 
-@login_required(login_url='/')
+@login_required()
 def odpprint(request):
     col = 'odp'
     if (request.GET['nummin'] and request.GET['odp']) or request.GET['nummin']:
@@ -134,7 +134,7 @@ def odpprint(request):
     filename= "odp_%s.xls" % datetime.today().strftime("%Y%m%d")
     return imprimirToExcel('dependencia/reporteodp.html', {'data': query,'fecha':datetime.today().date(),'hora':datetime.today().time(),'usuario':request.session['nombres']},filename)
 
-@login_required(login_url='/')
+@login_required()
 def gobernacionadd(request):
     profile = Usuario.objects.get(user = request.user)
     if request.method == 'POST':
@@ -153,7 +153,7 @@ def gobernacionadd(request):
         frmgobernacion = GobernacionForm()
     return render_to_response('dependencia/gobernacion.html', {'frmgobernacion': frmgobernacion,'opcion':'add','usuario':request.session['nombres'],'fecha':request.session['login_date']}, context_instance=RequestContext(request),)
 
-@login_required(login_url='/')
+@login_required()
 def gobernacionedit(request, codigo):
     if request.method == 'POST':
         profile = Usuario.objects.get(user = request.user)
@@ -169,7 +169,7 @@ def gobernacionedit(request, codigo):
         #frmgobernacion.provincia.choices = Provincia.objects.filter(region=gobernacion.region).values_list('numpro','provincia')        
     return render_to_response('dependencia/gobernacion.html', {'frmgobernacion': frmgobernacion,'opcion':'edit','codigo':codigo,'usuario':request.session['nombres'],'fecha':request.session['login_date']}, context_instance=RequestContext(request),)
 
-@login_required(login_url='/')
+@login_required()
 def gobernacionquery(request):
     col = "-gobernacion"
     if "2-sort" in request.GET:
@@ -191,7 +191,7 @@ def gobernacionquery(request):
     tblgobernaciones.paginate(page=request.GET.get('page', 1), per_page=6)
     return render_to_response('dependencia/gobernacion_consulta.html', {'consultagobernacionform':consultagobernacionform,'tabla':tblgobernaciones,'usuario':request.session['nombres'],'fecha':request.session['login_date']}, context_instance=RequestContext(request),)
 
-@login_required(login_url='/')
+@login_required()
 def gobernacionprint(request):
     col = 'gobernacion'
     if (request.GET['region'] and request.GET['provincia']) or request.GET['region']:
@@ -203,7 +203,7 @@ def gobernacionprint(request):
     filename= "gobernacion_%s.csv" % datetime.today().strftime("%Y%m%d")
     return imprimirToExcel('dependencia/reportegob.html', {'data': query,'fecha':datetime.today().date(),'hora':datetime.today().time(),'usuario':request.session['nombres']},filename)
 
-@login_required(login_url='/')
+@login_required()
 def jsondependencia(request):
     if not request.GET['r']:
         dependencia ={}

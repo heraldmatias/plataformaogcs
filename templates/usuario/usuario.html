@@ -23,12 +23,13 @@
       {{ campo.errors }}      
       {% if campo.label != "Estado" %} 
       <div class="row-fluid">
-      <div class="span4">{{ campo.label_tag }}:</div><div class="span2">{{ campo }} </div></div><p></p>{% endif %}
-      <input type="hidden" name="estado" id="id_estado" value="2">
+      <div class="span4">{{ campo.label_tag }}:</div><div class="span5">{{ campo }} </div>{% if campo.label == "Contraseña" %}<div class="span2" id="sclave" name="sclave"> </div>{% endif %}</div><p></p>{% endif %}
       {% endfor %}
+      <input type="hidden" name="estado" id="id_estado" value="2">
+      <input type="hidden" name="nivel" id="id_nivel" value="1">
       {% else %}
       {% for campo in frmusuario %}      
-      {{ campo.errors }}      
+      {{ campo.errors }}
       <div class="row-fluid">
       <div class="span4">{{ campo.label_tag }}:</div><div class="span2">{{ campo }} </div></div><p></p>
       {% endfor %}        
@@ -52,7 +53,7 @@ return confirmar('¿Desea grabar el registro?');}
 $(document).ready(function() {
   dependencias();
 });
-validaletra('id_nombres');
+validaletra('id_nombres');validaclave('id_contrasena','sclave');
 validaletra('id_apellidos');
 validanumero('id_rpc');
 validanumero('id_rpm');

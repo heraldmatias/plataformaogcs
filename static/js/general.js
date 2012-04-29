@@ -63,7 +63,11 @@ function validaletra(campo){
 var l='';
  $('#'+campo).keyup(function () {
   this.value = this.value.replace(/[^A-Za-záéíóúÁÉÍÓÚÜü ]/g,'');
-  l = this.value.toUpperCase();
+  //l = this.value.toUpperCase();
+  //$('#'+campo).val(l);
+});
+$('#'+campo).change(function () {
+  l = $('#'+campo).val().toUpperCase();
   $('#'+campo).val(l);
 });
 }
@@ -71,3 +75,35 @@ function validanumero(campo){
  $('#'+campo).keyup(function () {
   this.value = this.value.replace(/[^0-9]/g,'');
 });}
+
+passtatus= new Array(5);
+passtatus[0]='Escriba su contraseña';
+passtatus[1]='La contraseña debe superar 5 caracteres';
+passtatus[2]='Contraseña baja';
+passtatus[3]='Contraseña media';
+passtatus[4]='Contraseña alta';
+function validaclave(campo,sclave){
+$('#'+campo).keyup(function () {
+this.value = this.value.replace(/[ ]/g,'');
+var clave = $('#'+sclave);var pass=$('#'+campo).val();
+var letras= /^[a-z]+$/gi;var numeros=/^\d+$/g;var caracteres=/^\W+$/g;
+var alfa=/^\w+$/g;var estado=0;
+if(pass.length>=5){
+	if(letras.test(pass)|numeros.test(pass)|caracteres.test(pass)){
+        estado=2;
+	}else if(alfa.test(pass)){
+        estado=3;  
+        }else if((/\W+/gi).test(pass)&(/\w+/gi).test(pass)&(/\d+/gi).test(pass)){
+        estado=4;  
+        }else{
+        estado=3; 
+        }
+}else if(pass.length==0){
+estado=0;
+}else{
+estado=1;
+}
+clave.html(" ");clave.html(passtatus[estado]);
+});
+
+}

@@ -13,7 +13,7 @@ from datetime import datetime
 from scripts.scripts import imprimirToExcel
 from django.http import HttpResponse
 
-@login_required(login_url='/')
+@login_required()
 def regionadd(request):
     if request.method == 'POST':
         profile = Usuario.objects.get(user = request.user)
@@ -30,7 +30,7 @@ def regionadd(request):
         frmregion = RegionForm()
     return render_to_response('ubigeo/region.html', {'frmregion': frmregion,'opcion':'add','usuario':request.session['nombres'],'fecha':request.session['login_date']}, context_instance=RequestContext(request),)
 
-@login_required(login_url='/')
+@login_required()
 def regionedit(request, codigo):
     if request.method == 'POST':
         profile = Usuario.objects.get(user = request.user)
@@ -45,14 +45,14 @@ def regionedit(request, codigo):
         frmregion = RegionForm(instance=region)
     return render_to_response('ubigeo/region.html', {'frmregion': frmregion,'opcion':'edit','codigo':codigo,'usuario':request.session['nombres'],'fecha':request.session['login_date']}, context_instance=RequestContext(request),)
 
-@login_required(login_url='/')
+@login_required()
 def regionprint(request):
     if "region" in request.GET:
         qregiones = Region.objects.all().filter(region__icontains=request.GET['region']).order_by("region")
         filename= "region_%s.xls" % datetime.today().strftime("%Y%m%d")
         return imprimirToExcel('ubigeo/reporter.html', {'data': qregiones,'fecha':datetime.today().date(),'hora':datetime.today().time(),'usuario':request.session['nombres']},filename)
 
-@login_required(login_url='/')
+@login_required()
 def regionquery(request):
     col = "-region"
     regiones = None
@@ -69,7 +69,7 @@ def regionquery(request):
     tblregiones.paginate(page=request.GET.get('page', 1), per_page=6)
     return render_to_response('ubigeo/region_consulta.html', {'consultaregionform':consultaregionform,'tblregiones':tblregiones,'usuario':request.session['nombres'],'fecha':request.session['login_date']}, context_instance=RequestContext(request),)
 
-@login_required(login_url='/')
+@login_required()
 def provinciaadd(request):
     profile = Usuario.objects.get(user = request.user)
     if request.method == 'POST':
@@ -86,7 +86,7 @@ def provinciaadd(request):
     print frmprovincia.non_field_errors
     return render_to_response('ubigeo/provincia.html', {'frmprovincia': frmprovincia,'opcion':'add','usuario':request.session['nombres'],'fecha':request.session['login_date']}, context_instance=RequestContext(request),)
 
-@login_required(login_url='/')
+@login_required()
 def provinciaedit(request, codigo):
     if request.method == 'POST':
         profile = Usuario.objects.get(user = request.user)
@@ -101,7 +101,7 @@ def provinciaedit(request, codigo):
         frmprovincia = ProvinciaForm(instance=provincia)
     return render_to_response('ubigeo/provincia.html', {'frmprovincia': frmprovincia,'opcion':'edit','codigo':codigo,'usuario':request.session['nombres'],'fecha':request.session['login_date']}, context_instance=RequestContext(request),)
 
-@login_required(login_url='/')
+@login_required()
 def provinciaquery(request):
     col = "-provincia"
     if "2-sort" in request.GET:
@@ -122,7 +122,7 @@ def provinciaquery(request):
     tblprovincias.paginate(page=request.GET.get('page', 1), per_page=6)
     return render_to_response('ubigeo/provincia_consulta.html', {'consultaprovinciaform':consultaprovinciaform,'tabla':tblprovincias,'usuario':request.session['nombres'],'fecha':request.session['login_date']}, context_instance=RequestContext(request),)
 
-@login_required(login_url='/')
+@login_required()
 def provinciaprint(request):
     col = 'provincia'
     if (request.GET['region'] and request.GET['provincia']) or request.GET['region']:
@@ -134,7 +134,7 @@ def provinciaprint(request):
     filename= "provincia_%s.xls" % datetime.today().strftime("%Y%m%d")
     return imprimirToExcel('ubigeo/reportep.html', {'data': provincias,'fecha':datetime.today().date(),'hora':datetime.today().time(),'usuario':request.session['nombres'],},filename)
 
-@login_required(login_url='/')
+@login_required()
 def jsonprovincia(request):
     if request.GET['r']:
         provincias = Provincia.objects.filter(region = Region.objects.get(numreg = request.GET['r'])).order_by('provincia')

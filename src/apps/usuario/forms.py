@@ -13,7 +13,16 @@ class UsuarioForm(forms.ModelForm):
             'dependencia': forms.Select(),
             'organismo': forms.Select(attrs={'onChange':'dependencias();',}),
             'contrasena': forms.PasswordInput(),
-            #'nivel': forms.Select(attrs={'disabled':'disabled',}),
+            'usuario': forms.TextInput(attrs={'readonly':'readonly',}),
+        }
+
+class EditUsuarioForm(forms.ModelForm):
+    class Meta:
+        model = Usuario
+        exclude = ('idusuario_mod','fec_mod','user','numero','usuario','nivel','contrasena')
+        widgets = {
+            'dependencia': forms.Select(),
+            'organismo': forms.Select(attrs={'onChange':'dependencias();',}),
             'usuario': forms.TextInput(attrs={'readonly':'readonly',}),
         }
 

@@ -43,14 +43,14 @@ def singin(request):
                         "home/index.html",
                         {"error_message":"Por favor ingrese valores correctos.",'form':form,})
 
-@login_required(login_url='/')
+@login_required()
 def main(request): 
     if 'm' in request.GET:
         return render_to_response('home/home.html',{'m':request.GET['m'],'usuario':request.session['nombres'],'fecha':request.session['login_date']}, context_instance=RequestContext(request),)
     else: 
         return render_to_response('home/home.html',{'usuario':request.session['nombres'],'fecha':request.session['login_date'],'user':request.user}, context_instance=RequestContext(request),)
 
-@login_required(login_url='/')
+@login_required()
 def singout(request):
     logout(request)
     return redirect('/')
