@@ -47,7 +47,7 @@ class ConsultaOdpForm(forms.ModelForm):#CORREGIR
 
 class OdpTable(tables.Table):
     item = tables.Column()
-    nummin = tables.Column()
+    nummin = tables.Column(orderable=True)
     odp = tables.LinkColumn('ogcs-mantenimiento-odp-edit', args=[A('numodp')],orderable=True,)
     iniciales = tables.Column()
     estado = tables.Column()    
@@ -79,8 +79,8 @@ class ConsultaGobernacionForm(forms.ModelForm):
 
 class GobernacionTable(tables.Table):
     item = tables.Column()
-    region = tables.Column()
-    provincia = tables.Column()
+    region = tables.Column(orderable=True)
+    provincia = tables.Column(orderable=True)
     gobernacion = tables.LinkColumn('ogcs-mantenimiento-gobernacion-edit', args=[A('numgob')],orderable=True)
     iniciales = tables.Column()
     estado = tables.Column()    

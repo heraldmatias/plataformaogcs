@@ -35,7 +35,7 @@ class RegionTable(tables.Table):
 
 class ProvinciaTable(tables.Table):
     item = tables.Column()
-    region = tables.Column(verbose_name="Región")
+    region = tables.Column(verbose_name="Región",orderable=True)
     provincia = tables.LinkColumn('ogcs-mantenimiento-provincia-edit', args=[A('numpro')],orderable=True)
     estado = tables.Column()    
 
