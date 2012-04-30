@@ -3,6 +3,10 @@
   {% block title %} Plataforma Intersectorial de Comunicaci&oacute;n OGCS {% endblock %}
   {% block content %}
   {% include 'include/header.html' %}
+{% if mensaje %}
+<h4><div class="alert alert-success"><a class="close" data-dismiss="alert">×</a><strong>Mensaje:</strong>
+<p>{{ mensaje }}</p></div></h4>
+{% endif %}
 <ul class="nav nav-tabs">
 <li class="active"><a href="/ubigeo/provincia/{{ opcion }}/{% if codigo %}{{ codigo }}/{% endif %}">{% if opcion == "add" %}Nuevo {% else %} Modificar {% endif %}</a></li>
 <li><a href="/ubigeo/provincia/consulta/" >Consultar</a></li>

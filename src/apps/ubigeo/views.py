@@ -15,6 +15,7 @@ from django.http import HttpResponse
 
 @login_required()
 def regionadd(request):
+    mensaje=""
     if request.method == 'POST':
         profile = Usuario.objects.get(user = request.user)
         num = Region.objects.values("numreg").order_by("-numreg",)[:1]
@@ -25,13 +26,15 @@ def regionadd(request):
             for campo in frmregion.fields:
                 frmregion.fields[campo]=request.POST[campo].upper()
             frmregion.save()
-            return redirect('/home/') # Crear un parametro en home para mostrar los mensajes de exito.
+            frmregion = RegionForm() # Crear un parametro en home para mostrar los mensajes de exito.
+            mensaje="Registro grabado satisfactoriamente."
     else:        
         frmregion = RegionForm()
-    return render_to_response('ubigeo/region.html', {'frmregion': frmregion,'opcion':'add','usuario':request.session['nombres'],'fecha':request.session['login_date']}, context_instance=RequestContext(request),)
+    return render_to_response('ubigeo/region.html', {'frmregion': frmregion,'opcion':'add','usuario':request.session['nombres'],'fecha':request.session['login_date'],'mensaje':mensaje}, context_instance=RequestContext(request),)
 
 @login_required()
 def regionedit(request, codigo):
+    mensaje=""
     if request.method == 'POST':
         profile = Usuario.objects.get(user = request.user)
         region = Region.objects.get(numreg=int(codigo))
@@ -39,11 +42,11 @@ def regionedit(request, codigo):
         frmregion = RegionForm(request.POST, instance=region) # A form bound to the POST data	
         if frmregion.is_valid():
             frmregion.save()
-            return redirect('/home/') # Crear un parametro en home para mostrar los mensajes de exito.
+            mensaje="Registro modificado satisfactoriamente." # Crear un parametro en home para mostrar los mensajes de exito.
     else:
         region = get_object_or_404(Region, numreg=int(codigo))
         frmregion = RegionForm(instance=region)
-    return render_to_response('ubigeo/region.html', {'frmregion': frmregion,'opcion':'edit','codigo':codigo,'usuario':request.session['nombres'],'fecha':request.session['login_date']}, context_instance=RequestContext(request),)
+    return render_to_response('ubigeo/region.html', {'frmregion': frmregion,'opcion':'edit','codigo':codigo,'usuario':request.session['nombres'],'fecha':request.session['login_date'],'mensaje':mensaje}, context_instance=RequestContext(request),)
 
 @login_required()
 def regionprint(request):
@@ -72,6 +75,7 @@ def regionquery(request):
 @login_required()
 def provinciaadd(request):
     profile = Usuario.objects.get(user = request.user)
+    mensaje=""
     if request.method == 'POST':
         num = Provincia.objects.values("numpro").order_by("-numpro",)[:1]
         num = 1 if len(num)==0 else int(num[0]["numpro"])+1
@@ -80,14 +84,16 @@ def provinciaadd(request):
         print request.POST  
         if frmprovincia.is_valid():
             frmprovincia.save()
-            return redirect('/home/') # Crear un parametro en home para mostrar los mensajes de exito.
+            frmprovincia = ProvinciaForm()  
+            mensaje="Registro grabado satisfactoriamente." # Crear un parametro en home para mostrar los mensajes de exito.
     else:        
         frmprovincia = ProvinciaForm()
     print frmprovincia.non_field_errors
-    return render_to_response('ubigeo/provincia.html', {'frmprovincia': frmprovincia,'opcion':'add','usuario':request.session['nombres'],'fecha':request.session['login_date']}, context_instance=RequestContext(request),)
+    return render_to_response('ubigeo/provincia.html', {'frmprovincia': frmprovincia,'opcion':'add','usuario':request.session['nombres'],'fecha':request.session['login_date'],'mensaje':mensaje}, context_instance=RequestContext(request),)
 
 @login_required()
 def provinciaedit(request, codigo):
+    mensaje=""
     if request.method == 'POST':
         profile = Usuario.objects.get(user = request.user)
         provincia = Provincia.objects.get(numpro=int(codigo))
@@ -95,11 +101,11 @@ def provinciaedit(request, codigo):
         frmprovincia = ProvinciaForm(request.POST, instance=provincia) # A form bound to the POST data	
         if frmprovincia.is_valid():
             frmprovincia.save()
-            return redirect('/home/') # Crear un parametro en home para mostrar los mensajes de exito.
+            mensaje="Registro modificado satisfactoriamente." # Crear un parametro en home para mostrar los mensajes de exito.
     else:
         provincia = get_object_or_404(Provincia, numpro=int(codigo))
         frmprovincia = ProvinciaForm(instance=provincia)
-    return render_to_response('ubigeo/provincia.html', {'frmprovincia': frmprovincia,'opcion':'edit','codigo':codigo,'usuario':request.session['nombres'],'fecha':request.session['login_date']}, context_instance=RequestContext(request),)
+    return render_to_response('ubigeo/provincia.html', {'frmprovincia': frmprovincia,'opcion':'edit','codigo':codigo,'usuario':request.session['nombres'],'fecha':request.session['login_date'],'mensaje':mensaje}, context_instance=RequestContext(request),)
 
 @login_required()
 def provinciaquery(request):

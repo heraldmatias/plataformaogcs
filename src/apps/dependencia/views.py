@@ -18,6 +18,7 @@ from scripts.scripts import imprimirToExcel
 @login_required()
 def ministerioadd(request):
     profile = Usuario.objects.get(user = request.user)
+    mensaje=""
     if request.method == 'POST':
         num = Ministerio.objects.values("nummin").order_by("-nummin",)[:1]
         num = 1 if len(num)==0 else int(num[0]["nummin"])+1
@@ -25,25 +26,27 @@ def ministerioadd(request):
         frmministerio = MinisterioForm(request.POST, instance=iministerio) # A form bound to the POST data
         if frmministerio.is_valid():
             frmministerio.save()
-            return redirect('/home/') # Crear un parametro en home para mostrar los mensajes de exito.
+            frmministerio = MinisterioForm() # Crear un parametro en home para mostrar los mensajes de exito.
+            mensaje = "Registro grabado satisfactoriamente." 
     else:        
         frmministerio = MinisterioForm()
-    return render_to_response('dependencia/ministerio.html', {'frmministerio': frmministerio,'opcion':'add','usuario':request.session['nombres'],'fecha':request.session['login_date']}, context_instance=RequestContext(request),)
+    return render_to_response('dependencia/ministerio.html', {'frmministerio': frmministerio,'opcion':'add','usuario':request.session['nombres'],'fecha':request.session['login_date'],'mensaje':mensaje}, context_instance=RequestContext(request),)
 
 @login_required()
 def ministerioedit(request, codigo):
+    mensaje=""
     if request.method == 'POST':
         profile = Usuario.objects.get(user = request.user)
         ministerio = Ministerio.objects.get(nummin=int(codigo))
         ministerio.idusuario_mod=profile.numero
         frmministerio = MinisterioForm(request.POST, instance=ministerio) # A form bound to the POST data	
         if frmministerio.is_valid():
-            frmministerio.save()
-            return redirect('/home/') # Crear un parametro en home para mostrar los mensajes de exito.
+            frmministerio.save() # Crear un parametro en home para mostrar los mensajes de exito.
+            mensaje = "Registro modificado satisfactoriamente."
     else:
         ministerio = get_object_or_404(Ministerio, nummin=int(codigo))
         frmministerio = MinisterioForm(instance=ministerio)
-    return render_to_response('dependencia/ministerio.html', {'frmministerio': frmministerio,'opcion':'edit','codigo':codigo,'usuario':request.session['nombres'],'fecha':request.session['login_date']}, context_instance=RequestContext(request),)
+    return render_to_response('dependencia/ministerio.html', {'frmministerio': frmministerio,'opcion':'edit','codigo':codigo,'usuario':request.session['nombres'],'fecha':request.session['login_date'],'mensaje':mensaje}, context_instance=RequestContext(request),)
 
 @login_required()
 def ministerioquery(request):
@@ -74,6 +77,7 @@ def ministerioprint(request):
 @login_required()
 def odpadd(request):
     profile = Usuario.objects.get(user = request.user)
+    mensaje=""
     if request.method == 'POST':
         num = Odp.objects.values("numodp").order_by("-numodp",)[:1]
         num = 1 if len(num)==0 else int(num[0]["numodp"])+1
@@ -81,13 +85,15 @@ def odpadd(request):
         frmopd = OdpForm(request.POST, instance=iodp) # A form bound to the POST data
         if frmopd.is_valid():
             frmopd.save()
-            return redirect('/home/') # Crear un parametro en home para mostrar los mensajes de exito.
+            frmopd = OdpForm() # Crear un parametro en home para mostrar los mensajes de exito.
+            mensaje = "Registro grabado satisfactoriamente." 
     else:        
         frmopd = OdpForm()
-    return render_to_response('dependencia/odp.html', {'frmodp': frmopd,'opcion':'add','usuario':request.session['nombres'],'fecha':request.session['login_date']}, context_instance=RequestContext(request),)
+    return render_to_response('dependencia/odp.html', {'frmodp': frmopd,'opcion':'add','usuario':request.session['nombres'],'fecha':request.session['login_date'],'mensaje':mensaje}, context_instance=RequestContext(request),)
 
 @login_required()
 def odpedit(request, codigo):
+    mensaje=""
     if request.method == 'POST':
         profile = Usuario.objects.get(user = request.user)
         odp = Odp.objects.get(numodp=int(codigo))
@@ -95,11 +101,11 @@ def odpedit(request, codigo):
         frmodp = OdpForm(request.POST, instance=odp) # A form bound to the POST data	
         if frmodp.is_valid():
             frmodp.save()
-            return redirect('/home/') # Crear un parametro en home para mostrar los mensajes de exito.
+            mensaje = "Registro modificado satisfactoriamente." # Crear un parametro en home para mostrar los mensajes de exito.
     else:
         odp = get_object_or_404(Odp, numodp=int(codigo))
         frmodp = OdpForm(instance=odp)
-    return render_to_response('dependencia/odp.html', {'frmodp': frmodp,'opcion':'edit','codigo':codigo,'usuario':request.session['nombres'],'fecha':request.session['login_date']}, context_instance=RequestContext(request),)
+    return render_to_response('dependencia/odp.html', {'frmodp': frmodp,'opcion':'edit','codigo':codigo,'usuario':request.session['nombres'],'fecha':request.session['login_date'],'mensaje':mensaje}, context_instance=RequestContext(request),)
 
 @login_required()
 def odpquery(request):
@@ -137,6 +143,7 @@ def odpprint(request):
 @login_required()
 def gobernacionadd(request):
     profile = Usuario.objects.get(user = request.user)
+    mensaje=""
     if request.method == 'POST':
         from ubigeo.models import Region
         num = Gobernacion.objects.values("numgob").order_by("-numgob",)[:1]
@@ -148,13 +155,15 @@ def gobernacionadd(request):
         frmgobernacion = GobernacionForm(request.POST, instance=igobernacion) # A form bound to the POST data
         if frmgobernacion.is_valid():
             frmgobernacion.save()
-            return redirect('/home/') # Crear un parametro en home para mostrar los mensajes de exito.
+            frmgobernacion = GobernacionForm() # Crear un parametro en home para mostrar los mensajes de exito.
+            mensaje = "Registro grabado satisfactoriamente."
     else:        
         frmgobernacion = GobernacionForm()
-    return render_to_response('dependencia/gobernacion.html', {'frmgobernacion': frmgobernacion,'opcion':'add','usuario':request.session['nombres'],'fecha':request.session['login_date']}, context_instance=RequestContext(request),)
+    return render_to_response('dependencia/gobernacion.html', {'frmgobernacion': frmgobernacion,'opcion':'add','usuario':request.session['nombres'],'fecha':request.session['login_date'],'mensaje':mensaje}, context_instance=RequestContext(request),)
 
-@login_required()
+@login_required() 
 def gobernacionedit(request, codigo):
+    mensaje=""
     if request.method == 'POST':
         profile = Usuario.objects.get(user = request.user)
         gobernacion = Gobernacion.objects.get(numgob=int(codigo))
@@ -162,12 +171,12 @@ def gobernacionedit(request, codigo):
         frmgobernacion = GobernacionForm(request.POST, instance=gobernacion) # A form bound to the POST data	
         if frmgobernacion.is_valid():
             frmgobernacion.save()
-            return redirect('/home/') # Crear un parametro en home para mostrar los mensajes de exito.
+            mensaje = "Registro modificado satisfactoriamente." # Crear un parametro en home para mostrar los mensajes de exito.
     else:
         gobernacion = get_object_or_404(Gobernacion, numgob=int(codigo))
         frmgobernacion = GobernacionForm(instance=gobernacion)
         #frmgobernacion.provincia.choices = Provincia.objects.filter(region=gobernacion.region).values_list('numpro','provincia')        
-    return render_to_response('dependencia/gobernacion.html', {'frmgobernacion': frmgobernacion,'opcion':'edit','codigo':codigo,'usuario':request.session['nombres'],'fecha':request.session['login_date']}, context_instance=RequestContext(request),)
+    return render_to_response('dependencia/gobernacion.html', {'frmgobernacion': frmgobernacion,'opcion':'edit','codigo':codigo,'usuario':request.session['nombres'],'fecha':request.session['login_date'],'mensaje':mensaje}, context_instance=RequestContext(request),)
 
 @login_required()
 def gobernacionquery(request):
