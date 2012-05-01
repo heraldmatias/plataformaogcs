@@ -1,0 +1,67 @@
+ {% extends 'base.html' %}
+  {% load static %}
+  {% block title %} Plataforma Intersectorial de Comunicaci&oacute;n OGCS {% endblock %}
+  {% block content %}
+  {% include 'include/header.html' %}
+{% if mensaje %}
+<h4><div class="alert alert-success"><a class="close" data-dismiss="alert">×</a><strong>Mensaje:</strong>
+<p>{{ mensaje }}</p></div></h4>
+{% endif %}
+<ul class="nav nav-tabs">
+<li class="active"><a href="/usuario/admin/{{ opcion }}/{% if codigo %}{{ codigo }}/{% endif %}">{% if opcion == "add" %}Nuevo {% else %} Modificar {% endif %}</a></li>
+<li><a href="/usuario/admin/consulta/" >Consultar</a></li>
+</ul>
+<div class="tab-content" id="contenido">
+<div id="nuevo" class="tab-pane fade in active">
+<form class="form-inline" name="frmusu" id="frmusu" method="post" action="/usuario/admin/{{ opcion }}/{% if codigo %}{{ codigo }}/{% endif %}" ><!--data-toggle="modal"-->
+<div id="frminformacion" class="modal" style="position: relative; top: auto; left: auto; margin: 0 auto; z-index: 1"><!--class="modal hide fade">-->
+    <div class="modal-header">
+      <a class="close" data-dismiss="modal" >&times;</a>
+      <h3>Registro de Administrador</h3>
+    </div>
+    <div class="modal-body">
+      {% csrf_token %}              
+      {{ frmusuario.non_field_errors }}
+      {% if opcion == "add" %}
+      {% for campo in frmusuario %}      
+      {{ campo.errors }}      
+      {% if campo.label != "Estado" %} 
+      <div class="row-fluid">
+      <div class="span4">{{ campo.label_tag }}:</div><div class="span5">{{ campo }} </div>{% if campo.label == "Contraseña" %}<div class="span2" id="sclave" name="sclave"> </div>{% endif %}</div><p></p>{% endif %}
+      {% endfor %}
+      <input type="hidden" name="estado" id="id_estado" value="2">
+      <input type="hidden" name="nivel" id="id_nivel" value="1">
+      {% else %}
+      {% for campo in frmusuario %}      
+      {{ campo.errors }}
+      <div class="row-fluid">
+      <div class="span4">{{ campo.label_tag }}:</div><div class="span2">{{ campo }} </div></div><p></p>
+      {% endfor %}        
+      {% endif %}
+    </div><input type="hidden" value="{{ dependencia }}" id="id_dep" name="id_dep">
+    <div class="modal-footer">
+     <input class="btn-primary" name="grabar" value="Guardar Cambios" type="submit">
+     <input class="btn" name="grabar" value="Cerrar" type="button" onclick="javascript: $('#frmregion').modal('hide')">
+    </div>
+</div>
+</form></div></div>
+  {% endblock %}
+  {% block scriptjs %}    
+<script>
+$('#frmusu').submit(function() {
+if (!document.getElementById("id_politica").checked) {
+alert('Debe Aceptar las politicas de uso para poder registrarse.'); return false;}
+else{
+return confirmar('¿Desea grabar el registro?');}
+});
+$(document).ready(function() {
+  dependencias();
+});
+validaletra('id_nombres');validaclave('id_contrasena','sclave');
+validaletra('id_apellidos');comboelegir('id_organismo');comboelegir('id_sexo');
+validanumero('id_rpc');
+validanumero('id_rpm');
+validanumero('id_nextel');
+validanumero('id_anexo');validanumero('id_fono');
+</script>
+  {% endblock %}
