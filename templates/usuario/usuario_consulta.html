@@ -38,7 +38,7 @@
   {% block scriptjs %}    
 <script>
 $(document).ready(function() {
-  dependencias();  
+  dependencias(0); combotodos('id_organismo');  combotodos('id_estado');
 });
 function imprimir(){
 var organismo=$('#id_organismo').val();

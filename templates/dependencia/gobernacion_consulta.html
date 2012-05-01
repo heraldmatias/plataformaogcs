@@ -35,7 +35,7 @@
   {% block scriptjs %}    
 <script>
 $(document).ready(function() {
-provincias();
+provincias(0);combotodos('id_region');combotodos('id_provincia');
 });
 function imprimir(){
 var region=$('#id_region').val();
@@ -43,5 +43,6 @@ var provincia=$('#id_provincia').val();
 var url="/dependencia/gobernacion/imprimir/?region="+region+"&provincia="+provincia;
 location.href=url;
 }
+
 </script>
   {% endblock %}

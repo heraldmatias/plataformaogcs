@@ -66,7 +66,7 @@ class GobernacionForm(forms.ModelForm):
         model = Gobernacion
         fields = ('region','provincia','gobernacion','iniciales','estado')
         widgets = {
-            'region': forms.Select(attrs={'onChange':'provincias();',}),
+            'region': forms.Select(attrs={'onChange':'provincias(1);',}),
         }
 
 class ConsultaGobernacionForm(forms.ModelForm):
@@ -74,7 +74,7 @@ class ConsultaGobernacionForm(forms.ModelForm):
         model = Gobernacion
         fields = ('region','provincia',)
         widgets = {
-            'region': forms.Select(attrs={'onChange':'provincias();',}),
+            'region': forms.Select(attrs={'onChange':'provincias(0);',}),
         }     
 
 class GobernacionTable(tables.Table):

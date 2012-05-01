@@ -8,12 +8,16 @@ function confirmar(mensaje){
 	return false;
 }
 
-function provincias(){
+function provincias(label){
         var id= $("#id_region").val();
 	var provincia = $("#id_provincia");
         var idpro = provincia.val();var select=true;    
 	provincia.find('option').remove();
-provincia.append("<option selected='selected' value=''>---------</option>");
+if(label==0){
+provincia.append("<option selected='selected' value=''>---TODOS---</option>");
+}else{
+provincia.append("<option selected='selected' value=''>---ELEGIR---</option>");
+}
 	$.getJSON('/ubigeo/provincia/json/?r='+id, function(data){
 	$.each(data, function(key,value){
                 if(value.fields.numpro==idpro){
@@ -25,12 +29,16 @@ provincia.append("<option selected='selected' value=''>---------</option>");
 	});
 }
 
-function dependencias(){
+function dependencias(label){
         var id= $("#id_organismo").val();
 	var dependencia = $("#id_dependencia");
         var iddep = $("#id_dep").val();var select=true;
 	dependencia.find('option').remove();
-dependencia.append("<option selected='selected' value=''>---------</option>");
+if(label==0){
+dependencia.append("<option selected='selected' value=''>---TODOS---</option>");
+}else{
+dependencia.append("<option selected='selected' value=''>---ELEGIR---</option>");
+}
 	$.getJSON('/dependencia/dependencias/json/?r='+id, function(data){
 	$.each(data, function(key,value){
                 if(id==1){
@@ -105,5 +113,13 @@ estado=1;
 }
 clave.html(" ");clave.html(passtatus[estado]);
 });
+}
 
+function combotodos(combo){
+var cb= $('#'+combo);
+cb.get(0).options[0].text="---TODOS---";
+}
+function comboelegir(combo){
+var cb= $('#'+combo);
+cb.get(0).options[0].text="---ELEGIR---";
 }

@@ -11,7 +11,7 @@ class UsuarioForm(forms.ModelForm):
         exclude = ('idusuario_mod','fec_mod','user','numero','usuario','nivel')
         widgets = {
             'dependencia': forms.Select(),
-            'organismo': forms.Select(attrs={'onChange':'dependencias();',}),
+            'organismo': forms.Select(attrs={'onChange':'dependencias(1);',}),
             'contrasena': forms.PasswordInput(),
             'usuario': forms.TextInput(attrs={'readonly':'readonly',}),
         }
@@ -22,7 +22,7 @@ class EditUsuarioForm(forms.ModelForm):
         exclude = ('idusuario_mod','fec_mod','user','numero','usuario','nivel','contrasena')
         widgets = {
             'dependencia': forms.Select(),
-            'organismo': forms.Select(attrs={'onChange':'dependencias();',}),
+            'organismo': forms.Select(attrs={'onChange':'dependencias(1);',}),
             'usuario': forms.TextInput(attrs={'readonly':'readonly',}),
         }
 
@@ -32,7 +32,7 @@ class ConsultaUsuarioForm(forms.ModelForm):
         fields = ('organismo','dependencia','nombres','apellidos','estado')
         widgets = {
             'dependencia': forms.Select(),
-            'organismo': forms.Select(attrs={'onChange':'dependencias();',}),
+            'organismo': forms.Select(attrs={'onChange':'dependencias(0);',}),
         }
 
 class UsuarioTable(tables.Table):
