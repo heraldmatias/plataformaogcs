@@ -1,0 +1,5 @@
+"Reporte de la PGCS-APORTE"
+"Item","Organismo","Dependencia","Fecha Creación","Usuario"
+{% for row in data %}{{ forloop.counter }},{{ row.organismo|addslashes }}, {{ row.dependencia|addslashes }}, {{ row.fec_creac|addslashes }}, {{ row.usuario|addslashes }}
+{% endfor %}
+Fecha: {{ fecha }},Hora: {{ hora }},Usuario: {{ usuario }}

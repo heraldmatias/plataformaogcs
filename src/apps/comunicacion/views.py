@@ -69,6 +69,20 @@ def oacquery(request):
     return render_to_response('comunicacion/oac_consulta.html', {'formulario':formulario,'tabla':tabla,'usuario':request.session['nombres'],'fecha':request.session['login_date'],'dependencia':dependencia}, context_instance=RequestContext(request),)
 
 @login_required()
+def oacprint(request):
+    filtro = list()
+    if 'organismo' in request.GET:
+        if request.GET['organismo']:
+            filtro.append(u"oac.organismo_id =%s"%request.GET['organismo'])
+        if 'dependencia' in request.GET:
+            if request.GET['dependencia']:
+                filtro.append(u"oac.dependencia =%s"%request.GET['dependencia'])
+    filtro.append(u"idusuario_creac=usuario.numero")
+    query = Oac.objects.extra(tables=['usuario',],where=filtro,select={'usuario':'usuario.usuario','dependencia':"case oac.organismo_id when 1 then (select ministerio from ministerio where nummin=oac.dependencia) when 2 then (select odp from odp where numodp=oac.dependencia) when 3 then (select gobernacion from gobernacion where numgob=oac.dependencia) end"})
+    filename= "oac_%s.csv" % datetime.today().strftime("%Y%m%d")
+    return imprimirToExcel('comunicacion/reporteoac.html', {'data': query,'fecha':datetime.today().date(),'hora':datetime.today().time(),'usuario':request.session['nombres']},filename)
+
+@login_required()
 def pgcsadd(request):
     mensaje=""
     if request.method == 'POST':               
@@ -119,6 +133,21 @@ def pgcsquery(request):
     config.configure(tabla)
     tabla.paginate(page=request.GET.get('page', 1), per_page=6)
     return render_to_response('comunicacion/pgcs_consulta.html', {'formulario':formulario,'tabla':tabla,'usuario':request.session['nombres'],'fecha':request.session['login_date'],'dependencia':dependencia}, context_instance=RequestContext(request),)
+
+@login_required()
+def pgcsprint(request,tipo):
+    filtro = list()
+    if 'organismo' in request.GET:
+        if request.GET['organismo']:
+            filtro.append(u"oac.organismo_id =%s"%request.GET['organismo'])
+        if 'dependencia' in request.GET:
+            if request.GET['dependencia']:
+                filtro.append(u"oac.dependencia =%s"%request.GET['dependencia'])
+    filtro.append(u"idusuario_creac=usuario.numero")    
+    filtro.append(u"tipopgcs_id="+str(tipo))
+    query = Pgcs.objects.extra(tables=['usuario',],where=filtro,select={'usuario':'usuario.usuario','dependencia':"case pgcs.organismo_id when 1 then (select ministerio from ministerio where nummin=pgcs.dependencia) when 2 then (select odp from odp where numodp=pgcs.dependencia) when 3 then (select gobernacion from gobernacion where numgob=pgcs.dependencia) end"})
+    filename= ("pgcs_%s.csv" if tipo=="1" else "pgcsaporte_%s.csv") % datetime.today().strftime("%Y%m%d")
+    return imprimirToExcel('comunicacion/reportepgcs.html' if tipo=="1" else 'comunicacion/reporte_pgcs_aporte.html', {'data': query,'fecha':datetime.today().date(),'hora':datetime.today().time(),'usuario':request.session['nombres']},filename)
 
 @login_required()
 def pgcs_apor_add(request):

@@ -42,8 +42,8 @@ $(document).ready(function() {
   dependencias(0); combotodos('id_organismo');
 });
 function imprimir(){
-var region=$('#id_region').val();
-var url="/ubigeo/region/imprimir/?region="+region;
+var org=$('#id_organismo').val();var dep=$('#id_dependencia').val();
+var url="{% url ogcs-mantenimiento-oac-print %}?organismo="+org+'&dependencia='+dep;
 location.href=url;
 }
 </script>

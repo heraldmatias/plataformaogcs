@@ -46,8 +46,12 @@ $(document).ready(function() {
   dependencias(0); combotodos('id_organismo');
 });
 function imprimir(){
-var region=$('#id_region').val();
-var url="/ubigeo/region/imprimir/?region="+region;
+var org=$('#id_organismo').val();var dep=$('#id_dependencia').val();
+{% if aporte %}
+var url="{% url ogcs-mantenimiento-pgcs-print 2 %}?organismo="+org+'&dependencia='+dep;
+{% else %}
+var url="{% url ogcs-mantenimiento-pgcs-print 1 %}?organismo="+org+'&dependencia='+dep;
+{% endif %}
 location.href=url;
 }
 </script>
