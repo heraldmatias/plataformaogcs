@@ -1,0 +1,63 @@
+  {% extends 'base.html' %}
+  {% load static %}
+  {% block title %} Plataforma Intersectorial de Comunicaci&oacute;n OGCS {% endblock %}
+  {% block content %}
+  {% include 'include/header.html' %}
+{% if mensaje %}
+<h4><div class="alert alert-success"><a class="close" data-dismiss="alert">×</a><strong>Mensaje:</strong>
+<p>{{ mensaje }}</p></div></h4>
+{% endif %}
+<ul class="nav nav-tabs">
+<li class="active"><a href="{% if aporte %}{% url ogcs-mantenimiento-pgcs-aporte-add %}{% else %}{% url ogcs-mantenimiento-pgcs-add %}{% endif %}">Nuevo</a></li>
+<li><a href="{% if aporte %}{% url ogcs-mantenimiento-pgcs-aporte-query %}{% else %}{% url ogcs-mantenimiento-pgcs-query %}{% endif %}" >Consultar</a></li>
+</ul>
+<div class="tab-content" id="contenido">
+<div id="nuevo" class="tab-pane fade in active">
+<form enctype="multipart/form-data" class="form-inline" id="frmoac" name="frmoac" method="post" action="{% if aporte %}{% url ogcs-mantenimiento-pgcs-aporte-add %}{% else %}{% url ogcs-mantenimiento-pgcs-add %}{% endif %}" ><!--data-toggle="modal"-->
+<div id="frmprovincia" class="modal" style="position: relative; top: auto; left: auto; margin: 0 auto; z-index: 1"><!--class="modal hide fade">-->
+    <div class="modal-header">
+      <a class="close" data-dismiss="modal" >&times;</a>
+      {% if aporte %}
+      <h3>Nuevo Aporte PGCS (Plan General de Comunicación del sector)</h3>
+      {% else %}
+      <h3>Nuevo PGCS (Plan General de Comunicación del sector)</h3>
+      {% endif %}
+    </div>
+    <div class="modal-body">
+      {% csrf_token %}
+      <div class="row-fluid">
+      {{ formulario.as_p }}
+
+    </div>
+    </div>
+    <div class="modal-footer">
+     <input class="btn-primary" name="grabar" value="Guardar Cambios" type="submit">
+     <input class="btn" name="grabar" value="Cerrar" type="button" onclick="cerrarformulario('contenido');">
+    </div>
+</div>
+</form>
+</div></div>
+  {% endblock %}
+  {% block scriptjs %}  
+  {% if aporte %}  
+<script>
+$('#frmoac').submit(function() {
+var ext = $('#id_archivo').val().split('.').pop().toLowerCase();
+if($.inArray(ext, ['pdf','doc','docx']) == -1) {
+    alert('Solo se acepta archivos en formato PDF y WORD!');return false;
+}else{
+return confirmar('¿Desea grabar el registro?');}
+});
+</script>
+{% else %}
+<script>
+$('#frmoac').submit(function() {
+var ext = $('#id_archivo').val().split('.').pop().toLowerCase();
+if($.inArray(ext, ['pdf']) == -1) {
+    alert('Solo se acepta archivos en formato PDF!');return false;
+}else{
+return confirmar('¿Desea grabar el registro?');}
+});
+</script>
+{% endif %}
+  {% endblock %}

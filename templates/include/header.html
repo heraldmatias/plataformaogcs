@@ -26,15 +26,15 @@
 	      <li class="dropdown">
 		<a class="dropdown-toggle" data-toggle="dropdown" href="">OAC<b class="caret"></b></a>
 		<ul class="dropdown-menu">                  
-                  <li><a href="#" data-toggle="modal">Nuevo Oac</a></li>                
-		  <li><a href="#" data-toggle="modal">Consultar Oac</a></li>		  
+                  <li><a href="{% url ogcs-mantenimiento-oac-add %}" data-toggle="modal">Nuevo Oac</a></li>                
+		  <li><a href="{% url ogcs-mantenimiento-oac-query %}" data-toggle="modal">Consultar Oac</a></li>		  
 		</ul>
 	      </li>
 	      <li class="dropdown">
 		<a class="dropdown-toggle" data-toggle="dropdown" href="">PGCS<b class="caret"></b></a>
 		<ul class="dropdown-menu">                  
-                  <li><a href="#" data-toggle="modal">Nuevo Pgcs</a></li>                
-		  <li><a href="#" data-toggle="modal">Consultar Pgcs</a></li>		  
+                  <li><a href="{% url ogcs-mantenimiento-pgcs-add %}" data-toggle="modal">Pgcs - Ogcs</a></li>                
+		  <li><a href="{% url ogcs-mantenimiento-pgcs-aporte-add %}" data-toggle="modal">Pgcs - Aporte</a></li>		  
 		</ul>
 	      </li>		   
 	      <li class="dropdown">

@@ -12,6 +12,7 @@ urlpatterns = patterns('',
     (r'^ubigeo/', include('ubigeo.urls')),
     (r'^dependencia/', include('dependencia.urls')),  
     (r'^usuario/', include('usuario.urls')),
+    (r'^comunicacion/', include('comunicacion.urls')),
 )
 
 from django.views.static import serve
