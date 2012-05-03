@@ -63,7 +63,7 @@ def oacquery(request):
                 dependencia=request.GET['dependencia']
     filtro.append(u"idusuario_creac=usuario.numero")
     query = Oac.objects.extra(tables=['usuario',],where=filtro,select={'usuario':'usuario.usuario','dependencia':"case oac.organismo_id when 1 then (select ministerio from ministerio where nummin=oac.dependencia) when 2 then (select odp from odp where numodp=oac.dependencia) when 3 then (select gobernacion from gobernacion where numgob=oac.dependencia) end"})
-    tabla = OacTable(oacs.order_by(col))
+    tabla = OacTable(query.order_by(col))
     config.configure(tabla)
     tabla.paginate(page=request.GET.get('page', 1), per_page=6)
     return render_to_response('comunicacion/oac_consulta.html', {'formulario':formulario,'tabla':tabla,'usuario':request.session['nombres'],'fecha':request.session['login_date'],'dependencia':dependencia}, context_instance=RequestContext(request),)
