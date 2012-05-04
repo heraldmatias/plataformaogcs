@@ -10,6 +10,15 @@
 <!--  <link href="{{ STATIC_URL  }}/static/bootstrap/css/docs.css" rel="stylesheet" type="text/css"/>  -->
   <style type="text/css">
   .fondo{background:#FFFFFF}
+a:link {color: #ffffff}
+a:active {color: #ffffff}
+/*a:visited {color: #ffffff}*/
+.menublanco {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	color: #ffffff;
+	font-weight: bold;
+	font-size: 12px;
+}
 a:hover	{TEXT-DECORATION:underline; color: #06136f}
 .rojito {
 	font-family: Verdana, Arial, Helvetica, sans-serif;
@@ -25,7 +34,14 @@ a:hover	{TEXT-DECORATION:underline; color: #06136f}
   <title>{% block title %}{% endblock %}</title>  
 </head>
 <body class="well">
-  {% if login %}<div class="container fondo" style="width:960px"> {% else %}<div class="container fondo">{% endif %}
+   {% if login %}<div class="container fondo" style="width:960px">{% else %} <div class="container fondo">{% endif %}
+   <header id="overview"><div class="row">
+                <div class="span4"><img src="{{ STATIC_URL  }}images/logo.png"> </div>
+ {% if login %} <div class="span3 offset2" style="position: relative; top: 10px; left: 28.5em; margin: 0 auto; z-index: 1"><img src="{{ STATIC_URL  }}images/logopcm.png"> </div>{% endif %}
+{% if login %}
+<img src="{{ STATIC_URL  }}images/left.png" style="position: relative; top: 88.90px; left: -50.7em; margin: 0 auto; z-index: 1">
+{% endif %}
+</div><br>
   {% block content %}
   {% endblock %}  
   </div>  
