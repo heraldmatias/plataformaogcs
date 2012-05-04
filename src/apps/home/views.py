@@ -13,7 +13,7 @@ from datetime import datetime
 
 def index(request):
     form = LoginForm()
-    return render_to_response('home/index.html', {'form': form,}, context_instance=RequestContext(request),)
+    return render_to_response('home/index.html', {'form': form,'login':'login'}, context_instance=RequestContext(request),)
 
 def singin(request):
     if request.method == 'POST':
@@ -43,12 +43,12 @@ def singin(request):
             form = LoginForm()
             return render(request,
                         "home/index.html",
-                        {"error_message":"Su cuenta esta inactiva, porfavor consulte con su Administrador.",'form':form,})
+                        {"error_message":"Su cuenta esta inactiva, porfavor consulte con su Administrador.",'form':form,'login':'login'})
     else:
         form = LoginForm()
         return render(request,
                         "home/index.html",
-                        {"error_message":"Por favor ingrese valores correctos.",'form':form,})
+                        {"error_message":"Por favor ingrese valores correctos.",'form':form,'login':'login'})
 
 @login_required()
 def main(request): 

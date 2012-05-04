@@ -8,14 +8,24 @@
   <link href="{{ STATIC_URL  }}bootstrap/datepicker/css/datepicker.css" rel="stylesheet" type="text/css"/>
   <link href="{{ STATIC_URL  }}prettify/prettify.css" rel="stylesheet" type="text/css"/>
 <!--  <link href="{{ STATIC_URL  }}/static/bootstrap/css/docs.css" rel="stylesheet" type="text/css"/>  -->
+  <style type="text/css">
+  .fondo{background:#FFFFFF}
+a:hover	{TEXT-DECORATION:underline; color: #06136f}
+.rojito {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	color: #D2014D;
+	font-weight: bold;
+	font-size: 10px;
+}
+  </style>
   <meta content="text/html; charset=UTF-8" http-equiv="content-type">
   {% endblock %}
   {% block csspage %}
   {% endblock %}
   <title>{% block title %}{% endblock %}</title>  
 </head>
-<body>
-  <div class="container"> 
+<body class="well">
+  {% if login %}<div class="container fondo" style="width:960px"> {% else %}<div class="container fondo">{% endif %}
   {% block content %}
   {% endblock %}  
   </div>  
