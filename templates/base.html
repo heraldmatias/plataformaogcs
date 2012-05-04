@@ -10,9 +10,9 @@
 <!--  <link href="{{ STATIC_URL  }}/static/bootstrap/css/docs.css" rel="stylesheet" type="text/css"/>  -->
   <style type="text/css">
   .fondo{background:#FFFFFF}
-a:link {color: #ffffff}
+/*a:link {color: #ffffff}
 a:active {color: #ffffff}
-/*a:visited {color: #ffffff}*/
+a:visited {color: #ffffff}*/
 .menublanco {
 	font-family: Verdana, Arial, Helvetica, sans-serif;
 	color: #ffffff;
@@ -26,6 +26,24 @@ a:hover	{TEXT-DECORATION:underline; color: #06136f}
 	font-weight: bold;
 	font-size: 10px;
 }
+.azul {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	color: #2578CB;
+	font-weight: bold;
+	font-size: 14px;
+}
+.gris {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	color: #453D3D;
+	font-weight: bold;
+	font-size: 10px;
+}
+.gris2 {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	color: #453D3D;
+	font-weight: bold;
+	font-size: 12px;
+}
   </style>
   <meta content="text/html; charset=UTF-8" http-equiv="content-type">
   {% endblock %}
@@ -33,18 +51,30 @@ a:hover	{TEXT-DECORATION:underline; color: #06136f}
   {% endblock %}
   <title>{% block title %}{% endblock %}</title>  
 </head>
-<body class="well">
+<body class="well"><!--<img src="{{ STATIC_URL  }}images/varon.png"></p>-->
    {% if login %}<div class="container fondo" style="width:960px">{% else %} <div class="container fondo">{% endif %}
    <header id="overview"><div class="row">
-                <div class="span4"><img src="{{ STATIC_URL  }}images/logo.png"> </div>
- {% if login %} <div class="span3 offset2" style="position: relative; top: 10px; left: 28.5em; margin: 0 auto; z-index: 1"><img src="{{ STATIC_URL  }}images/logopcm.png"> </div>{% endif %}
-{% if login %}
-<img src="{{ STATIC_URL  }}images/left.png" style="position: relative; top: 88.90px; left: -50.7em; margin: 0 auto; z-index: 1">
+{% if login %} <div class="span4"><img src="{{ STATIC_URL  }}images/logo.png"> </div> {% else %}  <div class="span4"><img src="{{ STATIC_URL  }}images/logo.png" style="position: relative; top: 10px;"> </div> {% endif %}
+ {% if login %} <div class="span3 offset2" style="position: relative; top: 10px; left: 28.5em; margin: 0 auto; z-index: 1"><img src="{{ STATIC_URL  }}images/logopcm.png"> </div>{% else %}
+<div class="row"><div class="span5 offset3" style="position: relative; top: 20px; left: 32em; margin: 0 auto; z-index: 1"><div class="row">
+<div class="span2"><p class="rojito">Ministerio del Interior </p><p class="gris">{{ fecha|date:"D d M Y" }}</div>
+<img style="position: relative; top: 5px; left: -17.5em; margin: 0 auto; z-index: 1" src="{{ STATIC_URL  }}images/varon.png">
+<div class="span2"><p class="gris2">BIENVENIDO</p><p class="azul">{{ usuario }}</p> </div>
+</div></div></div>
 {% endif %}
-</div><br>
+{% if login %}
+<img src="{{ STATIC_URL  }}images/cabecera.png" style="position: relative; top: 35px; left: 7px; margin: 0 auto; z-index: 1">
+{% endif %}
+</div></header><br>{% if not login %}
+<div class="row-fluid">
+<img src="{{ STATIC_URL  }}images/foro.png" style="position: relative; top: 16em; left: 73em; margin: 0 auto; z-index: 1">  
+<img src="{{ STATIC_URL  }}images/chat.png" style="position: relative; top: 20em; left: 59.4em; margin: 0 auto; z-index: 1">
+<img src="{{ STATIC_URL  }}images/docs.png" style="position: relative; top: 24em; left: 45.8em; margin: 0 auto; z-index: 1">
+<img src="{{ STATIC_URL  }}images/acta.png" style="position: relative; top: 28em; left: 32.3em; margin: 0 auto; z-index: 1">
+</div>{% endif %}
   {% block content %}
-  {% endblock %}  
-  </div>  
+  {% endblock %} 
+
   {% block js %}  
   <script src="{{ STATIC_URL }}bootstrap/js/jquery.js" type="text/javascript"></script>
   <!--<script src="{{ STATIC_URL }}bootstrap/js/jquery-ui.js" type="text/javascript"></script>

@@ -1,18 +1,9 @@
-
+<div class="container" style="position:relative;top: -30px;">
   <div class="page-header">
-<div class="navbar">
-    <div class="navbar-inner" style="background:#F4003F; ">
-      <div class="container">
-        <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
-          <span class="icon-bar"></span>
-          <span class="icon-bar"></span>
-          <span class="icon-bar"></span>
-        </a>
-        <!--<a class="brand" href=""><h1>OGCS</h1>Plataforma Intersectorial de Comunicación</a>-->
-  <div class="subnav menublanco" >
+    <div class="navbar-inner" style="background:#F4003F;">
 		<ul class="nav nav-pills">
 	      <li class="dropdown">
-		<a class="dropdown-toggle" data-toggle="dropdown" href="">Mantenimiento<b class="caret"></b></a>
+		<a class="dropdown-toggle menublanco" data-toggle="dropdown" href="">Mantenimiento<b class="caret"></b></a>
 		<ul class="dropdown-menu">                  
                   <li><a href="/ubigeo/region/add/" data-toggle="modal">Regi&oacute;n</a></li>                
 		  <li><a href="/ubigeo/provincia/add/" data-toggle="modal">Provincia</a></li>
@@ -24,49 +15,49 @@
 		</ul>
 	      </li>
 	      <li class="dropdown">
-		<a class="dropdown-toggle" data-toggle="dropdown" href="">OAC<b class="caret"></b></a>
+		<a class="dropdown-toggle menublanco" data-toggle="dropdown" href="">OAC<b class="caret"></b></a>
 		<ul class="dropdown-menu">                  
                   <li><a href="{% url ogcs-mantenimiento-oac-add %}" data-toggle="modal">Nuevo Oac</a></li>                
 		  <li><a href="{% url ogcs-mantenimiento-oac-query %}" data-toggle="modal">Consultar Oac</a></li>		  
 		</ul>
 	      </li>
 	      <li class="dropdown">
-		<a class="dropdown-toggle" data-toggle="dropdown" href="">PGCS<b class="caret"></b></a>
+		<a class="dropdown-toggle menublanco" data-toggle="dropdown" href="">PGCS<b class="caret"></b></a>
 		<ul class="dropdown-menu">                  
-                  <li><a href="{% url ogcs-mantenimiento-pgcs-add %}" data-toggle="modal">Pgcs - Ogcs</a></li>                
-		  <li><a href="{% url ogcs-mantenimiento-pgcs-aporte-add %}" data-toggle="modal">Pgcs - Aporte</a></li>		  
+                  <li><a href="{% url ogcs-mantenimiento-pgcs-add %}" data-toggle="modal">PGCS - OGCS</a></li>                
+		  <li><a href="{% url ogcs-mantenimiento-pgcs-aporte-add %}" data-toggle="modal">PGCS - APORTE</a></li>		  
 		</ul>
 	      </li>		   
 	      <li class="dropdown">
-		<a class="dropdown-toggle" data-toggle="dropdown" href="">MCCA<b class="caret"></b></a>
+		<a class="dropdown-toggle menublanco" data-toggle="dropdown" href="">MCCA<b class="caret"></b></a>
 		<ul class="dropdown-menu">                  
                   <li><a href="#" data-toggle="modal">Nuevo Mcca</a></li>                
 		  <li><a href="#" data-toggle="modal">Consultar Mcca</a></li>		  
 		</ul>
 	      </li>   
 	      <li class="dropdown">
-		<a class="dropdown-toggle" data-toggle="dropdown" href="">MCC<b class="caret"></b></a>
+		<a class="dropdown-toggle menublanco" data-toggle="dropdown" href="">MCC<b class="caret"></b></a>
 		<ul class="dropdown-menu">                  
                   <li><a href="#" data-toggle="modal">Nuevo Mcc</a></li>                
 		  <li><a href="#" data-toggle="modal">Consultar Mcc</a></li>		  
 		</ul>
 	      </li>   
 	      <li class="dropdown">
-		<a class="dropdown-toggle" data-toggle="dropdown" href="">MG<b class="caret"></b></a>
+		<a class="dropdown-toggle menublanco" data-toggle="dropdown" href="">MG<b class="caret"></b></a>
 		<ul class="dropdown-menu">                  
                   <li><a href="#" data-toggle="modal">Nuevo Mg</a></li>                
 		  <li><a href="#" data-toggle="modal">Consultar Mg</a></li>		  
 		</ul>
 	      </li>
 	      <li class="dropdown">
-		<a class="dropdown-toggle" data-toggle="dropdown" href="">DIG<b class="caret"></b></a>
+		<a class="dropdown-toggle menublanco" data-toggle="dropdown" href="">DIG<b class="caret"></b></a>
 		<ul class="dropdown-menu">                  
                   <li><a href="#" data-toggle="modal">Nuevo Dig</a></li>                
 		  <li><a href="#" data-toggle="modal">Consultar Dig</a></li>		  
 		</ul>
 	      </li>
 	      <li class="dropdown">
-		<a class="dropdown-toggle" data-toggle="dropdown" href="">ARI<b class="caret"></b></a>
+		<a class="dropdown-toggle menublanco" data-toggle="dropdown" href="">ARI<b class="caret"></b></a>
 		<ul class="dropdown-menu">                  
                   <li><a href="#" data-toggle="modal">Nuevo Ari</a></li>                
 		  <li><a href="#" data-toggle="modal">Consultar Ari</a></li>		  
@@ -75,13 +66,9 @@
 	      <li><a href="">Calendario de Actividades</a></li>
 	      <li><a href="">Chat Privado</a></li>
 	      <li><a href="">Foro</a></li>-->
-	    </ul> 
-          </div>  
-	  <div id="sesion" class="pull-right">
-          <!--<p>Fecha: {{ fecha }} </p>
-          Usuario: {{ usuario }}          
-          <a  href="/home/logout/">Cerrar Sesión</a>
-          </div>--> <a  href="/home/logout/">Cerrar Sesión</a></div>   
+            <li class="pull-right"><a class="menublanco" href="/home/logout/">Cerrar Sesión  <img src="{{ STATIC_URL  }}images/sesion.png"></a></li> 
+	    </ul>             
+          </div>            
         </div>
       </div>
-    </div></section>
+
