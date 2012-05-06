@@ -11,7 +11,7 @@
 <li class="active"><a href="/usuario/{{ opcion }}/{% if codigo %}{{ codigo }}/{% endif %}">{% if opcion == "add" %}Nuevo {% else %} Modificar {% endif %}</a></li>
 <li><a href="/usuario/consulta/" >Consultar</a></li>
 </ul>
-<div class="tab-content" id="contenido">
+<div class="tab-content" id="contenido_izq">
 <div id="nuevo" class="tab-pane fade in active">
 <form class="form-inline" name="frmusu" id="frmusu" method="post" action="/usuario/{{ opcion }}/{% if codigo %}{{ codigo }}/{% endif %}" ><!--data-toggle="modal"-->
 <div id="frminformacion" class="modal" style="position: relative; top: auto; left: auto; margin: 0 auto; z-index: 1"><!--class="modal hide fade">-->

@@ -27,21 +27,92 @@
     	<div id="cabecera_izq">
     		<img height="71" width="342" src="{{ STATIC_URL  }}images/logo.png">
     	</div>
-        
+        {% if login %}
         <div id="cabecera_der">
         	<img height="60" width="207" src="{{ STATIC_URL  }}images/logopcm.png" />
         </div>
-    	
-    </div>
-    <div class="clear"></div>
-    
+    	{% else %}
+        <div id="cabecera_der">         	
+            <table width="356" border="0" cellspacing="0" cellpadding="0" style="margin:12px 8px 0 0">
+             <tr>
+               <td width="129" valign="top" class="ministerio">Ministerio del Interior </td>
+               <td width="49" rowspan="2"><img src="{{ STATIC_URL  }}images/varon.png" width="38" height="36"></td>
+               <td width="178" class="gris2">Bienvenido</td>
+             </tr>
+             <tr>
+               <td valign="top" class="fecha">{{ fecha|date:"D d M Y" }}</td>
+               <td width="178" class="azul">{{ usuario }}</td>
+             </tr>
+           </table>
+        </div>
+       {% endif %}</div>
+    <div class="clear"></div>    
     <div id="menu">
-    	
+        {% if not login %} 	      
+        <ul id="nave">
+            <li class="dropdown principal"><a class="dropdown-toggle menublanco" data-toggle="dropdown" href="">Mantenimiento<b class="caret"></b></a>
+                <ul class="dropdown-menu">                  
+                  <li class="opcion"><a href="/ubigeo/region/add/" data-toggle="modal">Regi&oacute;n</a></li>                
+		  <li class="opcion"><a href="/ubigeo/provincia/add/" data-toggle="modal">Provincia</a></li>
+		  <li class="opcion"><a href="/dependencia/ministerio/add/" data-toggle="modal">Ministerio</a></li>
+		  <li class="opcion"><a href="/dependencia/odp/add/" data-toggle="modal">ODP</a></li>
+		  <li class="opcion"><a href="/dependencia/gobernacion/add/" data-toggle="modal">Gobernaci&oacute;n</a></li>
+		  <li class="opcion"><a href="/usuario/add/" data-toggle="modal">Usuario</a></li>
+                  <li class="opcion"><a href="/usuario/admin/add/" data-toggle="modal">Administrador</a></li>
+                </ul></li>
+            <li class="dropdown principal"><a class="dropdown-toggle menublanco" data-toggle="dropdown" href="">OAC<b class="caret"></b></a>
+                <ul class="dropdown-menu">                  
+                  <li><a href="{% url ogcs-mantenimiento-oac-add %}" data-toggle="modal">Nuevo Oac</a></li>                
+		  <li><a href="{% url ogcs-mantenimiento-oac-query %}" data-toggle="modal">Consultar Oac</a></li>		  
+		</ul></li>
+            <li class="dropdown principal"><a class="dropdown-toggle menublanco" data-toggle="dropdown" href="">PGCS<b class="caret"></b></a>
+                <ul class="dropdown-menu">                  
+                  <li><a href="{% url ogcs-mantenimiento-pgcs-add %}" data-toggle="modal">PGCS - OGCS</a></li>                
+		  <li><a href="{% url ogcs-mantenimiento-pgcs-aporte-add %}" data-toggle="modal">PGCS - APORTE</a></li>		  
+		</ul></li>
+            <li class="dropdown principal"><a class="dropdown-toggle menublanco" data-toggle="dropdown" href="">MCCA<b class="caret"></b></a>
+                <ul class="dropdown-menu">                  
+                  <li><a href="#" data-toggle="modal">Nuevo Mcca</a></li>                
+		  <li><a href="#" data-toggle="modal">Consultar Mcca</a></li>		  
+		</ul></li>
+            <li class="dropdown principal"><a class="dropdown-toggle menublanco" data-toggle="dropdown" href="">MCC<b class="caret"></b></a>
+                <ul class="dropdown-menu">                  
+                  <li><a href="#" data-toggle="modal">Nuevo Mcc</a></li>                
+		  <li><a href="#" data-toggle="modal">Consultar Mcc</a></li>		  
+		</ul></li>
+            <li class="dropdown principal"><a class="dropdown-toggle menublanco" data-toggle="dropdown" href="">MG<b class="caret"></b></a>
+                <ul class="dropdown-menu">                  
+                  <li><a href="#" data-toggle="modal">Nuevo Mg</a></li>                
+		  <li><a href="#" data-toggle="modal">Consultar Mg</a></li>		  
+		</ul></li>
+            <li class="dropdown principal"><a class="dropdown-toggle menublanco" data-toggle="dropdown" href="">DIG<b class="caret"></b></a>
+                <ul class="dropdown-menu">                  
+                  <li><a href="#" data-toggle="modal">Nuevo Dig</a></li>                
+		  <li><a href="#" data-toggle="modal">Consultar Dig</a></li>		  
+		</ul></li>
+            <li class="dropdown principal"><a class="dropdown-toggle menublanco" data-toggle="dropdown" href="">ARI<b class="caret"></b></a>
+                <ul class="dropdown-menu">                  
+                  <li><a href="#" data-toggle="modal">Nuevo Ari</a></li>                
+		  <li><a href="#" data-toggle="modal">Consultar Ari</a></li>		  
+		</ul></li>
+        </ul>
+        <div id="cerrar_sesion">
+        <a class="menublanco" href="{% url ogcs-logout %}"> Cerrar sesión&nbsp;<img width="20" height="19" src="{{ STATIC_URL }}images/sesion.png" align="absmiddle"></a>
+        </div>
+       {% endif %} 
     </div>
-    
+{% if not login %} <div id="contenido"> {% endif %}
   {% block content %}
   {% endblock %}
-  </div> 
+{% if not login %}<div id="contenido_der">
+            <div id="foros">
+           	<div class="links">Foro OGCS </div>
+                <div class="links">Chat OGCS </div>
+                <div class="links">Documentos</div>
+                <div class="links">Acta de Reunión</div>
+            </div>
+        </div>  </div>{% endif %}
+</div>
   {% block js %}  
   <script src="{{ STATIC_URL }}bootstrap/js/jquery.js" type="text/javascript"></script>
   <script src="{{ STATIC_URL }}js/jquery.corner.js" type="text/javascript"></script>
