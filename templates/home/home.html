@@ -2,29 +2,71 @@
   {% load static %}
   {% block title %} Plataforma Intersectorial de Comunicaci&oacute;n OGCS {% endblock %}
   {% block content %}
-  {% include 'include/header.html' %}
-  <br><br>
-  {% if m == "userr" %}
-    <h3><div class="span6"><div class="alert alert-error"><a class="close" data-dismiss="alert">×</a><strong>Mensaje:</strong>
-    <p>Usuario creado correctamente,pero no se ha podido enviar el email con los datos del registro.</p>  </div></div></h3>
-  {% endif %}
-  {% if m == "usadd" %}
-    <h3><div class="span6"><div class="alert alert-success"><a class="close" data-dismiss="alert">×</a><strong>Mensaje:</strong>
-    <p>Usuario creado correctamente, se ha enviado un email con los datos del registro.</p>  </div></div></h3>
-  {% endif %} 
-  {% endblock %}
-  {% block scriptjs %}	
-	<script>
-	$('#id_fechacreac_tw').datepicker({
-	    format: 'mm-dd-yyyy',
-            language: 'es',
-            autoclose: true
-	});
-        $('#id_fechacreac_fb').datepicker({
-	    format: 'mm-dd-yyyy',
-            language: 'es',
-            autoclose: true
-	});		
-	</script>
-  {% endblock %}
-
+<div id="contenedor" class="corners_5">
+    <div id="cabecera">
+    	<div id="cabecera_izq">
+    		<img height="71" width="342" src="img/logo.png">
+    	</div>
+        
+        <div id="cabecera_der">
+        	
+            <table width="356" border="0" cellspacing="0" cellpadding="0" style="margin:12px 8px 0 0">
+             <tr>
+               <td width="129" valign="top" class="ministerio">Ministerio del Interior </td>
+               <td width="49" rowspan="2"><img src="img/varon.png" width="38" height="36"></td>
+               <td width="178" class="gris2">Bienvenido</td>
+             </tr>
+             <tr>
+               <td valign="top" class="fecha">14-04-2012</td>
+               <td width="178" class="azul">Jorge Herrada Berta </td>
+             </tr>
+           </table>
+        </div>
+    	
+    </div>
+    <div class="clear"></div>
+    
+    <div id="menu">
+    	<ul id="nav">
+        	<li><span class="con">Mantenimiento</span></li>
+            <li><span>OAC</span></li>
+            <li><span>POCS</span></li>
+            <li><span>MCCA</span></li>
+            <li><span>MCC</span></li>
+            <li><span>CA</span></li>
+            <li><span>MO</span></li>
+        </ul>
+        <div id="cerrar_sesion">
+        Cerrar sesión&nbsp;<img width="20" height="19" src="img/sesion.png" align="absmiddle">
+        </div>
+  </div>
+    
+    <div id="contenido">
+    	<div id="contenido_izq">
+        	<div id="banner">
+  <object classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" codebase="http://fpdownload.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=7,0,0,0" width="705" height="225" id="test" align="middle">
+                    <param name="allowScriptAccess" value="sameDomain" wmode="transparent" />
+                    <param name="movie" value="swf/fotosportada.swf" wmode="transparent" />
+                    <param name="wmode" value="transparent" />
+                    <param name="quality" value="high" wmode="transparent" />
+                    <param name="bgcolor" value="#EAEAEA" wmode="transparent" />
+                    <embed src="swf/fotosportada.swf" quality="high" bgcolor="#EAEAEA" width="705" height="225" name="portada" align="top" wmode="transparent" allowScriptAccess="sameDomain" type="application/x-shockwave-flash" pluginspage="http://www.macromedia.com/go/getflashplayer" />
+				</object>
+            </div>
+      </div>
+    	<div id="contenido_der">
+        	<div id="foros">
+           		<div class="links">Foro OGCS 
+                </div>
+                <div class="links">Chat OGCS 
+                </div>
+                <div class="links">Documentos
+                </div>
+                <div class="links">Acta de Reunión 
+                </div>
+            </div>
+        </div>
+    
+    </div>
+</div>
+{% endblock %}

@@ -1,38 +1,35 @@
   {% extends 'base.html' %}
+  {% load static %}
   {% block title %} Plataforma Intersectorial de Comunicaci&oacute;n OGCS {% endblock %}
   {% block content %}
-	<!--<header id="overview">
-                <div class="row">
-                <div class="span4"><img src="{{ STATIC_URL  }}images/logo.png"> </div>
-                <div class="span3 offset2" style="position: relative; top: 10px; left: 28.5em; margin: 0 auto; z-index: 1"><img src="{{ STATIC_URL  }}images/logopcm.png"> </div>
-<img src="{{ STATIC_URL  }}images/left.png" style="position: relative; top: 88.90px; left: -50.7em; margin: 0 auto; z-index: 1">
-                </div><br>
-                <div class="row-fluid"><div class="span12 well" style="background:#F4003F; height:8px;"></div></div>-->
-		<!--<h1>Oficina General de Comunicaci&oacute;n Social</h1>
-		<h2>Plataforma Intersectorial de Comunicaci&oacute;n OGCS</h2></header>--><br><br>
-	<div class="row "> <!--show-grid -->
-		<div class="span6 offset2">
-<img class="span6" style="position: relative; top: auto; left: auto; margin: 0 auto; z-index: 1" src="{{ STATIC_URL  }}images/navs.png">		
-		    <form class="form-inline well fondo" name="login" method="post" action="/home/login/">                
-                                {% csrf_token %}                               
-				<div class="row">
-				<div class="span6">
-					<h3>Iniciar Sesion:</h3><br>
-					    {% if error_message %}<div class="row-fluid"><div class="span12"><div class="alert alert-error">
-					    <a class="close" data-dismiss="alert">×</a>
-					    <strong>Error!</strong> {{ error_message }}</div></div></div>{% endif %}
-					<div class="row">
-						<div class="span1">{{ form.usuario.label_tag }}</div>
-						<div class="span3">{{ form.usuario }}</div>
-					</div><br>
-					<div class="row">
-						<div class="span1">{{ form.clave.label_tag }}</div>
-						<div class="span3">{{ form.clave }}</div>
-					<br><p><div class="span3 offset1"><a class="rojito" href="">No puedo acceder a mi cuenta</a> </div></p>
-					</div><br>
-					<div class="row">
-					<div class="span2 offset1"><a href="javascript: document.login.submit();"><img src="{{ STATIC_URL  }}images/botonsesion.png"></a> </div><div class="span2"><a href="javascript: document.login.submit();"><img src="{{ STATIC_URL  }}images/botoncuenta.png"></a> </div></div></div><img class="span6" style="position: relative; top: auto; left: 19px; margin: 0 auto; z-index: 1" src="{{ STATIC_URL  }}images/nav.png"></div>
+    <div id="contenido">
+    	<div id="contenido_izq">
+{% if error_message %}<div class="span9"><div class="alert alert-error">
+<a class="close" data-dismiss="alert">×</a>
+<strong>Error!</strong> {{ error_message }}</div></div>{% endif %}
+<form class="form-inline fondo" name="login" method="post" action="/home/login/">                
+                {% csrf_token %}
+        	<div id="login">
+            	<a href="#"><div class="titulo"> ¿olvidaste tu contraseña?</div></a>
+                <div class="tabla_login"> 
+                	<table width="400">
+                        <tr>
+                        	<td colspan="2">{{ form.usuario.label_tag }}{{ form.usuario }}</td>
+                        </tr>
+                        <tr>
+                        	<td colspan="2">{{ form.clave.label_tag }}{{ form.clave }}</td>
+                        </tr>
+                        <tr>
+                        	<td align="left" width="50%"><a href="javascript: document.login.submit();"><img  src="{{ STATIC_URL  }}images/botonsesion.png"></a></td>
+                            <td align="center" width="50%"><a href="#"><img src="{{ STATIC_URL  }}images/botoncuenta.png"></a></td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
 </form>
-		</div>		
-	</div>
+        </div>
+    	<div id="contenido_der"></div>
+    
+    </div>
+
 {% endblock %}
