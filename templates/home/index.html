@@ -28,8 +28,20 @@
             </div>
 </form>
         </div>
-    	<div id="contenido_der"></div>
-    
+    	<div id="contenido_der"></div>    
     </div>
-
 {% endblock %}
+ {% block scriptjs %}    
+<script>
+$('#id_usuario').keydown(function(event) {
+  if (event.which == 13) {
+    document.login.submit();
+  }
+});
+$('#id_clave').keydown(function(event) {
+  if (event.which == 13) {
+    document.login.submit();
+  }
+});
+</script>
+  {% endblock %}
