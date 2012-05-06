@@ -42,7 +42,7 @@ def oacadd(request):
             mensaje="Registro grabado satisfactoriamente."
     else:        
         formulario = OacForm()
-    return render_to_response('comunicacion/oac.html', {'formulario': formulario,'usuario':request.session['nombres'],'fecha':request.session['login_date'],'mensaje':mensaje}, context_instance=RequestContext(request),)
+    return render_to_response('comunicacion/oac.html', {'formulario': formulario,'usuario':request.session['nombres'],'fecha':request.session['login_date'],'mensaje':mensaje,'dep':request.session['dependencia']}, context_instance=RequestContext(request),)
 
 @login_required()
 def oacquery(request):
@@ -66,7 +66,7 @@ def oacquery(request):
     tabla = OacTable(query.order_by(col))
     config.configure(tabla)
     tabla.paginate(page=request.GET.get('page', 1), per_page=6)
-    return render_to_response('comunicacion/oac_consulta.html', {'formulario':formulario,'tabla':tabla,'usuario':request.session['nombres'],'fecha':request.session['login_date'],'dependencia':dependencia}, context_instance=RequestContext(request),)
+    return render_to_response('comunicacion/oac_consulta.html', {'formulario':formulario,'tabla':tabla,'usuario':request.session['nombres'],'fecha':request.session['login_date'],'dependencia':dependencia,'dep':request.session['dependencia']}, context_instance=RequestContext(request),)
 
 @login_required()
 def oacprint(request):
@@ -107,7 +107,7 @@ def pgcsadd(request):
             mensaje="Registro grabado satisfactoriamente."
     else:        
         formulario = PgcsForm()
-    return render_to_response('comunicacion/pgcs.html', {'formulario': formulario,'usuario':request.session['nombres'],'fecha':request.session['login_date'],'mensaje':mensaje}, context_instance=RequestContext(request),)
+    return render_to_response('comunicacion/pgcs.html', {'formulario': formulario,'usuario':request.session['nombres'],'fecha':request.session['login_date'],'mensaje':mensaje,'dep':request.session['dependencia']}, context_instance=RequestContext(request),)
 
 @login_required()
 def pgcsquery(request):
@@ -132,7 +132,7 @@ def pgcsquery(request):
     tabla = PgcsTable(query.order_by(col))
     config.configure(tabla)
     tabla.paginate(page=request.GET.get('page', 1), per_page=6)
-    return render_to_response('comunicacion/pgcs_consulta.html', {'formulario':formulario,'tabla':tabla,'usuario':request.session['nombres'],'fecha':request.session['login_date'],'dependencia':dependencia}, context_instance=RequestContext(request),)
+    return render_to_response('comunicacion/pgcs_consulta.html', {'formulario':formulario,'tabla':tabla,'usuario':request.session['nombres'],'fecha':request.session['login_date'],'dependencia':dependencia,'dep':request.session['dependencia']}, context_instance=RequestContext(request),)
 
 @login_required()
 def pgcsprint(request,tipo):
@@ -175,7 +175,7 @@ def pgcs_apor_add(request):
             mensaje="Registro grabado satisfactoriamente."
     else:        
         formulario = PgcsForm()
-    return render_to_response('comunicacion/pgcs.html', {'formulario': formulario,'usuario':request.session['nombres'],'fecha':request.session['login_date'],'mensaje':mensaje,'aporte':'aporte'}, context_instance=RequestContext(request),)
+    return render_to_response('comunicacion/pgcs.html', {'formulario': formulario,'usuario':request.session['nombres'],'fecha':request.session['login_date'],'mensaje':mensaje,'aporte':'aporte','dep':request.session['dependencia']}, context_instance=RequestContext(request),)
 
 @login_required()
 def pgcs_apor_query(request):
@@ -200,5 +200,5 @@ def pgcs_apor_query(request):
     tabla = PgcsTable(query.order_by(col))
     config.configure(tabla)
     tabla.paginate(page=request.GET.get('page', 1), per_page=6)
-    return render_to_response('comunicacion/pgcs_consulta.html', {'formulario':formulario,'tabla':tabla,'usuario':request.session['nombres'],'fecha':request.session['login_date'],'dependencia':dependencia,'aporte':'aporte'}, context_instance=RequestContext(request),)
+    return render_to_response('comunicacion/pgcs_consulta.html', {'formulario':formulario,'tabla':tabla,'usuario':request.session['nombres'],'fecha':request.session['login_date'],'dependencia':dependencia,'aporte':'aporte','dep':request.session['dependencia']}, context_instance=RequestContext(request),)
 

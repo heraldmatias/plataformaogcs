@@ -24,7 +24,7 @@ $(document).ready(function() {
 				if (mes <10) mes = "0" + mes;  
 			 
 				fechaHoy = dia + "/" + mes + "/" + anno;
-				$(".fecha").html(""+fechaHoy)
+				//$(".fecha").html(""+fechaHoy)
 
 });
 

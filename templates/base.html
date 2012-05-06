@@ -35,7 +35,7 @@
         <div id="cabecera_der">         	
             <table width="356" border="0" cellspacing="0" cellpadding="0" style="margin:12px 8px 0 0">
              <tr>
-               <td width="129" valign="top" class="ministerio">Ministerio del Interior </td>
+               <td width="129" valign="top" class="ministerio">{{ dep }}</td>
                <td width="49" rowspan="2"><img src="{{ STATIC_URL  }}images/varon.png" width="38" height="36"></td>
                <td width="178" class="gris2">Bienvenido</td>
              </tr>
@@ -52,13 +52,13 @@
         <ul id="nave">
             <li class="dropdown principal"><a class="dropdown-toggle menublanco" data-toggle="dropdown" href="">Mantenimiento<b class="caret"></b></a>
                 <ul class="dropdown-menu">                  
-                  <li class="opcion"><a href="/ubigeo/region/add/" data-toggle="modal">Regi&oacute;n</a></li>                
-		  <li class="opcion"><a href="/ubigeo/provincia/add/" data-toggle="modal">Provincia</a></li>
-		  <li class="opcion"><a href="/dependencia/ministerio/add/" data-toggle="modal">Ministerio</a></li>
-		  <li class="opcion"><a href="/dependencia/odp/add/" data-toggle="modal">ODP</a></li>
-		  <li class="opcion"><a href="/dependencia/gobernacion/add/" data-toggle="modal">Gobernaci&oacute;n</a></li>
-		  <li class="opcion"><a href="/usuario/add/" data-toggle="modal">Usuario</a></li>
-                  <li class="opcion"><a href="/usuario/admin/add/" data-toggle="modal">Administrador</a></li>
+                  <li class="opcion"><a href="{% url ogcs-mantenimiento-region-add %}" data-toggle="modal">Regi&oacute;n</a></li>                
+		  <li class="opcion"><a href="{% url ogcs-mantenimiento-provincia-add %}" data-toggle="modal">Provincia</a></li>
+		  <li class="opcion"><a href="{% url ogcs-mantenimiento-ministerio-add %}" data-toggle="modal">Ministerio</a></li>
+		  <li class="opcion"><a href="{% url ogcs-mantenimiento-odp-add %}" data-toggle="modal">ODP</a></li>
+		  <li class="opcion"><a href="{% url ogcs-mantenimiento-gobernacion-add %}" data-toggle="modal">Gobernaci&oacute;n</a></li>
+		  <li class="opcion"><a href="{% url ogcs-mantenimiento-usuario-add 1 %}" data-toggle="modal">Usuario</a></li>
+                  <li class="opcion"><a href="{% url ogcs-mantenimiento-usuario-add 2 %}" data-toggle="modal">Administrador</a></li>
                 </ul></li>
             <li class="dropdown principal"><a class="dropdown-toggle menublanco" data-toggle="dropdown" href="">OAC<b class="caret"></b></a>
                 <ul class="dropdown-menu">                  

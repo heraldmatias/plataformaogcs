@@ -8,20 +8,26 @@
 <p>{{ mensaje }}</p></div></h4>
 {% endif %}
 <ul class="nav nav-tabs">
-<li class="active"><a href="/usuario/{{ opcion }}/{% if codigo %}{{ codigo }}/{% endif %}">{% if opcion == "add" %}Nuevo {% else %} Modificar {% endif %}</a></li>
-<li><a href="/usuario/consulta/" >Consultar</a></li>
+ {% if opcion == "add" %}
+    <li class="active"><a href="{% url ogcs-mantenimiento-usuario-add nivel %}">Nuevo</a></li>{% else %}
+    <li class="active"><a href="{% url ogcs-mantenimiento-usuario-edit nivel codigo %}">Modificar</a></li>{% endif %}
+    <li><a href="{% url ogcs-mantenimiento-usuario-consulta nivel %}" >Consultar</a></li>
 </ul>
 <div class="tab-content" id="contenido_izq">
 <div id="nuevo" class="tab-pane fade in active">
-<form class="form-inline" name="frmusu" id="frmusu" method="post" action="/usuario/{{ opcion }}/{% if codigo %}{{ codigo }}/{% endif %}" ><!--data-toggle="modal"-->
+{% if opcion == "add" %}
+<form class="form-inline" name="frmusu" id="frmusu" method="post" action="{% url ogcs-mantenimiento-usuario-add nivel %}" >{% else %}
+<form class="form-inline" name="frmusu" id="frmusu" method="post" action="{% url ogcs-mantenimiento-usuario-edit nivel codigo %}" >{% endif %}
 <div id="frminformacion" class="modal" style="position: relative; top: auto; left: auto; margin: 0 auto auto 20px; z-index: 1"><!--class="modal hide fade">-->
     <div class="modal-header">
       <a class="close" data-dismiss="modal" >&times;</a>
-      <h3>Registro de Usuario</h3>
+      {% if nivel == "1" %}
+      <h3>Registro de Usuario</h3> {% else %}       <h3>Registro de Administrador</h3> {% endif %}
     </div>
     <div class="modal-body">
       {% csrf_token %}              
-      {{ frmusuario.non_field_errors }}
+      {% if existe == 0 %}<ul class="errorlist"><li> Ya existe un usuario en este Organismo y Dependencia. </li></ul>{% endif %} 
+      {% if existe == 3 %}<ul class="errorlist"> <li> Ya existe un Administrador en este Organismo y Dependencia. </li></ul>{% endif %} 
       {% if opcion == "add" %}
       {% for campo in frmusuario %}      
       {{ campo.errors }}      

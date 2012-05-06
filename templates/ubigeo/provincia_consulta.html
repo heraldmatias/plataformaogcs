@@ -5,12 +5,12 @@
   
   {% load render_table from django_tables2 %}
 <ul class="nav nav-tabs">
-<li><a href="/ubigeo/provincia/add/">{%if not opcion %} Nuevo {% else %} {% if opcion == "add" %}Nuevo {% else %} Modificar {% endif %}{% endif %}</a></li>
-<li class="active"><a href="/ubigeo/provincia/consulta/" >Consultar</a></li>
+    <li ><a href="{% url ogcs-mantenimiento-provincia-add %}">Nuevo</a></li>
+    <li class="active"><a href="{% url  ogcs-mantenimiento-provincia-consulta %}" >Consultar</a></li>
 </ul>
 <div class="tab-content" id="contenido_izq">
 <div id="nuevo" class="tab-pane fade in active">
-<form class="form-inline span7" name="frmreg" method="get" action="/ubigeo/provincia/consulta/"><!--data-toggle="modal"-->
+<form class="form-inline span7" name="frmreg" method="get" action="{% url  ogcs-mantenimiento-provincia-consulta %}"><!--data-toggle="modal"-->
 <div id="frmregion" class="modal span7" style="position: relative; top: auto; left: auto; margin: 0 auto auto -1.3em; z-index: 1"><!--class="modal hide fade">-->
     <div class="modal-header">
       <a class="close" data-dismiss="modal" href="javascript: cerrarformulario('contenido');">&times;</a>
@@ -39,7 +39,7 @@
 function imprimir(){
 var region=$('#id_region').val();
 var provin=$('#id_provincia').val();
-var url="/ubigeo/provincia/imprimir/?region="+region+"&provincia="+provin;
+var url="{% url  ogcs-mantenimiento-provincia-print %}?region="+region+"&provincia="+provin;
 location.href=url;
 }
 combotodos('id_region');validaletra('id_provincia');

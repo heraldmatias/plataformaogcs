@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from django import forms
-from models import Usuario,Administrador
+from models import Usuario
 import django_tables2 as tables
 from django_tables2.utils import A
 
@@ -39,11 +39,11 @@ class UsuarioTable(tables.Table):
     item = tables.Column()
     organismo = tables.Column(orderable=True)
     dependencia = tables.Column(orderable=True)
-    nombres = tables.LinkColumn('ogcs-mantenimiento-usuario-edit', args=[A('numero')],orderable=True)
+    nombres = tables.LinkColumn('ogcs-mantenimiento-usuario-edit', args=[1,A('numero')],orderable=True)
     apellidos = tables.Column(orderable=True) 
     sexo = tables.Column()
     usuario = tables.Column()
-    email = tables.LinkColumn('ogcs-mantenimiento-usuario-edit', args=[A('numero')],orderable=True)
+    email = tables.LinkColumn('ogcs-mantenimiento-usuario-edit', args=[1,A('numero')],orderable=True)
     estado = tables.Column(verbose_name='Estado')
 
     def render_item(self):
@@ -57,7 +57,7 @@ class UsuarioTable(tables.Table):
 
 class AdministradorForm(forms.ModelForm):
     class Meta:
-        model = Administrador
+        model = Usuario
         exclude = ('idusuario_mod','fec_mod','user','numero','usuario','nivel')
         widgets = {
             'dependencia': forms.Select(),
@@ -68,7 +68,7 @@ class AdministradorForm(forms.ModelForm):
 
 class EditAdministradorForm(forms.ModelForm):
     class Meta:
-        model = Administrador
+        model = Usuario
         exclude = ('idusuario_mod','fec_mod','user','numero','usuario','nivel','contrasena')
         widgets = {
             'dependencia': forms.Select(),
@@ -78,7 +78,7 @@ class EditAdministradorForm(forms.ModelForm):
 
 class ConsultaAdministradorForm(forms.ModelForm):
     class Meta:
-        model = Administrador
+        model = Usuario
         fields = ('organismo','dependencia','nombres','apellidos','estado')
         widgets = {
             'dependencia': forms.Select(),
@@ -89,11 +89,11 @@ class AdministradorTable(tables.Table):
     item = tables.Column()
     organismo = tables.Column(orderable=True)
     dependencia = tables.Column(orderable=True)
-    nombres = tables.LinkColumn('ogcs-mantenimiento-admin-edit', args=[A('numero')],orderable=True)
+    nombres = tables.LinkColumn('ogcs-mantenimiento-admin-edit', args=[2,A('numero')],orderable=True)
     apellidos = tables.Column(orderable=True) 
     sexo = tables.Column()
     usuario = tables.Column()
-    email = tables.LinkColumn('ogcs-mantenimiento-admin-edit', args=[A('numero')],orderable=True)
+    email = tables.LinkColumn('ogcs-mantenimiento-admin-edit', args=[2,A('numero')],orderable=True)
     estado = tables.Column(verbose_name='Estado')
 
     def render_item(self):

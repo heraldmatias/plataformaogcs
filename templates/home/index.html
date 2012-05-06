@@ -7,7 +7,7 @@
 {% if error_message %}<div class="span9"><div class="alert alert-error">
 <a class="close" data-dismiss="alert">×</a>
 <strong>Error!</strong> {{ error_message }}</div></div>{% endif %}
-<form class="form-inline fondo" name="login" method="post" action="/home/login/">                
+<form class="form-inline fondo" name="login" method="post" action="{% url ogcs-login %}">                
                 {% csrf_token %}
         	<div id="login">
             	<a href="#"><div class="titulo"> ¿olvidaste tu contraseña?</div></a>
