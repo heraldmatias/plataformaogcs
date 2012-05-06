@@ -1,0 +1,181 @@
+body{
+	background-color: #EEEEEE;
+    color: #000000;
+    font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+    font-size: 10px;
+    font-style: normal;
+    font-variant: normal;
+    font-weight: normal;
+    line-height: normal;
+    text-decoration: none;
+    text-transform: none;
+}
+
+
+#contenedor{
+	background-color: #FFFFFF;
+	margin:16px auto;
+	width:960px;
+	min-height:200px;
+	height:auto;
+}
+
+#cabecera{
+	float:inherit
+	
+}
+
+#cabecera_izq{
+	float:left;
+	margin:9px 9px;
+	
+}
+
+#cabecera_der{
+	float:right;
+	margin:15px 16px;
+	
+}
+
+#menu{
+	background: url(../images/cabecera.png) repeat-x 0 0;
+	margin:3px 0 0 -24px;
+	height:54px;
+	width:984px
+}
+
+#contenido{
+	margin:5px 0 0 0;
+	padding:0 0 80px 0;
+	float:left;
+	background:#FFF;
+	position:relative
+	
+}
+
+#contenido_izq{
+	float:left;
+	width:762px;
+	height:auto
+	
+}
+
+#login{
+	float:right;
+	background: url(../images/login.png) repeat-x 0 0;
+	height:300px;
+	width:586px
+	
+}
+
+#login .titulo{
+	margin:40px 0 0 140px;
+	color:#e12b40;
+	min-width:0px
+}
+
+
+#login .tabla_login{
+	margin:40px 0 0 70px; 
+	color:#e12b40;
+	min-width:0px
+}
+
+
+#contenido_der{
+	float:left;
+	width:198px;
+	height:auto
+}
+
+#nave{
+	color:#FFF;
+	font-weight:bold;
+	font-size:12px;
+	padding:7px 0 0 11px;
+	float:left;
+	margin:0px;
+	
+}
+
+#nave .principal{
+	float:left;
+	list-style:none;
+	padding:0 21px;
+	border-right:1px solid #932424;
+	/*letter-spacing:-0.5pt*/
+	/*padding:1px 0;*/
+	
+}
+
+#nave li span{
+	padding:3px 0;
+	float:left
+	
+}
+
+#cerrar_sesion{
+	color:#FFF;
+	font-weight:bold;
+	font-size:11px;
+	padding:8px 30px 0 0;
+	float:right;
+	margin:0px;
+	
+}
+
+#banner{
+	float:right;
+	margin:0 23px 0 0;
+	
+}
+
+#foros{
+	float:left;
+	background: url(../images/foros.png) repeat-x;
+	height:229px;
+	width:173px;
+	margin:2px 0 0 5px;
+	
+}
+
+#foros .links{
+	float:left;
+	position:relative;
+	margin:17px 0 24px 50px;
+	font-size:12px;
+	font-weight:bold
+
+}
+
+.ministerio{
+	color: #D2014D;
+    font-family: Verdana,Arial,Helvetica,sans-serif;
+    font-size: 10px;
+    font-weight: bold;
+}
+
+.fecha {
+    color: #453D3D;
+    font-family: Verdana,Arial,Helvetica,sans-serif;
+    font-size: 10px;
+    font-weight: bold;
+}
+.azul {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	color: #2578CB;
+	font-weight: bold;
+	font-size: 14px;
+}
+
+.gris2 {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	color: #453D3D;
+	font-weight: bold;
+	font-size: 12px;
+}
+
+
+.clear{
+clear:both	
+}
