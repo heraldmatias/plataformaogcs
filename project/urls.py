@@ -13,6 +13,7 @@ urlpatterns = patterns('',
     (r'^dependencia/', include('dependencia.urls')),  
     (r'^usuario/', include('usuario.urls')),
     (r'^comunicacion/', include('comunicacion.urls')),
+    (r'^extras/', include('extras.urls')),
 )
 
 from django.views.static import serve

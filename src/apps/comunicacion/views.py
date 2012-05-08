@@ -3,8 +3,8 @@ from forms import *
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, render_to_response, redirect
 from django.template import RequestContext
-from usuario.models import Usuario, Estado
-from dependencia.models import Ministerio, Odp, Gobernacion
+#from usuario.models import Usuario, Estado
+#from dependencia.models import Ministerio, Odp, Gobernacion
 from models import Oac, Pgcs, TipoOgcs
 from django.contrib.auth.decorators import login_required
 from django.core import serializers
@@ -14,7 +14,7 @@ from django_tables2.config import RequestConfig
 from datetime import datetime
 from scripts.scripts import imprimirToExcel
 from django.http import HttpResponse
-from django.core.files import File
+#from django.core.files import File
 from django.core.files.storage import  FileSystemStorage
 
 @login_required()

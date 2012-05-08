@@ -14,7 +14,7 @@ class Oac(models.Model):
     organismo = models.ForeignKey(Organismo, verbose_name='Organismo')
     dependencia = models.IntegerField(verbose_name='Dependencia',)
     archivo = models.FileField(upload_to='oac/',verbose_name='Adjuntar Archivo',)
-    urloac = models.URLField(verbose_name='Url de la oac',max_length=70,null=True,blank=True)
+    urloac = models.URLField(verbose_name='Url de la oac',max_length=100,null=True,blank=True)
     idusuario_creac = models.IntegerField(verbose_name='Usuario creador',)
     fec_creac = models.DateTimeField(verbose_name='Fecha de creación del registro',auto_now_add=True)
 

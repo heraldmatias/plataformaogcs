@@ -1,0 +1,54 @@
+  {% extends 'base.html' %}
+  {% load static %}
+  {% block title %} Plataforma Intersectorial de Comunicaci&oacute;n OGCS {% endblock %}
+  {% block content %}  
+{% if mensaje %}
+<h4><div class="alert alert-success"><a class="close" data-dismiss="alert">×</a><strong>Mensaje:</strong>
+<p>{{ mensaje }}</p></div></h4>
+{% endif %}
+<ul class="nav nav-tabs">
+<li class="active"><a href="{% url ogcs-mantenimiento-mg-add %}">Nuevo</a></li>
+<li><a href="{% url ogcs-mantenimiento-mg-query %}" >Consultar</a></li>
+</ul>
+<div class="tab-content" id="contenido_izq">
+<div id="nuevo" class="tab-pane fade in active">
+<form enctype="multipart/form-data" class="form-inline" id="frmmg" name="frmmg" method="post" action="{% url ogcs-mantenimiento-mg-add %}" >
+<div id="frmprovincia" class="modal" style="position: relative; top: auto; left: auto; margin: 0 auto auto 20px; z-index: 1">
+    <div class="modal-header">
+      <a class="close" data-dismiss="modal" >&times;</a>
+      <h3>MG (Material Gráfico)</h3>
+    </div>
+    <div class="modal-body">
+      {% csrf_token %}
+      <div class="row-fluid">
+      {{ formulario.as_p }}
+    </div>
+    </div>
+    <div class="modal-footer">
+     <input class="btn-primary" name="grabar" value="Guardar Cambios" type="submit">
+     <input class="btn" name="grabar" value="Cerrar" type="button" onclick="cerrarformulario('contenido');">
+    </div>
+</div>
+</form>
+</div></div>
+  {% endblock %}
+  {% block scriptjs %}    
+<script>
+$('#frmmg').submit(function() {
+var ok=true;
+$("form input:file").each(function(index){
+var ext = $(this).val().split('.').pop().toLowerCase();
+if($.inArray(ext, ['jpg','gif','png','jpeg','avi','swf','flv','mp4']) == -1) {
+    alert('Material Gráfico '+(index+1)+': Solo se acepta archivos en formato Audio y Video!');$(this).focus();ok=false;return false;
+}});
+if(ok){return confirmar('¿Desea grabar el registro?');}else{return false;}
+});
+
+/*var ext = $('#id_arcmg1').val().split('.').pop().toLowerCase();
+if($.inArray(ext, ['jpg','gif','png','jpeg','avi','swf','flv','mp4']) == -1) {
+    alert('Solo se acepta archivos en formato Audio y Video!');return false;
+}else{
+return confirmar('¿Desea grabar el registro?');}
+});*/
+</script>
+  {% endblock %}
