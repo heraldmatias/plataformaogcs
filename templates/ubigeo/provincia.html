@@ -11,7 +11,7 @@
  {% if opcion == "add" %}
     <li class="active"><a href="{% url ogcs-mantenimiento-provincia-add %}">Nuevo</a></li>{% else %}
     <li class="active"><a href="{% url ogcs-mantenimiento-provincia-edit codigo %}">Modificar</a></li>{% endif %}
-    <li><a href="{% url  ogcs-mantenimiento-region-consulta %}" >Consultar</a></li>
+    <li><a href="{% url  ogcs-mantenimiento-provincia-consulta %}" >Consultar</a></li>
 </ul>
 <div class="tab-content" id="contenido_izq">
 <div id="nuevo" class="tab-pane fade in active">

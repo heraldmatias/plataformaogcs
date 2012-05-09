@@ -1,0 +1,5 @@
+"Reporte del MG (Material Gráfico)"
+"Item","Organismo","Dependencia","Usuario","Fecha","Tipo"
+{% for row in data %}{{ forloop.counter }},{{ row.organismo|addslashes }},{{ row.dependencia|addslashes }},{{ row.usuario|addslashes }},{{ row.fecha|addslashes }},{{ row.tipo|addslashes }}
+{% endfor %}
+Fecha: {{ fecha }},Hora: {{ hora }},Usuario: {{ usuario }}

@@ -38,7 +38,7 @@ $('#frmmg').submit(function() {
 var ok=true;
 $("form input:file").each(function(index){
 var ext = $(this).val().split('.').pop().toLowerCase();
-if($.inArray(ext, ['jpg','gif','png','jpeg','avi','swf','flv','mp4']) == -1) {
+if($.inArray(ext, ['jpg','gif','png','jpeg','avi','swf','flv','f4v','mp4']) == -1) {
     alert('Material Gráfico '+(index+1)+': Solo se acepta archivos en formato Audio y Video!');$(this).focus();ok=false;return false;
 }});
 if(ok){return confirmar('¿Desea grabar el registro?');}else{return false;}

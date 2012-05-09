@@ -24,15 +24,8 @@ class MGTable(tables.Table):
     dependencia = tables.Column(orderable=True)
     fec_creac = tables.Column(verbose_name='Fecha de Creación')
     usuario = tables.Column(verbose_name='Usuario')
-    Descargar = tables.TemplateColumn('<a href={{ record.urlmg1 }} target="_blank">Descargar</a>')
-    Descargar = tables.TemplateColumn('<a href={{ record.urlmg2 }} target="_blank">Descargar</a>')
-    Descargar = tables.TemplateColumn('<a href={{ record.urlmg3 }} target="_blank">Descargar</a>')
-    Descargar = tables.TemplateColumn('<a href={{ record.urlmg4 }} target="_blank">Descargar</a>')
-    Descargar = tables.TemplateColumn('<a href={{ record.urlmg5 }} target="_blank">Descargar</a>')
-    Descargar = tables.TemplateColumn('<a href={{ record.urlmg6 }} target="_blank">Descargar</a>')
-    Descargar = tables.TemplateColumn('<a href={{ record.urlmg7 }} target="_blank">Descargar</a>')
-    Descargar = tables.TemplateColumn('<a href={{ record.urlmg8 }} target="_blank">Descargar</a>')
-
+    Descargar = tables.TemplateColumn('<a href={{ record.Descargar }} target="_blank">Descargar</a>')
+    Tipo = tables.Column(orderable=True)
     def render_item(self):
         value = getattr(self, '_counter', 1)
         self._counter = value + 1
