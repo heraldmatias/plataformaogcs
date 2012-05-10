@@ -1,0 +1,230 @@
+  {% extends 'base.html' %}
+  {% load static %}
+  {% block title %} Plataforma Intersectorial de Comunicaci&oacute;n OGCS {% endblock %}
+  {% block content %}
+  {% load render_table from django_tables2 %}
+  
+{% if mensaje %}
+<h4><div class="alert alert-success"><a class="close" data-dismiss="alert">×</a><strong>Mensaje:</strong>
+<p>{{ mensaje }}</p></div></h4>
+{% endif %}
+
+<div class="tab-content" id="contenido_izq">
+<div id="nuevo" class="tab-pane fade in active" style="width:500px">
+<form enctype="multipart/form-data" class="form-inline" id="frmcca" name="frmcca" method="post" action="{% if aporte %}{% url ogcs-mantenimiento-pgcs-aporte-add %}{% else %}{% url ogcs-mantenimiento-pgcs-add %}{% endif %}" ><!--data-toggle="modal"-->
+<div id="frmprovincia" class="modal" style="position: relative; top: auto; left: auto; margin: 0 auto auto 20px; z-index: 1;width:720px;height:auto"><!--class="modal hide fade">-->
+    <div class="modal-header">
+      <h3>Nuevo MCCA (Matriz de Campaña de Comunicaciones Anuales)</h3>
+      
+    </div>
+    <div class="modal-body" style="max-height:2000px;" >
+      {% csrf_token %}
+      <div class="row-fluid">
+          <div class="alert alert-error" id="alert"><strong></strong><!--<a class="close" data-dismiss="alert">×</a>--></div>
+          <label>Nombre de la campaña: </label> {{ form.nombremmca }}<br /><br />
+          <label class="input-append date" style="display:inline" id="dp4" data-date-format="dd-mm-yyyy" >Fecha inicial: {{ form.fechaini }}<span class="add-on"><i class="icon-th"></i></span></label> 
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp
+          <label id="dp5" style="display:inline" class="input-append date" data-date-format="dd-mm-yyyy" >Fecha final:  {{ form.fechafin }}<span class="add-on"><i class="icon-th"></i></span></label>
+
+      </div>
+     <!------------------------------------------------------------------------------------------------------------------>    
+    <!------------------------------------------------------- Sectores Involucrados Estado  ---------------------------------------------->
+	 
+      	<div class="modal-header">
+      		<h3>Sectores Involucrados Estado</h3>
+      	</div>
+    	<div class="row-fluid">
+       		<div class="alert alert-error" id="alert1"><strong></strong><!--<a class="close" data-dismiss="alert">×</a>--></div>
+    		<label>{{ form_estado.organismo.label_tag }}: {{ form_estado.organismo }}</label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<label>{{ form_estado.dependencia.label_tag }}: {{ form_estado.dependencia }}</label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input class="btn-primary" name="agregar" value="Agregar" type="button" onclick="agregar_estado()">
+    	</div>
+      
+        <br><input type="hidden" value="{{ dependencia }}" id="id_dep" name="id_dep">
+          	<fieldset>
+          	{% render_table tabla %}    
+          	</fieldset>
+     <!------------------------------------------------------------------------------------------------------------------> 
+     <!------------------------------------------------------- Sectores Involucrados Privado  ---------------------------------------------->
+    
+        <div class="modal-header">
+      		<h3>Sectores Involucrados Privado</h3>
+      	</div>
+    	<div class="row-fluid"><br />
+        	<div class="alert alert-error" id="alert2"><strong></strong><!--<a class="close" data-dismiss="alert">×</a>--></div>
+    		{{ form_privado}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input class="btn-primary" name="agregar" value="Agregar" type="button" onclick="agregar_privado()"><br /><br />
+    	</div>
+      
+        
+          	<fieldset>
+          	{% render_table tabla1 %}    
+          	</fieldset>
+       <!------------------------------------------------------------------------------------------------------------------>       
+       <!------------------------------------------------------- indicadores ---------------------------------------------->      
+       
+            <div class="modal-header">
+      		<h3>Indicadores</h3>
+      	</div>
+    	<div class="row-fluid"><br />
+        	<div class="alert alert-error" id="alert3"><strong></strong><!--<a class="close" data-dismiss="alert">×</a>--></div>
+    		{{ form_indicador}} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input class="btn-primary" name="agregar" value="Agregar" type="button" onclick="agregar_indicador()">
+    	</div>
+      
+        <br>
+          	<fieldset>
+          	{% render_table tabla2 %}    
+          	</fieldset>
+        <!------------------------------------------------------------------------------------------------------------------>      
+       <!------------------------------------------------------- mensaje  ---------------------------------------------->
+             
+            <div class="modal-header">
+      		<h3>Mensajes</h3>
+      	</div>
+    	<div class="row-fluid"><br />
+        	<div class="alert alert-error" id="alert4"><strong></strong><!--<a class="close" data-dismiss="alert">×</a>--></div>
+    		{{ form_mensaje }}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input class="btn-primary" name="agregar" value="Agregar" type="button" onclick="agregar_mensaje()">
+    	</div>
+      
+        <br>
+          	<fieldset>
+          	{% render_table tabla3 %}    
+          	</fieldset>
+        
+        <!------------------------------------------------------------------------------------------------------------------>    
+    <!------------------------------------------------------- canal  ---------------------------------------------->
+	 
+      	<div class="modal-header">
+      		<h3>Canales de comunicación</h3>
+      	</div>
+    	<div class="row-fluid"><br />
+        	<div class="alert alert-error" id="alert5"><strong></strong><!--<a class="close" data-dismiss="alert">×</a>--></div>
+    		<label>Tipo: {{ form_canal.tipommca }}</label>&nbsp;&nbsp;<label>Canal de comunicación: {{ form_canal.canal }}</label>&nbsp;&nbsp;<input class="btn-primary" name="agregar" value="Agregar" type="button" onclick="agregar_canal()">
+    	</div>
+      
+        <br>
+          	<fieldset>
+          	{% render_table tabla4 %}    
+          	</fieldset>
+        
+        
+         <!------------------------------------------------------------------------------------------------------------------>      
+       <!------------------------------------------------------- accion  ---------------------------------------------->
+             
+            <div class="modal-header">
+      		<h3>Aciones planteadas</h3>
+      	</div>
+    	<div class="row-fluid"><br />
+    		<div class="alert alert-error" id="alert6"><strong></strong><!--<a class="close" data-dismiss="alert">×</a>--></div>
+          		<label class="input-append date" style="display:inline" id="dp6" data-date-format="dd-mm-yyyy" >Fecha inicial: {{ form_accion.fechaini }}<span class="add-on"><i class="icon-th"></i></span></label> 
+          		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp
+          		<label id="dp7" style="display:inline" class="input-append date" data-date-format="dd-mm-yyyy" >Fecha final:  {{ form_accion.fechafin }}<span class="add-on"><i class="icon-th"></i></span></label><br /><br />
+                <label>{{ form_accion.acciones.label_tag }}: {{ form_accion.acciones }}</label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input class="btn-primary" name="agregar" value="Agregar" type="button" onclick="agregar_accion()"> 
+    	</div>
+      
+        <br>
+          	<fieldset>
+          	{% render_table tabla5 %}    
+          	</fieldset>
+        
+        
+        
+        <!------------------------------------------------------------------------------------------------------------------>      
+       <!------------------------------------------------------- observacion  ---------------------------------------------->
+             
+            <div class="modal-header">
+      		<h3>Observaciones OGCP</h3>
+      	</div>
+    	<div class="row-fluid"><br />
+        	<div class="alert alert-error" id="alert7"><strong></strong><!--<a class="close" data-dismiss="alert">×</a>--></div>
+    		{{ form_observacion }}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input class="btn-primary" name="agregar" value="Agregar" type="button" onclick="agregar_observacion()">
+    	</div>
+      
+        <br>
+          	<fieldset>
+          	{% render_table tabla6 %}    
+          	</fieldset>
+        
+            
+            
+        
+        </div>
+    
+    <div class="modal-footer">
+     <input class="btn-primary" name="grabar" value="Guardar" type="submit">
+     <input class="btn" name="grabar" value="Cerrar" type="button" onclick="cerrarformulario('contenido');">
+    </div>
+</div>
+</form>
+</div></div>
+  {% endblock %}
+  {% block scriptjs %}  
+
+<script>
+
+
+$('#dp4').datepicker().on('changeDate', function(ev){
+					var fechaini = $("#id_fechaini").val().split('-');
+					var fechafin = $("#id_fechafin").val().split('-');
+					 var stDate = new Date(fechaini[2],fechaini[1],fechaini[0]);
+            		 var endDate = new Date(fechafin[2],fechafin[1],fechafin[0]);
+					 
+					if($('#id_fechafin').val()!=""){
+						if (stDate.valueOf() > endDate.valueOf()){
+							$('#alert').show().find('strong').text('La fecha inicial no puede ser mayor que la fecha final.');
+							$('#id_fechaini').val($('#id_fechafin').val())
+						} else {
+							$('#alert').hide();
+						}
+					}$('#dp4').datepicker('hide')
+				});
+
+$('#dp5').datepicker().on('changeDate', function(ev){
+					var fechaini = $("#id_fechaini").val().split('-');
+					var fechafin = $("#id_fechafin").val().split('-');
+					 var stDate = new Date(fechaini[2],fechaini[1],fechaini[0]);
+            		 var endDate = new Date(fechafin[2],fechafin[1],fechafin[0]);
+					
+					if($('#id_fechaini').val()!=""){
+						if (stDate.valueOf() > endDate.valueOf()){
+							$('#alert').show().find('strong').text('La fecha final no puede ser menor que la fecha inicial.');
+							$('#id_fechafin').val($('#id_fechaini').val())
+						} else {
+							$('#alert').hide();
+						}
+					}$('#dp5').datepicker('hide');
+				});
+
+
+$('#dp6').datepicker().on('changeDate', function(ev){
+					var fechaini = $("#id_fechaini_acc").val().split('-');
+					var fechafin = $("#id_fechafin_acc").val().split('-');
+					 var stDate = new Date(fechaini[2],fechaini[1],fechaini[0]);
+            		 var endDate = new Date(fechafin[2],fechafin[1],fechafin[0]);
+					 
+					if($('#id_fechafin_acc').val()!=""){
+						if (stDate.valueOf() > endDate.valueOf()){
+							$('#alert6').show().find('strong').text('La fecha inicial no puede ser mayor que la fecha final.');
+							$('#id_fechaini_acc').val($('#id_fechafin_acc').val())
+						} else {
+							$('#alert6').hide();
+						}
+					}$('#dp6').datepicker('hide')
+				});
+
+$('#dp7').datepicker().on('changeDate', function(ev){
+					var fechaini = $("#id_fechaini_acc").val().split('-');
+					var fechafin = $("#id_fechafin_acc").val().split('-');
+					 var stDate = new Date(fechaini[2],fechaini[1],fechaini[0]);
+            		 var endDate = new Date(fechafin[2],fechafin[1],fechafin[0]);
+					
+					if($('#id_fechaini_acc').val()!=""){
+						if (stDate.valueOf() > endDate.valueOf()){
+							$('#alert6').show().find('strong').text('La fecha final no puede ser menor que la fecha inicial.');
+							$('#id_fechafin_acc').val($('#id_fechaini_acc').val())
+						} else {
+							$('#alert6').hide();
+						}
+					}$('#dp7').datepicker('hide');
+				});
+				
+</script>
+
+  {% endblock %}
