@@ -56,6 +56,9 @@ class Pgcs(models.Model):
 
     def __unicode__(self):
         return self.nombre
+		
+######################## MCCA INICIO   ################################################
+#######################################################################################
 
 class MccaTipoComunicacion(models.Model):
     codigo = models.AutoField(verbose_name='Codigo Autoincrementado',primary_key=True)
@@ -123,7 +126,7 @@ class MccaPrivado(models.Model):
 class MccaIndicador(models.Model):
     nummcca = models.ForeignKey(Mcca,verbose_name='Codigo mcca',to_field='nummcca')
     item = models.IntegerField(verbose_name='Items',)
-    indicador = models.CharField(verbose_name='Nombre de los indicadores', max_length=300)
+    indicador = models.CharField(verbose_name='Indicador', max_length=300)
     auditoria = models.IntegerField(verbose_name='Auditoria',choices=AUDITORIA)
 
     class Meta:
@@ -138,7 +141,7 @@ class MccaIndicador(models.Model):
 class MccaMensaje(models.Model):
     nummcca = models.ForeignKey(Mcca,verbose_name='Codigo mcca',to_field='nummcca')
     item = models.IntegerField(verbose_name='Items',)
-    mensaje = models.CharField(verbose_name='Nombre de los indicadores', max_length=300)
+    mensaje = models.CharField(verbose_name='Mensaje', max_length=300)
     auditoria = models.IntegerField(verbose_name='Auditoria',choices=AUDITORIA)
 
     class Meta:
@@ -186,7 +189,7 @@ class MccaAccion(models.Model):
 class MccaObservacion(models.Model):
     nummcca = models.ForeignKey(Mcca,verbose_name='Codigo mcca',to_field='nummcca')
     item = models.IntegerField(verbose_name='Items',)    
-    observacion = models.CharField(verbose_name='Nombre del canal de comunicacion', max_length=300)
+    observacion = models.CharField(verbose_name='Observacion', max_length=300)
     auditoria = models.IntegerField(verbose_name='Auditoria',choices=AUDITORIA)
 
     class Meta:
@@ -196,6 +199,13 @@ class MccaObservacion(models.Model):
 
     def __unicode__(self):
         return self.observacion
+
+######################## MCCA FIN   ################################################
+#######################################################################################
+
+
+######################## MCC INICIO   ################################################
+#######################################################################################
 
 class MccTipo(models.Model):
     codigo = models.AutoField(verbose_name='Codigo Autoincrementado',primary_key=True)
@@ -240,11 +250,12 @@ class Mcc(models.Model):
     nombremmc = models.CharField(verbose_name='Nombre de la mmca',max_length=120)
     fechaini = models.DateTimeField(verbose_name='Fecha de inicio de la campaña',)
     fechafin = models.DateTimeField(verbose_name='Fecha de final de la campaña',)	
-    nummcctipo = models.IntegerField(verbose_name='Tipo mcc',)
+    nummcctipo = models.ForeignKey(MccTipo,verbose_name='Tipo mcc',)
     nummccestado = models.ForeignKey(MccEstado,verbose_name='Mcc Estado',)
     region = models.ForeignKey(Region, verbose_name='Region')
     provincia = models.ForeignKey(Provincia, verbose_name='Provincia')
     descripcionmcc = models.TextField(verbose_name='Breve descripción y estado actual del mcc',)
+	lugar = models.CharField(verbose_name='Lugar de la mcc',max_length=120)
     propuestamcc = models.TextField(verbose_name='Propuesta del mcc',)
     idusuario_creac = models.IntegerField(verbose_name='Usuario creador',)
     fec_creac = models.DateTimeField(verbose_name='Fecha de creación del registro',auto_now_add=True)
@@ -265,7 +276,7 @@ class Mcc(models.Model):
 class MccActor(models.Model):
     nummcc = models.ForeignKey(Mcc,verbose_name='Numero de la mcc',to_field='nummcc')
     item = models.IntegerField(verbose_name='Items',)    
-    numtipovarios = models.IntegerField(verbose_name='Numero de Tipo Varios de mcc')
+    numtipovarios = models.ForeignKey(MccTipoVarios,verbose_name='Numero de Tipo Varios de mcc')
     actor = models.CharField(verbose_name='Actor involucrado', max_length=100)
     institucion = models.CharField(verbose_name='Institucion Actor involucrado', max_length=100)
     auditoria = models.IntegerField(verbose_name='Auditoria',choices=AUDITORIA)
@@ -281,7 +292,7 @@ class MccActor(models.Model):
 class MccLider(models.Model):
     nummcc = models.ForeignKey(Mcc,verbose_name='Numero de la mcc',to_field='nummcc')
     item = models.IntegerField(verbose_name='Items',)    
-    numtipovarios = models.IntegerField(verbose_name='Numero de Tipo Varios de mcc')
+    numtipovarios = models.ForeignKey(MccTipoVarios, verbose_name='Numero de Tipo Varios de mcc')
     lider = models.CharField(verbose_name='Actor involucrado', max_length=100)
     institucion = models.CharField(verbose_name='Institucion Actor involucrado', max_length=100)
     auditoria = models.IntegerField(verbose_name='Auditoria',choices=AUDITORIA)
@@ -308,3 +319,6 @@ class MccObservacion(models.Model):
 
     def __unicode__(self):
         return self.nummcc
+		
+######################## MCC FINAL ################################################
+###################################################################################
