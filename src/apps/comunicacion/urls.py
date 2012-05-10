@@ -10,4 +10,13 @@ urlpatterns = patterns('comunicacion.views',
     url(r'^pgcs/aporte/add/$','pgcs_apor_add', name='ogcs-mantenimiento-pgcs-aporte-add'),
     url(r'^pgcs/aporte/consulta/$','pgcs_apor_query', name='ogcs-mantenimiento-pgcs-aporte-query'),
     url(r'^pgcs/print/(?P<tipo>\d+)/$','pgcsprint', name='ogcs-mantenimiento-pgcs-print'),
+	
+	######################## MCCA ###############################################
+	url(r'^mcca/add/$','mccaadd', name='ogcs-mantenimiento-mcca-add'),
+	url(r'^mcca/consulta/$','mcca_query', name='ogcs-mantenimiento-mcca-query'),
+	
+	
+	######################## MCC ################################################
+	url(r'^mcc/add/$','mccadd', name='ogcs-mantenimiento-mcc-add'),
+	url(r'^mcc/consulta/$','mcc_query', name='ogcs-mantenimiento-mcc-query'),
 )
