@@ -32,6 +32,7 @@ provincia.append("<option selected='selected' value=''>---ELEGIR---</option>");
 function dependencias(label){
         var id= $("#id_organismo").val();
 	var dependencia = $("#id_dependencia");
+	$("#id_dependencia").removeAttr("disabled")
         var iddep = $("#id_dep").val();var select=true;
 	dependencia.find('option').remove();
 if(label==0){
@@ -42,6 +43,7 @@ dependencia.append("<option selected='selected' value=''>---ELEGIR---</option>")
 	$.getJSON('/dependencia/dependencias/json/?r='+id, function(data){
 	$.each(data, function(key,value){
                 if(id==1){
+					
                    if(value.fields.nummin==iddep){
 		      dependencia.append("<option value='"+value.fields.nummin+"' selected='selected'>"+value.fields.ministerio+"</option>");select=false;
                    }else{
