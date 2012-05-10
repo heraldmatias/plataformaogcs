@@ -1,0 +1,1 @@
+insert into ministerio (nummin,ministerio,iniciales,estado_id) values(1,'MINISTERIO DE TRANSPORTE','MTC','1');
