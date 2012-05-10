@@ -20,8 +20,8 @@ class Oac(models.Model):
 
     class Meta:
         db_table = u'oac'
-        verbose_name = u'Organigrama de Área de Comunicaciones'
-        verbose_name_plural = u'Organigramas del Área de Comunicaciones'
+        verbose_name = u'Organigrama de �?rea de Comunicaciones'
+        verbose_name_plural = u'Organigramas del �?rea de Comunicaciones'
 
     def __unicode__(self):
         return self.urloac
@@ -255,7 +255,7 @@ class Mcc(models.Model):
     region = models.ForeignKey(Region, verbose_name='Region')
     provincia = models.ForeignKey(Provincia, verbose_name='Provincia')
     descripcionmcc = models.TextField(verbose_name='Breve descripción y estado actual del mcc',)
-	lugar = models.CharField(verbose_name='Lugar de la mcc',max_length=120)
+    lugar = models.CharField(verbose_name='Lugar de la mcc',max_length=120)
     propuestamcc = models.TextField(verbose_name='Propuesta del mcc',)
     idusuario_creac = models.IntegerField(verbose_name='Usuario creador',)
     fec_creac = models.DateTimeField(verbose_name='Fecha de creación del registro',auto_now_add=True)
