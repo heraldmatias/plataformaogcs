@@ -7,21 +7,26 @@
 <p>{{ mensaje }}</p></div></h4>
 {% endif %}
 <ul class="nav nav-tabs">
-<li class="active"><a href="{% url ogcs-mantenimiento-mg-add %}">Nuevo</a></li>
-<li><a href="{% url ogcs-mantenimiento-mg-query %}" >Consultar</a></li>
+<li class="active"><a href="{% url ogcs-mantenimiento-dig-add %}">Nuevo</a></li>
+<li><a href="{% url ogcs-mantenimiento-dig-query %}" >Consultar</a></li>
 </ul>
 <div class="tab-content" id="contenido_izq">
 <div id="nuevo" class="tab-pane fade in active">
-<form enctype="multipart/form-data" class="form-inline" id="frmmg" name="frmmg" method="post" action="{% url ogcs-mantenimiento-mg-add %}" >
+<form enctype="multipart/form-data" class="form-inline" id="frmmg" name="frmmg" method="post" action="{% url ogcs-mantenimiento-dig-add %}" >
 <div id="frmprovincia" class="modal" style="position: relative; top: auto; left: auto; margin: 0 auto auto 20px; z-index: 1">
     <div class="modal-header">
       <a class="close" data-dismiss="modal" >&times;</a>
-      <h3>MG (Material Gráfico)</h3>
+      <h3>DIG (Documentos de Interes General)</h3>
     </div>
     <div class="modal-body">
       {% csrf_token %}
       <div class="row-fluid">
-      {{ formulario.as_p }}
+      {% for campo in formulario %}
+      {% if forloop.counter == 1 %}<p><h4> Miscelanea</h4></p>{% endif %}
+      {% if forloop.counter == 4 %}<p><h4> Información Academica</h4></p>{% endif %}
+      {% if forloop.counter == 7 %}<p><h4> Buenas Practicas</h4></p>{% endif %}
+      <p>{{ campo.label_tag }}:{{ campo }}</p>
+      {% endfor %}
     </div>
     </div>
     <div class="modal-footer">
@@ -38,8 +43,8 @@ $('#frmmg').submit(function() {
 var ok=true;
 $("form input:file").each(function(index){
 var ext = $(this).val().split('.').pop().toLowerCase();
-if($.inArray(ext, ['jpg','gif','png','jpeg','avi','swf','flv','f4v','mp4','opt','ods']) == -1) {
-    alert('Material Gráfico '+(index+1)+': Solo se acepta archivos en formato Audio y Video!');$(this).focus();ok=false;return false;
+if($.inArray(ext, ['jpg','gif','png','jpeg','doc','docx','pdf','xls','xlsx','ppt','pptx','txt']) == -1) {
+    alert('DIG '+(index+1)+': Solo se acepta archivos de OFIMATICA. Seleccione presionando el boton EXAMINAR.');$(this).focus();ok=false;return false;
 }});
 if(ok){return confirmar('¿Desea grabar el registro?');}else{return false;}
 });

@@ -3,7 +3,7 @@ from forms import *
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, render_to_response, redirect
 from django.template import RequestContext
-from models import MaterialGrafico
+from models import MaterialGrafico, DocumentoInteresGeneral
 from django.contrib.auth.decorators import login_required
 from django.core import serializers
 from django.shortcuts import get_object_or_404
@@ -113,3 +113,82 @@ def mgprint(request):
             data.append(dmg)
     filename= "mg_%s.csv" % datetime.today().strftime("%Y%m%d")
     return imprimirToExcel('extras/reportemg.html', {'data': data,'fecha':datetime.today().date(),'hora':datetime.today().time(),'usuario':request.session['nombres']},filename)
+
+@login_required()
+def digadd(request):
+    mensaje=""
+    if request.method == 'POST':               
+        if 'archmis1' in request.FILES and 'archmis2' in request.FILES and 'archmis3' in request.FILES and 'archaca1' in request.FILES and 'archaca2' in request.FILES and 'archaca3' in request.FILES and 'archbue1' in request.FILES and 'archbue2' in request.FILES and 'archbue3' in request.FILES:
+            profile = request.user.get_profile()
+            ini=request.session['dependencia']            
+            fss = FileSystemStorage()
+            filename= "DIG%s%s_01" % (ini.iniciales,datetime.today().strftime("%d%m%Y"))
+            obj=DocumentoInteresGeneral.objects.extra(where=[u"SUBSTRING_INDEX(archmis1, '.', 1) ='documentosgeneral/mis/"+filename+"'",])[:1]
+            if len(obj)>0:
+                dobj = obj.values('archmis1','archmis2','archmis3','archaca1','archaca2','archaca3','archbue1','archbue2','archbue3')
+                for ar in ('archmis','archaca','archbue'):
+                    for a in range(1,4):
+                        fss.delete(dobj[0][ar+str(a)])
+                obj = obj.get()
+            else:    
+                num = DocumentoInteresGeneral.objects.values("numdig").order_by("-numdig",)[:1]
+                num = 1 if len(num)==0 else int(num[0]["numdig"])+1 
+                obj = DocumentoInteresGeneral(numdig=num,organismo=profile.organismo,dependencia=profile.dependencia,idusuario_creac=profile.numero,)
+            for archivo in request.FILES:   
+                filename1 = request.FILES[archivo].name
+                ext = filename1[filename1.rfind('.')+1:]
+                filename= "DIG%s%s_0%s.%s" % (ini.iniciales,datetime.today().strftime("%d%m%Y"),archivo[-1:],ext.upper())                
+                request.FILES[archivo].name = filename               
+            formulario = DIGForm(request.POST,request.FILES,instance=obj ) # A form bound to the POST data
+            if formulario.is_valid():
+                formulario.save()
+                obj.urlmis1= obj.archmis1.url
+                obj.urlmis2= obj.archmis2.url
+                obj.urlmis3= obj.archmis3.url
+                obj.urlaca1= obj.archaca1.url
+                obj.urlaca2= obj.archaca2.url
+                obj.urlaca3= obj.archaca3.url
+                obj.urlbue1= obj.archbue1.url
+                obj.urlbue2= obj.archbue2.url
+                obj.urlbue3= obj.archbue3.url
+                obj.save()
+                mensaje="Registro grabado satisfactoriamente."
+        formulario = DIGForm() # Crear un parametro en home para mostrar los mensajes de exito.            
+    else:        
+        formulario = DIGForm()
+    return render_to_response('extras/dig.html', {'formulario': formulario,'usuario':request.session['nombres'],'fecha':request.session['login_date'],'mensaje':mensaje,'dep':request.session['dependencia']}, context_instance=RequestContext(request),)
+
+@login_required()
+def digquery(request):
+    col = "-organismo"
+    query = None
+    dependencia=''
+    filtro = list()
+    if "2-sort" in request.GET:
+        col = request.GET['2-sort']
+    config = RequestConfig(request)
+    formulario = ConsultaDIGForm(request.GET)
+    if 'organismo' in request.GET:
+        if request.GET['organismo']:
+            filtro.append(u"documentointeresgeneral.organismo_id =%s"%request.GET['organismo'])
+        if 'dependencia' in request.GET:
+            if request.GET['dependencia']:
+                filtro.append(u"documentointeresgeneral.dependencia =%s"%request.GET['dependencia'])
+                dependencia=request.GET['dependencia']
+    filtro.append(u"idusuario_creac=usuario.numero")
+    filtro.append(u"documentointeresgeneral.organismo_id=organismo.codigo")
+    try:
+        query = DocumentoInteresGeneral.objects.extra(tables=['usuario','organismo'],where=filtro,select={'organismo':'organismo.nombre','usuario':'usuario.usuario','dependencia':"case documentointeresgeneral.organismo_id when 1 then (select ministerio from ministerio where nummin=documentointeresgeneral.dependencia) when 2 then (select odp from odp where numodp=documentointeresgeneral.dependencia) when 3 then (select gobernacion from gobernacion where numgob=documentointeresgeneral.dependencia) end",'tipomis1':"SUBSTRING_INDEX(archmis1, '.', -1)",'tipomis2':"SUBSTRING_INDEX(archmis2, '.', -1)",'tipomis3':"SUBSTRING_INDEX(archmis3, '.', -1)",'tipoaca1':"SUBSTRING_INDEX(archaca1, '.', -1)",'tipoaca2':"SUBSTRING_INDEX(archaca2, '.', -1)",'tipoaca3':"SUBSTRING_INDEX(archaca3, '.', -1)",'tipobue1':"SUBSTRING_INDEX(archbue1, '.', -1)",'tipobue2':"SUBSTRING_INDEX(archbue2, '.', -1)",'tipobue3':"SUBSTRING_INDEX(archbue3, '.', -1)"}).order_by(col).values('organismo','dependencia','fec_creac','usuario','dependencia','urlmis1','urlmis2','urlmis3','urlaca1','urlaca2','urlaca3','urlbue1','urlbue2','urlbue3','tipomis1','tipomis2','tipomis3','tipoaca1','tipoaca2','tipoaca3','tipobue1','tipobue2','tipobue3')
+        data = list()
+        dmg = dict()     
+        for mg in query:
+            for ar in ('mis','aca','bue'):
+                for a in range(1,4):
+                    dmg = {'organismo':mg['organismo'],'dependencia':mg['dependencia'],'fec_creac':mg['fec_creac'],'usuario':mg['usuario'],'Descargar':mg['url'+ar+str(a)],'TipoArchivo':mg['tipo'+ar+str(a)],'Tipo':ar.upper()}
+                    data.append(dmg)          
+        tabla = DIGTable(data)
+        config.configure(tabla)
+        tabla.paginate(page=request.GET.get('page', 1), per_page=6)
+        return render_to_response('extras/dig_consulta.html', {'formulario':formulario,'tabla':tabla,'usuario':request.session['nombres'],'fecha':request.session['login_date'],'dependencia':dependencia,'dep':request.session['dependencia']}, context_instance=RequestContext(request),)
+    except:
+        raise Http404
