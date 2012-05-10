@@ -30,6 +30,7 @@ $(document).ready(function() {
 				
 });
 
+
 function agregar_estado(){
 					if($("#id_organismo").val()=="" || $("#id_organismo").val()==null){
 						$('#alert1').show().find('strong').text('Debe elegir organismo.');
