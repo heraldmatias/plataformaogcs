@@ -15,7 +15,10 @@
 	color: #ffffff;
 	font-weight: bold;
 	font-size: 12px;
-}</style>
+}#alert, #alert1, #alert2, #alert3, #alert4, #alert5, #alert6, #alert7  {
+		display: none;
+	}
+</style>
   <meta content="text/html; charset=UTF-8" http-equiv="content-type">
   {% endblock %}
   {% block csspage %}
@@ -72,13 +75,13 @@
 		</ul></li>
             <li class="dropdown principal"><a class="dropdown-toggle menublanco" data-toggle="dropdown" href="">MCCA<b class="caret"></b></a>
                 <ul class="dropdown-menu">                  
-                  <li><a href="#" data-toggle="modal">Nuevo Mcca</a></li>                
-		  <li><a href="#" data-toggle="modal">Consultar Mcca</a></li>		  
+                  <li><a href="{% url ogcs-mantenimiento-mcca-add %}" data-toggle="modal">Nuevo Mcca</a></li>                
+		  <li><a href="{% url ogcs-mantenimiento-mcca-query %}" data-toggle="modal">Consultar Mcca</a></li>		  
 		</ul></li>
             <li class="dropdown principal"><a class="dropdown-toggle menublanco" data-toggle="dropdown" href="">MCC<b class="caret"></b></a>
                 <ul class="dropdown-menu">                  
-                  <li><a href="#" data-toggle="modal">Nuevo Mcc</a></li>                
-		  <li><a href="#" data-toggle="modal">Consultar Mcc</a></li>		  
+                  <li><a href="{% url ogcs-mantenimiento-mcc-add %}" data-toggle="modal">Nuevo Mcc</a></li>                
+		  <li><a href="{% url ogcs-mantenimiento-mcc-query %}" data-toggle="modal">Consultar Mcc</a></li>		  
 		</ul></li>
             <li class="dropdown principal"><a class="dropdown-toggle menublanco" data-toggle="dropdown" href="">MG<b class="caret"></b></a>
                 <ul class="dropdown-menu">                  
