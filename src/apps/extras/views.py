@@ -3,7 +3,7 @@ from forms import *
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, render_to_response, redirect
 from django.template import RequestContext
-from models import MaterialGrafico, DocumentoInteresGeneral
+from models import MaterialGrafico, DocumentoInteresGeneral, ActaReunionIntersectorial
 from django.contrib.auth.decorators import login_required
 from django.core import serializers
 from django.shortcuts import get_object_or_404
@@ -192,3 +192,58 @@ def digquery(request):
         return render_to_response('extras/dig_consulta.html', {'formulario':formulario,'tabla':tabla,'usuario':request.session['nombres'],'fecha':request.session['login_date'],'dependencia':dependencia,'dep':request.session['dependencia']}, context_instance=RequestContext(request),)
     except:
         raise Http404
+
+@login_required()
+def ariadd(request):
+    mensaje=""
+    if request.method == 'POST':               
+        if 'archari' in request.FILES:
+            profile = request.user.get_profile()
+            ini=request.session['dependencia']      
+            filename= "ARI%s%s.PDF" % (ini.iniciales,datetime.today().strftime("%d%m%Y"))
+            try:
+                obj=ActaReunionIntersectorial.objects.get(archari='actas/'+filename)
+            except:
+                num = ActaReunionIntersectorial.objects.values("numari").order_by("-numari",)[:1]
+                num = 1 if len(num)==0 else int(num[0]["numari"])+1
+                obj = ActaReunionIntersectorial(numari=num,organismo=profile.organismo,dependencia=profile.dependencia,idusuario_creac=profile.numero,)            
+            request.FILES['archari'].name = filename            
+        formulario = AriForm(request.POST,request.FILES,instance=obj ) 
+        if formulario.is_valid():
+            FileSystemStorage().delete('actas/'+filename)
+            formulario.save()
+            obj.urlari= obj.archari.url
+            obj.save()
+            formulario = AriForm() # Crear un parametro en home para mostrar los mensajes de exito.
+            mensaje="Registro grabado satisfactoriamente."
+    else:        
+        formulario = AriForm()
+    return render_to_response('extras/ari.html', {'formulario': formulario,'usuario':request.session['nombres'],'fecha':request.session['login_date'],'mensaje':mensaje,'dep':request.session['dependencia']}, context_instance=RequestContext(request),)
+
+
+@login_required()
+def ariquery(request):
+    col = "-organismo"
+    query = None
+    dependencia=''
+    filtro = list()
+    if "2-sort" in request.GET:
+        col = request.GET['2-sort']
+    config = RequestConfig(request)
+    formulario = ConsultaAriForm(request.GET)
+    if 'organismo' in request.GET:
+        if request.GET['organismo']:
+            filtro.append(u"actareunionintersectorial.organismo_id =%s"%request.GET['organismo'])
+        if 'dependencia' in request.GET:
+            if request.GET['dependencia']:
+                filtro.append(u"actareunionintersectorial.dependencia =%s"%request.GET['dependencia'])
+                dependencia=request.GET['dependencia']
+    filtro.append(u"idusuario_creac=usuario.numero")
+    query = ActaReunionIntersectorial.objects.extra(tables=['usuario',],where=filtro,select={'usuario':'usuario.usuario','dependencia':"case actareunionintersectorial.organismo_id when 1 then (select ministerio from ministerio where nummin=actareunionintersectorial.dependencia) when 2 then (select odp from odp where numodp=actareunionintersectorial.dependencia) when 3 then (select gobernacion from gobernacion where numgob=actareunionintersectorial.dependencia) end"}).filter(nombreari__icontains=request.GET['nombreari'] if 'nombreari' in request.GET else '')
+    #if 'nombreari' in request.GET:
+    #    query.filter(nombreari__icontains=request.GET['nombreari'])
+    tabla = AriTable(query.order_by(col))
+    config.configure(tabla)
+    tabla.paginate(page=request.GET.get('page', 1), per_page=6)
+    return render_to_response('extras/ari_consulta.html', {'formulario':formulario,'tabla':tabla,'usuario':request.session['nombres'],'fecha':request.session['login_date'],'dependencia':dependencia,'dep':request.session['dependencia']}, context_instance=RequestContext(request),)
+

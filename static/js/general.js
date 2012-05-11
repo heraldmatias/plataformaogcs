@@ -76,8 +76,8 @@ var l='';
   //l = this.value.toUpperCase();
   //$('#'+campo).val(l);
 });
-$('#'+campo).change(function () {
-  l = $('#'+campo).val().toUpperCase();
+$('#'+campo).focusout(function () {
+  l = $.trim($('#'+campo).val().toUpperCase());
   $('#'+campo).val(l);
 });
 }

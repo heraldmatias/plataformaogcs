@@ -73,7 +73,9 @@ class DocumentoInteresGeneral(models.Model):
 class ActaReunionIntersectorial(models.Model):
     codigo = models.AutoField(verbose_name='Codigo Autoincrementado',primary_key=True)
     numari = models.IntegerField(verbose_name='Numero de la ARI', unique=True)
-    nombreari = models.CharField(verbose_name='Nombre de la ARI', max_length=150)
+    organismo = models.ForeignKey(Organismo, verbose_name='Organismo')
+    dependencia = models.IntegerField(verbose_name='Dependencia',)
+    nombreari = models.CharField(verbose_name='Nombre de la Reunión', max_length=150)
     archari = models.FileField(verbose_name='Adjuntar Archivo',upload_to='actas/')
     urlari = models.URLField(verbose_name='Url de la Acta',max_length=100,null=True,blank=True)
     idusuario_creac = models.IntegerField(verbose_name='Usuario creador',)

@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 import django_tables2 as tables
 from django_tables2.utils import A
-from models import MaterialGrafico, DocumentoInteresGeneral
+from models import MaterialGrafico, DocumentoInteresGeneral, ActaReunionIntersectorial
 from django import forms
 
 class MGForm(forms.ModelForm):
@@ -66,3 +66,36 @@ class DIGTable(tables.Table):
     class Meta:
         attrs = {"class": "table table-bordered table-condensed table-striped"}
         orderable = False
+
+class AriForm(forms.ModelForm):
+    class Meta:
+        model = ActaReunionIntersectorial
+        fields = ('archari','nombreari')
+
+class ConsultaAriForm(forms.ModelForm):
+    class Meta:
+        model = ActaReunionIntersectorial
+        fields = ('organismo','dependencia','nombreari')
+        widgets = {
+            'organismo': forms.Select(attrs={'onChange':'dependencias(0);',}),
+            'dependencia':forms.Select(),
+        } 
+
+class AriTable(tables.Table):
+    item = tables.Column()
+    organismo = tables.Column(orderable=True)
+    dependencia = tables.Column(orderable=True)
+    nombreari = tables.Column(verbose_name='Reunión',orderable=True)
+    fec_creac = tables.Column(verbose_name='Fecha de Creación')
+    usuario = tables.Column(verbose_name='Usuario')
+    Descargar = tables.TemplateColumn('<a href={{ record.urlari }}>Descargar</a>')
+
+    def render_item(self):
+        value = getattr(self, '_counter', 1)
+        self._counter = value + 1
+        return '%d' % value
+
+    class Meta:
+        attrs = {"class": "table table-bordered table-condensed table-striped"}
+        orderable = False
+
