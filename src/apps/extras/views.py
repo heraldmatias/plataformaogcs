@@ -194,6 +194,34 @@ def digquery(request):
         raise Http404
 
 @login_required()
+def digprint(request):
+    col = "-organismo"
+    query = None
+    dependencia=''
+    filtro = list()
+    if "2-sort" in request.GET:
+        col = request.GET['2-sort']
+    if 'organismo' in request.GET:
+        if request.GET['organismo']:
+            filtro.append(u"documentointeresgeneral.organismo_id =%s"%request.GET['organismo'])
+        if 'dependencia' in request.GET:
+            if request.GET['dependencia']:
+                filtro.append(u"documentointeresgeneral.dependencia =%s"%request.GET['dependencia'])
+                dependencia=request.GET['dependencia']
+    filtro.append(u"idusuario_creac=usuario.numero")
+    filtro.append(u"documentointeresgeneral.organismo_id=organismo.codigo")
+    query = DocumentoInteresGeneral.objects.extra(tables=['usuario','organismo'],where=filtro,select={'organismo':'organismo.nombre','usuario':'usuario.usuario','dependencia':"case documentointeresgeneral.organismo_id when 1 then (select ministerio from ministerio where nummin=documentointeresgeneral.dependencia) when 2 then (select odp from odp where numodp=documentointeresgeneral.dependencia) when 3 then (select gobernacion from gobernacion where numgob=documentointeresgeneral.dependencia) end",'tipomis1':"SUBSTRING_INDEX(archmis1, '.', -1)",'tipomis2':"SUBSTRING_INDEX(archmis2, '.', -1)",'tipomis3':"SUBSTRING_INDEX(archmis3, '.', -1)",'tipoaca1':"SUBSTRING_INDEX(archaca1, '.', -1)",'tipoaca2':"SUBSTRING_INDEX(archaca2, '.', -1)",'tipoaca3':"SUBSTRING_INDEX(archaca3, '.', -1)",'tipobue1':"SUBSTRING_INDEX(archbue1, '.', -1)",'tipobue2':"SUBSTRING_INDEX(archbue2, '.', -1)",'tipobue3':"SUBSTRING_INDEX(archbue3, '.', -1)"}).order_by(col).values('organismo','dependencia','fec_creac','usuario','dependencia','urlmis1','urlmis2','urlmis3','urlaca1','urlaca2','urlaca3','urlbue1','urlbue2','urlbue3','tipomis1','tipomis2','tipomis3','tipoaca1','tipoaca2','tipoaca3','tipobue1','tipobue2','tipobue3')
+    data = list()
+    dmg = dict()     
+    for mg in query:
+        for ar in ('mis','aca','bue'):
+            for a in range(1,4):
+                dmg = {'organismo':mg['organismo'],'dependencia':mg['dependencia'],'fecha':mg['fec_creac'],'usuario':mg['usuario'],'tipoarchivo':mg['tipo'+ar+str(a)],'tipo':ar.upper()}
+                data.append(dmg)                  
+    filename= "dig_%s.csv" % datetime.today().strftime("%Y%m%d")
+    return imprimirToExcel('extras/reporte_dig.html', {'data': data,'fecha':datetime.today().date(),'hora':datetime.today().time(),'usuario':request.session['nombres']},filename)
+    
+@login_required()
 def ariadd(request):
     mensaje=""
     if request.method == 'POST':               
@@ -247,3 +275,20 @@ def ariquery(request):
     tabla.paginate(page=request.GET.get('page', 1), per_page=6)
     return render_to_response('extras/ari_consulta.html', {'formulario':formulario,'tabla':tabla,'usuario':request.session['nombres'],'fecha':request.session['login_date'],'dependencia':dependencia,'dep':request.session['dependencia']}, context_instance=RequestContext(request),)
 
+@login_required()
+def ariprint(request):
+    col = "-organismo"
+    query = None
+    filtro = list()
+    if "2-sort" in request.GET:
+        col = request.GET['2-sort']
+    if 'organismo' in request.GET:
+        if request.GET['organismo']:
+            filtro.append(u"actareunionintersectorial.organismo_id =%s"%request.GET['organismo'])
+        if 'dependencia' in request.GET:
+            if request.GET['dependencia']:
+                filtro.append(u"actareunionintersectorial.dependencia =%s"%request.GET['dependencia'])
+    filtro.append(u"idusuario_creac=usuario.numero")
+    query = ActaReunionIntersectorial.objects.extra(tables=['usuario',],where=filtro,select={'usuario':'usuario.usuario','dependencia':"case actareunionintersectorial.organismo_id when 1 then (select ministerio from ministerio where nummin=actareunionintersectorial.dependencia) when 2 then (select odp from odp where numodp=actareunionintersectorial.dependencia) when 3 then (select gobernacion from gobernacion where numgob=actareunionintersectorial.dependencia) end"}).filter(nombreari__icontains=request.GET['nombreari'] if 'nombreari' in request.GET else '')
+    filename= "ari_%s.csv" % datetime.today().strftime("%Y%m%d")
+    return imprimirToExcel('extras/reporte_ari.html', {'data': query,'fecha':datetime.today().date(),'hora':datetime.today().time(),'usuario':request.session['nombres']},filename)

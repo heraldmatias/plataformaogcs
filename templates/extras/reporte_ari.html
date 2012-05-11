@@ -1,0 +1,5 @@
+"REPORTE DE ARI (ACTA DE REUNIÓN INTERSECTORIAL)"
+"Item","Organismo","Dependencia","Reunión","Usuario","Fecha"
+{% for row in data %}{{ forloop.counter }},{{ row.organismo|addslashes }},{{ row.dependencia|addslashes }},{{ row.nombreari|addslashes }},{{ row.usuario|addslashes }},{{ row.fec_creac|addslashes }}
+{% endfor %}
+Fecha: {{ fecha }},Hora: {{ hora }},Usuario: {{ usuario }}

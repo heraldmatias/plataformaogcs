@@ -43,7 +43,7 @@ $(document).ready(function() {
 });
 function imprimir(){
 var org=$('#id_organismo').val();var dep=$('#id_dependencia').val();
-var url="{% url ogcs-mantenimiento-mg-print  %}?organismo="+org+'&dependencia='+dep;
+var url="{% url ogcs-mantenimiento-dig-print  %}?organismo="+org+'&dependencia='+dep;
 location.href=url;
 }
 </script>

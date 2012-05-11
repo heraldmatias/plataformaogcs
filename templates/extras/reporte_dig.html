@@ -1,0 +1,5 @@
+"REPORTE DE DIG (DOCUMENTOS DE INTERÉS GENERAL)"
+"Item","Organismo","Dependencia","Usuario","Fecha","Categoría","Tipo Archivo"
+{% for row in data %}{{ forloop.counter }},{{ row.organismo|addslashes }},{{ row.dependencia|addslashes }},{{ row.usuario|addslashes }},{{ row.fecha|addslashes }},{{ row.tipo|addslashes }},{{ row.tipoarchivo|addslashes }}
+{% endfor %}
+Fecha: {{ fecha }},Hora: {{ hora }},Usuario: {{ usuario }}
