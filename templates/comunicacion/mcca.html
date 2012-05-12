@@ -1,5 +1,16 @@
   {% extends 'base.html' %}
   {% load static %}
+  {% block csspage %}
+  <style type="text/css">
+	label.error {
+	    color: red;top:-20px;position:relative;height:30px;
+	    /*float: none;*/
+	    /*padding-left: 0.5em;*/
+	    /*vertical-align: top;*/
+            float: left;
+	}
+  </style>
+  {% endblock %}
   {% block title %} Plataforma Intersectorial de Comunicaci&oacute;n OGCS {% endblock %}
   {% block content %}
   {% load render_table from django_tables2 %}
@@ -11,7 +22,7 @@
 
 <div class="tab-content" id="contenido_izq">
 <div id="nuevo" class="tab-pane fade in active" style="width:500px">
-<form enctype="multipart/form-data" class="form-inline" id="frmcca" name="frmcca" method="post" action="{% if aporte %}{% url ogcs-mantenimiento-pgcs-aporte-add %}{% else %}{% url ogcs-mantenimiento-pgcs-add %}{% endif %}" ><!--data-toggle="modal"-->
+<form class="form-inline" id="frmcca" name="frmcca" method="post" action="{% url ogcs-mantenimiento-mcca-add %}" ><!--data-toggle="modal"-->
 <div id="frmprovincia" class="modal" style="position: relative; top: auto; left: auto; margin: 0 auto auto 20px; z-index: 1;width:720px;height:auto"><!--class="modal hide fade">-->
     <div class="modal-header">
       <h3>Nuevo MCCA (Matriz de Campaña de Comunicaciones Anuales)</h3>
@@ -19,12 +30,13 @@
     </div>
     <div class="modal-body" style="max-height:2000px;" >
       {% csrf_token %}
+      {{ form.errors }}
       <div class="row-fluid">
           <div class="alert alert-error" id="alert"><strong></strong><!--<a class="close" data-dismiss="alert">×</a>--></div>
           <label>Nombre de la campaña: </label> {{ form.nombremmca }}<br /><br />
-          <label class="input-append date" style="display:inline" id="dp4" data-date-format="dd-mm-yyyy" >Fecha inicial: {{ form.fechaini }}<span class="add-on"><i class="icon-th"></i></span></label> 
+          <label class="input-append date" style="display:inline" id="dp4" data-date-format="dd/mm/yyyy" >Fecha inicial: {{ form.fechaini }}<span class="add-on"><i class="icon-th"></i></span></label> 
           &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp
-          <label id="dp5" style="display:inline" class="input-append date" data-date-format="dd-mm-yyyy" >Fecha final:  {{ form.fechafin }}<span class="add-on"><i class="icon-th"></i></span></label>
+          <label id="dp5" style="display:inline" class="input-append date" data-date-format="dd/mm/yyyy" >Fecha final:  {{ form.fechafin }}<span class="add-on"><i class="icon-th"></i></span></label>
 
       </div>
      <!------------------------------------------------------------------------------------------------------------------>    
@@ -35,7 +47,7 @@
       	</div>
     	<div class="row-fluid">
        		<div class="alert alert-error" id="alert1"><strong></strong><!--<a class="close" data-dismiss="alert">×</a>--></div>
-    		<label>{{ form_estado.organismo.label_tag }}: {{ form_estado.organismo }}</label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<label>{{ form_estado.dependencia.label_tag }}: {{ form_estado.dependencia }}</label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input class="btn-primary" name="agregar" value="Agregar" type="button" onclick="agregar_estado()">
+    		<label>{{ form_estado.organismo.label_tag }}: {{ form_estado.organismo }}</label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<label>{{ form_estado.dependencia.label_tag }}: {{ form_estado.dependencia }}</label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input class="btn-primary" name="agregar" value="Agregar" type="button" onclick="sectores_estado()">
     	</div>
       
         <br><input type="hidden" value="{{ dependencia }}" id="id_dep" name="id_dep">
@@ -50,7 +62,7 @@
       	</div>
     	<div class="row-fluid"><br />
         	<div class="alert alert-error" id="alert2"><strong></strong><!--<a class="close" data-dismiss="alert">×</a>--></div>
-    		{{ form_privado}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input class="btn-primary" name="agregar" value="Agregar" type="button" onclick="agregar_privado()"><br /><br />
+    		{{ form_privado}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input class="btn-primary" name="agregar" value="Agregar" type="button" onclick="sectores_privado();"><br /><br />
     	</div>
       
         
@@ -65,7 +77,7 @@
       	</div>
     	<div class="row-fluid"><br />
         	<div class="alert alert-error" id="alert3"><strong></strong><!--<a class="close" data-dismiss="alert">×</a>--></div>
-    		{{ form_indicador}} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input class="btn-primary" name="agregar" value="Agregar" type="button" onclick="agregar_indicador()">
+    		{{ form_indicador}} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input class="btn-primary" name="agregar" value="Agregar" type="button" onclick="indicadores()">
     	</div>
       
         <br>
@@ -80,7 +92,7 @@
       	</div>
     	<div class="row-fluid"><br />
         	<div class="alert alert-error" id="alert4"><strong></strong><!--<a class="close" data-dismiss="alert">×</a>--></div>
-    		{{ form_mensaje }}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input class="btn-primary" name="agregar" value="Agregar" type="button" onclick="agregar_mensaje()">
+    		{{ form_mensaje }}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input class="btn-primary" name="agregar" value="Agregar" type="button" onclick="mensajes()">
     	</div>
       
         <br>
@@ -96,7 +108,7 @@
       	</div>
     	<div class="row-fluid"><br />
         	<div class="alert alert-error" id="alert5"><strong></strong><!--<a class="close" data-dismiss="alert">×</a>--></div>
-    		<label>Tipo: {{ form_canal.tipommca }}</label>&nbsp;&nbsp;<label>Canal de comunicación: {{ form_canal.canal }}</label>&nbsp;&nbsp;<input class="btn-primary" name="agregar" value="Agregar" type="button" onclick="agregar_canal()">
+    		<label>Tipo: {{ form_canal.tipommca }}</label>&nbsp;&nbsp;<label>Canal de comunicación: {{ form_canal.canal }}</label>&nbsp;&nbsp;<input class="btn-primary" name="agregar" value="Agregar" type="button" onclick="canales()">
     	</div>
       
         <br>
@@ -113,10 +125,10 @@
       	</div>
     	<div class="row-fluid"><br />
     		<div class="alert alert-error" id="alert6"><strong></strong><!--<a class="close" data-dismiss="alert">×</a>--></div>
-          		<label class="input-append date" style="display:inline" id="dp6" data-date-format="dd-mm-yyyy" >Fecha inicial: {{ form_accion.fechaini }}<span class="add-on"><i class="icon-th"></i></span></label> 
+          		<label class="input-append date" style="display:inline" id="dp6" data-date-format="yyyy-mm-dd" >Fecha inicial: {{ form_accion.fechainia }}<span class="add-on"><i class="icon-th"></i></span></label> 
           		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp
-          		<label id="dp7" style="display:inline" class="input-append date" data-date-format="dd-mm-yyyy" >Fecha final:  {{ form_accion.fechafin }}<span class="add-on"><i class="icon-th"></i></span></label><br /><br />
-                <label>{{ form_accion.acciones.label_tag }}: {{ form_accion.acciones }}</label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input class="btn-primary" name="agregar" value="Agregar" type="button" onclick="agregar_accion()"> 
+          		<label id="dp7" style="display:inline" class="input-append date" data-date-format="yyyy-mm-dd" >Fecha final:  {{ form_accion.fechafina }}<span class="add-on"><i class="icon-th"></i></span></label><br /><br />
+                <label>{{ form_accion.acciones.label_tag }}: {{ form_accion.acciones }}</label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input class="btn-primary" name="agregar" value="Agregar" type="button" onclick="accion();"> 
     	</div>
       
         <br>
@@ -134,7 +146,7 @@
       	</div>
     	<div class="row-fluid"><br />
         	<div class="alert alert-error" id="alert7"><strong></strong><!--<a class="close" data-dismiss="alert">×</a>--></div>
-    		{{ form_observacion }}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input class="btn-primary" name="agregar" value="Agregar" type="button" onclick="agregar_observacion()">
+    		{{ form_observacion }}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input class="btn-primary" name="agregar" value="Agregar" type="button" onclick="observaciones()">
     	</div>
       
         <br>
@@ -156,13 +168,14 @@
 </div></div>
   {% endblock %}
   {% block scriptjs %}  
-
+<script src="{{ STATIC_URL  }}js/jquery.validate.js" type="text/javascript"></script>
+<script src="{{ STATIC_URL  }}js/mcca.js" type="text/javascript"></script>
 <script>
 
 
 $('#dp4').datepicker().on('changeDate', function(ev){
-					var fechaini = $("#id_fechaini").val().split('-');
-					var fechafin = $("#id_fechafin").val().split('-');
+					var fechaini = $("#id_fechaini_mcca").val().split('-');
+					var fechafin = $("#id_fechaini_mcca").val().split('-');
 					 var stDate = new Date(fechaini[2],fechaini[1],fechaini[0]);
             		 var endDate = new Date(fechafin[2],fechafin[1],fechafin[0]);
 					 
@@ -177,8 +190,8 @@ $('#dp4').datepicker().on('changeDate', function(ev){
 				});
 
 $('#dp5').datepicker().on('changeDate', function(ev){
-					var fechaini = $("#id_fechaini").val().split('-');
-					var fechafin = $("#id_fechafin").val().split('-');
+					var fechaini = $("#id_fechainia").val().split('-');
+					var fechafin = $("#id_fechafina").val().split('-');
 					 var stDate = new Date(fechaini[2],fechaini[1],fechaini[0]);
             		 var endDate = new Date(fechafin[2],fechafin[1],fechafin[0]);
 					

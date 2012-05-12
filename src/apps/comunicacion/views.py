@@ -5,7 +5,7 @@ from django.shortcuts import render, render_to_response, redirect
 from django.template import RequestContext
 #from usuario.models import Usuario, Estado
 #from dependencia.models import Ministerio, Odp, Gobernacion
-from models import Oac, Pgcs, TipoOgcs
+from models import *
 from django.contrib.auth.decorators import login_required
 from django.core import serializers
 from django.shortcuts import get_object_or_404
@@ -208,134 +208,73 @@ def pgcs_apor_query(request):
 
 def mccaadd(request):
     mensaje=""
-    query = list()
-    query1 = list()
-    query2 = list()
-    query3 = list()
-    query4 = list()
-    query5 = list()
-    query6 = list()
-    if request.method == 'POST':               
-        if 'archivo' in request.FILES:
-            profile = request.user.get_profile() 
-            ini=request.session['dependencia']
-            filename= "PGCS%s%s.pdf" % (ini.iniciales,datetime.today().strftime("%d%m%Y"))
-            try:
-                obj=Pgcs.objects.get(archivo='pgcs/'+filename)
-            except:
-                num = Pgcs.objects.values("numpgcs").order_by("-numpgcs",)[:1]
-                num = 1 if len(num)==0 else int(num[0]["numpgcs"])+1
-                obj = Pgcs(numpgcs=num,organismo=profile.organismo,dependencia=profile.dependencia,idusuario_creac=profile.numero,tipopgcs=TipoOgcs.objects.get(codigo=1))
-            FileSystemStorage().delete('pgcs/'+filename)
-            request.FILES['archivo'].name = filename
-        formulario = PgcsForm(request.POST,request.FILES,instance=obj ) # A form bound to the POST data
-        if formulario.is_valid():
-            formulario.save()
-            obj.urlpgcs= obj.archivo.url
-            obj.save()
+    if request.method == 'POST':
+    #sectores_estado
+        corg = request.POST.getlist('corg')
+        cdep = request.POST.getlist('cdep')
+    #secores_privado
+        cpri = request.POST.getlist('cpri')
+    #indicadores
+        cind = request.POST.getlist('cind')
+    #mensajes
+        cmen = request.POST.getlist('cmen')
+    #canales
+        ctipo = request.POST.getlist('ctipo')
+        ccan = request.POST.getlist('ccan')
+    #acciones
+        cacc = request.POST.getlist('cacc')
+        caccfini = request.POST.getlist('caccfini')
+        caccffin = request.POST.getlist('caccffin')
+    #observaciones
+        cobs = request.POST.getlist('cobs')
+        #Proceso de escritura en la BD
+        profile = request.user.get_profile() 
+        ini=request.session['dependencia']
+        num = Mcca.objects.values("nummcca").order_by("-nummcca",)[:1]
+        num = 1 if len(num)==0 else int(num[0]["nummcca"])+1
+        obj = Mcca(nummcca=num,organismo=profile.organismo,dependencia=profile.dependencia,idusuario_creac=profile.numero,publico='ninguno')
+        formmcca = MccaForm(request.POST,instance=obj)
+        if formmcca.is_valid():
+            formmcca.save()
+            #sectores_Estado_save
+            for c in range(len(corg)): 
+                MccaEstado(nummcca=obj,item=c,organismo=Organismo.objects.get(codigo=corg[c]),dependencia=cdep[c]).save()
+            #sectores_privado_save
+            for c in range(len(cpri)):
+                MccaPrivado(nummcca=obj,item=c,privado=cpri[c],auditoria=1).save()
+            #indicadores_save
+            for c in range(len(cind)):
+                MccaIndicador(nummcca=obj,item=c,indicador=cind[c],auditoria=1).save()
+            #mensajes_save
+            for c in range(len(cmen)): 
+                MccaMensaje(nummcca=obj,item=c,mensaje=cmen[c],auditoria=1).save()
+            #canales_save
+            for c in range(len(ccan)):
+                MccaCanal(nummcca=obj,item=c,tipommca=MccaTipoComunicacion.objects.get(codigo=ctipo[c]),canal=ccan[c],auditoria=1).save()
+            #acciones_save
+            for c in range(len(cacc)):
+                MccaAccion(nummcca = obj,item =c, fechainia=caccfini[c],fechafina=caccffin[c], acciones=cacc[c], auditoria=1).save()
+            #observaciones_save
+            for c in range(len(cobs)):
+                MccaObservacion(nummcca=obj,item=c,observacion=cobs[c],auditoria=1).save()
             formmcca = MccaForm() # Crear un parametro en home para mostrar los mensajes de exito.
             mensaje="Registro grabado satisfactoriamente."
-    else:
-        #query = [
-        #                {'item':'1','organismo': 'Django Reinhardt', 'dependencia': 'jazz'},
-        #]
-        #query1 = [
-        #                {'item':'1','privado': 'Django Reinhardt'},
-        #]
-        #query2 = [
-        #                {'item':'1','indicador': 'Django Reinhardt'},
-        #]
-        #query3 = [
-        #                {'item':'1','mensaje': 'Django Reinhardt'},
-        #]
-        #
-        #query4 = [
-        #                {'item':'1','canal': 'Django Reinhardt','tipommca_id':'1'},
-        #]
-        #
-        #query5 = [
-        #                {'item':'1','accion': 'Django Reinhardt','fechaini':'09-05-2012','fechafin':'15-05-2012'},
-        #]
-        #
-        #query6 = [
-        #                {'item':'1','observacion': 'Django Reinhardt'},
-        #]
-        config = RequestConfig(request)
-       
-        if 'id_org' in request.GET:
-            query =mccaadd_estado(request)
-            
-        if("estados" in request.session):
-            query =request.session['estados']
-        #del request.session["estados"]
-
-        if 'privado' in request.GET:
-            query1 =mccaadd_privado(request)
-            
-        if("privados" in request.session):
-            query1 =request.session['privados']
-        
-        if 'indicador' in request.GET:
-            query2 =mccaadd_indicador(request)
-
-        if("indicadores" in request.session):
-            query2 =request.session['indicadores']
-
-        if 'mensaje' in request.GET:
-            query3 =mccaadd_mensaje(request)
-
-        if("mensajes" in request.session):
-            query3 =request.session['mensajes']
-
-        if 'canal' in request.GET:
-            query4 =mccaadd_canal(request)
-
-        if("canales" in request.session):
-            query4 =request.session['canales']
-
-        if 'accion' in request.GET:
-            query5 =mccaadd_accion(request)
-
-        if("acciones" in request.session):
-            query5 =request.session['acciones']
-
-        if 'obs' in request.GET:
-            query6 =mccaadd_observacion(request)
-
-        if("observaciones" in request.session):
-            query6 =request.session['observaciones']
-
-        
-        tabla = MccaForm_EstadoTable(query)
-        config.configure(tabla)
-
-        tabla1 = MccaForm_PrivadoTable(query1)
-        config.configure(tabla1)
-
-        tabla2 = MccaForm_IndicadorTable(query2)
-        config.configure(tabla2)
-
-        tabla3 = MccaForm_MensajeTable(query3)
-        config.configure(tabla3)
-
-        tabla4 = MccaForm_CanalTable(query4)
-        config.configure(tabla4)
-
-        tabla5 = MccaForm_AccionTable(query5)
-        config.configure(tabla5)
-        
-        tabla6 = MccaForm_ObservacionTable(query6)
-        config.configure(tabla6)
-        
+    else:        
         formmcca = MccaForm()
-        formmcca_estado = MccaForm_Estado()
-        formmcca_privado = MccaForm_Privado()
-        formmcca_indicador = MccaForm_Indicador()
-        formmcca_mensaje = MccaForm_Mensaje()
-        formmcca_canal = MccaForm_Canal()
-        formmcca_accion = MccaForm_Accion()
-        formmcca_observacion = MccaForm_Observacion()
-
+    tabla = MccaForm_EstadoTable(list())
+    tabla1 = MccaForm_PrivadoTable(list())
+    tabla2 = MccaForm_IndicadorTable(list())
+    tabla3 = MccaForm_MensajeTable(list())
+    tabla4 = MccaForm_CanalTable(list())
+    tabla5 = MccaForm_AccionTable(list())       
+    tabla6 = MccaForm_ObservacionTable(list())        
+    formmcca_estado = MccaForm_Estado()
+    formmcca_privado = MccaForm_Privado()
+    formmcca_indicador = MccaForm_Indicador()
+    formmcca_mensaje = MccaForm_Mensaje()
+    formmcca_canal = MccaForm_Canal()
+    formmcca_accion = MccaForm_Accion()
+    formmcca_observacion = MccaForm_Observacion()
     return render_to_response('comunicacion/mcca.html', {'form': formmcca,'form_estado': formmcca_estado,'form_privado': formmcca_privado,'form_indicador': formmcca_indicador,'form_mensaje': formmcca_mensaje,'form_canal': formmcca_canal,'form_accion': formmcca_accion,'form_observacion': formmcca_observacion,'tabla':tabla,'tabla1':tabla1,'tabla2':tabla2,'tabla3':tabla3,'tabla4':tabla4,'tabla5':tabla5,'tabla6':tabla6,'mensaje':mensaje}, context_instance=RequestContext(request),)
 
 
@@ -352,7 +291,7 @@ def mccaadd_estado(request):
     else:
         if("estados" in request.session):
             query =request.session['estados']
-        num=int(request.GET['id_org'])-1
+        num=int(request.GET['id_org'])-2
         query.pop(num);
         request.session['estados'] = query
 
@@ -554,36 +493,15 @@ def mccadd(request):
         #
         #query3 = [
         #                {'item':'1','observacion': 'Django Reinhardt'},
-        #]
+        #]        
 
-        if 'actor' in request.GET:
-            query1 =mccadd_actor(request)
-
-        if("actores" in request.session):
-            query1 =request.session['actores']
-
-        if 'lider' in request.GET:
-            query2 =mccadd_lider(request)
-
-        if("lideres" in request.session):
-            query2 =request.session['lideres']
-
-        if 'obs' in request.GET:
-            query3 =mccadd_observacion(request)
-
-        if("observaciones_mcc" in request.session):
-            query3 =request.session['observaciones_mcc']
-            
-        config = RequestConfig(request)
-
-
-        tabla1 = MccForm_ActorTable(query1)
+        tabla1 = MccForm_ActorTable(list())
         config.configure(tabla1)
 
-        tabla2 = MccForm_LiderTable(query2)
+        tabla2 = MccForm_LiderTable(list())
         config.configure(tabla2)
 
-        tabla3 = MccForm_ObservacionTable(query3)
+        tabla3 = MccForm_ObservacionTable(list())
         config.configure(tabla3)
 
         formmcc = MccForm()

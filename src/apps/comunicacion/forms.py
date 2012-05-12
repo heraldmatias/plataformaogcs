@@ -76,8 +76,8 @@ class MccaForm(forms.ModelForm):
         model = Mcca
         fields = ('nombremmca', 'fechaini', 'fechafin', )
         widgets = {
-            'fechaini': forms.TextInput(attrs={'size':'15'}),
-            'fechafin': forms.TextInput(attrs={'size':'15'}),
+            'fechaini': forms.TextInput(attrs={'size':'15','id':'id_fechaini_mcca'}),
+            'fechafin': forms.TextInput(attrs={'size':'15','id':'id_fechaini_mcca'}),
         }
         
 class MccaForm_Estado(forms.ModelForm):
@@ -91,12 +91,12 @@ class MccaForm_Estado(forms.ModelForm):
 
 class MccaForm_EstadoTable(tables.Table):
     item = tables.Column()
-    organismo = tables.Column(orderable=True)
-    dependencia = tables.Column(orderable=True)
+    organismo = tables.Column()
+    dependencia = tables.Column()
     eliminar = tables.TemplateColumn('<a href="javascript:Eliminar_estado({{ record.item }})">Eliminar</a>')
     
     class Meta:
-        attrs = {"class": "table table-bordered table-condensed table-striped", "name":"tabla_estado"}
+        attrs = {"class": "table table-bordered table-condensed table-striped", "id":"tabla_estado"}
         orderable = False
 
 
@@ -111,11 +111,11 @@ class MccaForm_Privado(forms.ModelForm):
 
 class MccaForm_PrivadoTable(tables.Table):
     item = tables.Column()
-    privado = tables.Column(orderable=True)
+    privado = tables.Column()
     eliminar = tables.TemplateColumn('<a href="javascript:Eliminar_privado({{ record.item }})">Eliminar</a>')
 
     class Meta:
-        attrs = {"class": "table table-bordered table-condensed table-striped", "name":"tabla_privado"}
+        attrs = {"class": "table table-bordered table-condensed table-striped", "id":"tabla_privado"}
         orderable = False
         
 ####################################################################################
@@ -128,11 +128,11 @@ class MccaForm_Indicador(forms.ModelForm):
 
 class MccaForm_IndicadorTable(tables.Table):
     item = tables.Column()
-    indicador = tables.Column(orderable=True)
+    indicador = tables.Column()
     eliminar = tables.TemplateColumn('<a href="javascript:Eliminar_indicador({{ record.item }})">Eliminar</a>')
 
     class Meta:
-        attrs = {"class": "table table-bordered table-condensed table-striped", "name":"tabla_indicador"}
+        attrs = {"class": "table table-bordered table-condensed table-striped", "id":"tabla_indicador"}
         orderable = False
 
 ####################################################################################
@@ -145,11 +145,11 @@ class MccaForm_Mensaje(forms.ModelForm):
 
 class MccaForm_MensajeTable(tables.Table):
     item = tables.Column()
-    mensaje = tables.Column(orderable=True)
+    mensaje = tables.Column()
     eliminar = tables.TemplateColumn('<a href="javascript:Eliminar_mensaje({{ record.item }})">Eliminar</a>')
 
     class Meta:
-        attrs = {"class": "table table-bordered table-condensed table-striped", "name":"tabla_mensaje"}
+        attrs = {"class": "table table-bordered table-condensed table-striped", "id":"tabla_mensaje"}
         orderable = False
 
 ####################################################################################
@@ -163,12 +163,12 @@ class MccaForm_Canal(forms.ModelForm):
         }
 class MccaForm_CanalTable(tables.Table):
     item = tables.Column()
-    canal = tables.Column(orderable=True)
-    tipommca_id = tables.Column(orderable=True)
+    canal = tables.Column()
+    tipommca_id = tables.Column()
     eliminar = tables.TemplateColumn('<a href="javascript:Eliminar_canal({{ record.item }})">Eliminar</a>')
 
     class Meta:
-        attrs = {"class": "table table-bordered table-condensed table-striped", "name":"tabla_canal"}
+        attrs = {"class": "table table-bordered table-condensed table-striped", "id":"tabla_canal"}
         orderable = False
 
 ####################################################################################
@@ -176,20 +176,21 @@ class MccaForm_CanalTable(tables.Table):
 class MccaForm_Accion(forms.ModelForm):
     class Meta:
         model = MccaAccion
-        fields = ('acciones','fechaini','fechafin',)
+        fields = ('acciones','fechainia','fechafina',)
         widgets = {
-            'fechaini': forms.TextInput(attrs={'size':'15','id':'id_fechaini_acc',}),
-            'fechafin': forms.TextInput(attrs={'size':'15','id':'id_fechafin_acc',}),
+            'fechainia': forms.TextInput(attrs={'size':'15','id':'id_fechaini_acc',}),
+            'fechafina': forms.TextInput(attrs={'size':'15','id':'id_fechafin_acc',}),
         }
+
 class MccaForm_AccionTable(tables.Table):
     item = tables.Column()
-    accion = tables.Column(orderable=True)
-    fechaini = tables.Column(orderable=True)
-    fechafin = tables.Column(orderable=True)
+    accion = tables.Column()
+    fechaini = tables.Column()
+    fechafin = tables.Column()
     eliminar = tables.TemplateColumn('<a href="javascript:Eliminar_accion({{ record.item }})">Eliminar</a>')
 
     class Meta:
-        attrs = {"class": "table table-bordered table-condensed table-striped", "name":"tabla_accion"}
+        attrs = {"class": "table table-bordered table-condensed table-striped", "id":"tabla_accion"}
         orderable = False
 
 ####################################################################################
@@ -201,11 +202,11 @@ class MccaForm_Observacion(forms.ModelForm):
 
 class MccaForm_ObservacionTable(tables.Table):
     item = tables.Column()
-    observacion = tables.Column(orderable=True)
+    observacion = tables.Column()
     eliminar = tables.TemplateColumn('<a href="javascript:Eliminar_observacion({{ record.item }})">Eliminar</a>')
 
     class Meta:
-        attrs = {"class": "table table-bordered table-condensed table-striped", "name":"tabla_observacion"}
+        attrs = {"class": "table table-bordered table-condensed table-striped", "id":"tabla_observacion"}
         orderable = False
 
 ####################################################################################

@@ -16,12 +16,12 @@ class Oac(models.Model):
     archivo = models.FileField(upload_to='oac/',verbose_name='Adjuntar Archivo',)
     urloac = models.URLField(verbose_name='Url de la oac',max_length=100,null=True,blank=True)
     idusuario_creac = models.IntegerField(verbose_name='Usuario creador',)
-    fec_creac = models.DateTimeField(verbose_name='Fecha de creación del registro',auto_now_add=True)
+    fec_creac = models.DateTimeField(verbose_name='Fecha de creaci�n del registro',auto_now_add=True)
 
     class Meta:
         db_table = u'oac'
-        verbose_name = u'Organigrama de �?rea de Comunicaciones'
-        verbose_name_plural = u'Organigramas del �?rea de Comunicaciones'
+        verbose_name = u'Organigrama de Area de Comunicaciones'
+        verbose_name_plural = u'Organigramas del Area de Comunicaciones'
 
     def __unicode__(self):
         return self.urloac
@@ -47,12 +47,12 @@ class Pgcs(models.Model):
     urlpgcs = models.URLField(verbose_name='Url de la pgcs', max_length=70)
     tipopgcs = models.ForeignKey(TipoOgcs,verbose_name='Estado del tipo de pgcs')
     idusuario_creac = models.IntegerField(verbose_name='Usuario creador',)
-    fec_creac = models.DateTimeField(verbose_name='Fecha de creación del registro',auto_now_add=True)
+    fec_creac = models.DateTimeField(verbose_name='Fecha de creaci�n del registro',auto_now_add=True)
     
     class Meta:
         db_table = u'pgcs'
-        verbose_name = u'Plan General de Comunicación del sector'
-        verbose_name_plural = u'Planes Generales de Comunicación del sector'
+        verbose_name = u'Plan General de Comunicacion del sector'
+        verbose_name_plural = u'Planes Generales de Comunicacion del sector'
 
     def __unicode__(self):
         return self.nombre
@@ -66,8 +66,8 @@ class MccaTipoComunicacion(models.Model):
     
     class Meta:
         db_table = u'mccatipocomunicacion'
-        verbose_name = u'Matriz de Campaña de Comunicaciones Año'
-        verbose_name_plural = u'Matrices de Campaña de Comunicaciones Anuales'
+        verbose_name = u'Matriz de Campana de Comunicaciones ano'
+        verbose_name_plural = u'Matrices de Campana de Comunicaciones Anuales'
 
     def __unicode__(self):
         return self.nombre
@@ -75,12 +75,14 @@ class MccaTipoComunicacion(models.Model):
 class Mcca(models.Model):
     codigo = models.AutoField(verbose_name='Codigo Autoincrementado',primary_key=True)
     nummcca = models.IntegerField(verbose_name='Numero de la mcca', unique=True)
+    organismo = models.ForeignKey(Organismo, verbose_name='Organismo')
+    dependencia = models.IntegerField(verbose_name='Dependencia',)
     nombremmca = models.CharField(verbose_name='Nombre de la mmca',max_length=70)
-    fechaini = models.DateTimeField(verbose_name='Fecha de inicio de la campaña',)
-    fechafin = models.DateTimeField(verbose_name='Fecha de final de la campaña',)	
-    publico = models.TextField(verbose_name='Nombre del público objetivo',)
+    fechaini = models.DateTimeField(verbose_name='Fecha de inicio de la campana',)
+    fechafin = models.DateTimeField(verbose_name='Fecha de final de la campana',)	
+    publico = models.TextField(verbose_name='Nombre del p�blico objetivo',)
     idusuario_creac = models.IntegerField(verbose_name='Usuario creador',)
-    fec_creac = models.DateTimeField(verbose_name='Fecha de creación del registro',auto_now_add=True)
+    fec_creac = models.DateTimeField(verbose_name='Fecha de creaci�n del registro',auto_now_add=True)
     idusuario_mod = models.IntegerField(verbose_name='Usuario modifico', null=True, blank=True)
     fec_mod = models.DateTimeField(verbose_name='Fecha modifico', auto_now=True, null=True, blank=True)
     idadministrador_mod	= models.IntegerField(verbose_name='Usuario modifico', null=True, blank=True)
@@ -172,8 +174,8 @@ class MccaCanal(models.Model):
 class MccaAccion(models.Model):
     nummcca = models.ForeignKey(Mcca,verbose_name='Codigo mcca',to_field='nummcca')
     item = models.IntegerField(verbose_name='Items',)
-    fechaini = models.DateTimeField(verbose_name='Fecha de inicio de la acciones planteadas')
-    fechafin = models.DateTimeField(verbose_name='Fecha final de la campaña')
+    fechainia = models.DateField(verbose_name='Fecha de inicio de la acciones planteadas')
+    fechafina = models.DateField(verbose_name='Fecha final de la campana')
     acciones = models.CharField(verbose_name='Nombre de las acciones planteadas',max_length=200)
     auditoria = models.IntegerField(verbose_name='Auditoria',choices=AUDITORIA)
 
@@ -248,17 +250,17 @@ class Mcc(models.Model):
     codigo = models.AutoField(verbose_name='Codigo Autoincrementado',primary_key=True)
     nummcc = models.IntegerField(verbose_name='Numero de la mcc', unique=True)
     nombremmc = models.CharField(verbose_name='Nombre de la mmca',max_length=120)
-    fechaini = models.DateTimeField(verbose_name='Fecha de inicio de la campaña',)
-    fechafin = models.DateTimeField(verbose_name='Fecha de final de la campaña',)	
+    fechaini = models.DateTimeField(verbose_name='Fecha de inicio de la campana',)
+    fechafin = models.DateTimeField(verbose_name='Fecha de final de la campana',)	
     nummcctipo = models.ForeignKey(MccTipo,verbose_name='Tipo mcc',)
     nummccestado = models.ForeignKey(MccEstado,verbose_name='Mcc Estado',)
     region = models.ForeignKey(Region, verbose_name='Region')
     provincia = models.ForeignKey(Provincia, verbose_name='Provincia')
-    descripcionmcc = models.TextField(verbose_name='Breve descripción y estado actual del mcc',)
+    descripcionmcc = models.TextField(verbose_name='Breve descripcion y estado actual del mcc',)
     lugar = models.CharField(verbose_name='Lugar de la mcc',max_length=120)
     propuestamcc = models.TextField(verbose_name='Propuesta del mcc',)
     idusuario_creac = models.IntegerField(verbose_name='Usuario creador',)
-    fec_creac = models.DateTimeField(verbose_name='Fecha de creación del registro',auto_now_add=True)
+    fec_creac = models.DateTimeField(verbose_name='Fecha de creaci�n del registro',auto_now_add=True)
     idusuario_mod = models.IntegerField(verbose_name='Usuario modifico', null=True, blank=True)
     fec_mod = models.DateTimeField(verbose_name='Fecha modifico', auto_now=True, null=True, blank=True)
     idadministrador_mod	= models.IntegerField(verbose_name='Usuario modifico', null=True, blank=True)
@@ -266,8 +268,8 @@ class Mcc(models.Model):
 
     class Meta:
         db_table = u'mcc'
-        verbose_name = u'Matriz de Campaña de Crisis'
-        verbose_name_plural = u'Matrices de Campaña de Crisis'
+        verbose_name = u'Matriz de Campana de Crisis'
+        verbose_name_plural = u'Matrices de Campana de Crisis'
 
     def __unicode__(self):
         return self.nombremmca
