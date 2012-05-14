@@ -22,7 +22,7 @@
 
 <div class="tab-content" id="contenido_izq">
 <div id="nuevo" class="tab-pane fade in active" style="width:500px">
-<form class="form-inline" id="frmcca" name="frmcca" method="post" action="{% url ogcs-mantenimiento-mcca-add %}" ><!--data-toggle="modal"-->
+<form class="form-inline" id="frmcca" name="frmcca" method="post" action="{% url ogcs-mantenimiento-mcca-add %}" onsubmit="return guardar_mcca();" ><!--data-toggle="modal"-->
 <div id="frmprovincia" class="modal" style="position: relative; top: auto; left: auto; margin: 0 auto auto 20px; z-index: 1;width:720px;height:auto"><!--class="modal hide fade">-->
     <div class="modal-header">
       <h3>Nuevo MCCA (Matriz de Campaña de Comunicaciones Anuales)</h3>
@@ -174,15 +174,15 @@
 
 
 $('#dp4').datepicker().on('changeDate', function(ev){
-					var fechaini = $("#id_fechaini_mcca").val().split('-');
-					var fechafin = $("#id_fechaini_mcca").val().split('-');
+					var fechaini = $("#id_fechaini_mcca").val().split('/');
+					var fechafin = $("#id_fechafin_mcca").val().split('/');
 					 var stDate = new Date(fechaini[2],fechaini[1],fechaini[0]);
             		 var endDate = new Date(fechafin[2],fechafin[1],fechafin[0]);
 					 
-					if($('#id_fechafin').val()!=""){
+					if($('#id_fechafin_mcca').val()!=""){
 						if (stDate.valueOf() > endDate.valueOf()){
 							$('#alert').show().find('strong').text('La fecha inicial no puede ser mayor que la fecha final.');
-							$('#id_fechaini').val($('#id_fechafin').val())
+							$('#id_fechaini_mcca').val($('#id_fechafin_mcca').val())
 						} else {
 							$('#alert').hide();
 						}
@@ -190,15 +190,15 @@ $('#dp4').datepicker().on('changeDate', function(ev){
 				});
 
 $('#dp5').datepicker().on('changeDate', function(ev){
-					var fechaini = $("#id_fechainia").val().split('-');
-					var fechafin = $("#id_fechafina").val().split('-');
+					var fechaini = $("#id_fechaini_mcca").val().split('/');
+					var fechafin = $("#id_fechafin_mcca").val().split('/');
 					 var stDate = new Date(fechaini[2],fechaini[1],fechaini[0]);
             		 var endDate = new Date(fechafin[2],fechafin[1],fechafin[0]);
 					
-					if($('#id_fechaini').val()!=""){
+					if($('#id_fechaini_mcca').val()!=""){
 						if (stDate.valueOf() > endDate.valueOf()){
 							$('#alert').show().find('strong').text('La fecha final no puede ser menor que la fecha inicial.');
-							$('#id_fechafin').val($('#id_fechaini').val())
+							$('#id_fechafin_mcca').val($('#id_fechaini_mcca').val())
 						} else {
 							$('#alert').hide();
 						}

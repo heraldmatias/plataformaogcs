@@ -77,7 +77,7 @@ class MccaForm(forms.ModelForm):
         fields = ('nombremmca', 'fechaini', 'fechafin', )
         widgets = {
             'fechaini': forms.TextInput(attrs={'size':'15','id':'id_fechaini_mcca'}),
-            'fechafin': forms.TextInput(attrs={'size':'15','id':'id_fechaini_mcca'}),
+            'fechafin': forms.TextInput(attrs={'size':'15','id':'id_fechafin_mcca'}),
         }
         
 class MccaForm_Estado(forms.ModelForm):
