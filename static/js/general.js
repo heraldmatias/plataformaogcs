@@ -11,7 +11,8 @@ function confirmar(mensaje){
 function provincias(label){
         var id= $("#id_region").val();
 	var provincia = $("#id_provincia");
-        var idpro = provincia.val();var select=true;    
+        var idpro = provincia.val();var select=true;   
+		provincia.removeAttr("disabled");
 	provincia.find('option').remove();
 if(label==0){
 provincia.append("<option selected='selected' value=''>---TODOS---</option>");

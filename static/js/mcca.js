@@ -318,22 +318,22 @@ function removedetalle(t,fila){
 
 
 function guardar_mcca(){
-					if($("#id_nombremmca").val()=="" ){
+					if($.trim($("#id_nombremmca").val())=="" ){
 							$('#alert').show().find('strong').text('Debe ingresar el nombre.');$("#id_nombremmca").focus();
 							return false;
 					}else{
 						$('#alert').hide();
 						
 					}
-					if($("#id_fechaini_mcca").val()=="" ){
-						$('#alert').show().find('strong').text('Debe elegir fecha inicial');$("#id_fechaini").focus();
+					if($.trim($("#id_fechaini_mcca").val())=="" ){
+						$('#alert').show().find('strong').text('Debe elegir fecha inicial');$("#id_fechaini_mcca").focus();
 						return false;
 					}else{
 						$('#alert').hide();
 						
 					}	
-					if($("#id_fechafin_mcca").val()=="" ){
-						$('#alert').show().find('strong').text('Debe elegir fecha final');$("#id_fechafin").focus();
+					if($.trim($("#id_fechafin_mcca").val())=="" ){
+						$('#alert').show().find('strong').text('Debe elegir fecha final');$("#id_fechafin_mcca").focus();
 						return false;
 					}else{
 						$('#alert').hide();

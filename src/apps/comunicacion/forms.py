@@ -263,7 +263,7 @@ class MccForm(forms.ModelForm):
         widgets = {
             'nummcctipo': forms.Select(),
             'nummccestado': forms.Select(),
-            'region': forms.Select(),
+            'region': forms.Select(attrs={'onChange':'provincias(0);',}),
             'provincia': forms.Select(attrs={'disabled':'disabled'}),
             'fechaini': forms.TextInput(attrs={'size':'15'}),
             'fechafin': forms.TextInput(attrs={'size':'15'}),
@@ -287,7 +287,7 @@ class MccForm_ActorTable(tables.Table):
     eliminar = tables.TemplateColumn('<a href="javascript:Eliminar_actor({{ record.item }})">Eliminar</a>')
 
     class Meta:
-        attrs = {"class": "table table-bordered table-condensed table-striped", "name":"tabla_canal"}
+        attrs = {"class": "table table-bordered table-condensed table-striped", "name":"tabla_actor", "id":"tabla_actor"}
         orderable = False
 
 ####################################################################################
@@ -310,7 +310,7 @@ class MccForm_LiderTable(tables.Table):
     eliminar = tables.TemplateColumn('<a href="javascript:Eliminar_lider({{ record.item }})">Eliminar</a>')
 
     class Meta:
-        attrs = {"class": "table table-bordered table-condensed table-striped", "name":"tabla_canal"}
+        attrs = {"class": "table table-bordered table-condensed table-striped", "name":"tabla_lider","id":"tabla_lider"}
         orderable = False
 
 ####################################################################################
@@ -327,7 +327,7 @@ class MccForm_ObservacionTable(tables.Table):
     eliminar = tables.TemplateColumn('<a href="javascript:Eliminar_observacion_mcc({{ record.item }})">Eliminar</a>')
 
     class Meta:
-        attrs = {"class": "table table-bordered table-condensed table-striped", "name":"tabla_observacion"}
+        attrs = {"class": "table table-bordered table-condensed table-striped", "name":"tabla_observacion","id":"tabla_observacion"}
         orderable = False
 
 ####################################################################################

@@ -236,10 +236,13 @@ def mccaadd(request):
 		fecfin = request.POST["fechafin"]
 		fecini = datetime.strptime(fecini, "%d/%m/%Y").strftime("%Y-%m-%d")
 		fecfin = datetime.strptime(fecfin, "%d/%m/%Y").strftime("%Y-%m-%d")
+                #obj = Mcca(nummcca=num,nombremmca=request.POST["nombremmca"],fechaini=fecini,fechafin=fecfin,organismo=1,dependencia=1,idusuario_creac=1,publico='ninguno')
 		obj = Mcca(nummcca=num,nombremmca=request.POST["nombremmca"],fechaini=fecini,fechafin=fecfin,organismo=profile.organismo,dependencia=profile.dependencia,idusuario_creac=profile.numero,publico='ninguno')
-		#formmcca = MccaForm(request.POST,instance=obj)
+		formmcca = MccaForm(request.POST,instance=obj)
 		#if formmcca.is_valid():
-		obj.save()
+                if formmcca.is_valid():
+                    formmcca.save()
+                obj.save()
 		#sectores_Estado_save
 		for c in range(len(corg)): 
 			MccaEstado(nummcca=obj,item=c,organismo=Organismo.objects.get(codigo=corg[c]),dependencia=cdep[c]).save()
@@ -257,7 +260,9 @@ def mccaadd(request):
 			MccaCanal(nummcca=obj,item=c,tipommca=MccaTipoComunicacion.objects.get(codigo=ctipo[c]),canal=ccan[c],auditoria=1).save()
 		#acciones_save
 		for c in range(len(cacc)):
-			MccaAccion(nummcca = obj,item =c, fechainia=caccfini[c],fechafina=caccffin[c], acciones=cacc[c], auditoria=1).save()
+                        fecini1 = datetime.strptime(caccfini[c], "%d/%m/%Y").strftime("%Y-%m-%d")
+                        fecfin1 = datetime.strptime(caccffin[c], "%d/%m/%Y").strftime("%Y-%m-%d")
+			MccaAccion(nummcca = obj,item =c, fechainia=fecini1,fechafina=fecfin1, acciones=cacc[c], auditoria=1).save()
 		#observaciones_save
 		for c in range(len(cobs)):
 			MccaObservacion(nummcca=obj,item=c,observacion=cobs[c],auditoria=1).save()
@@ -323,117 +328,65 @@ def mcca_query(request):
 
 def mccadd(request):
     mensaje=""
-    query1 = list()
-    query2 = list()
-    query3 = list()
     if request.method == 'POST':
-        if 'archivo' in request.FILES:
-            profile = request.user.get_profile()
-            ini=request.session['dependencia']
-            filename= "PGCS%s%s.pdf" % (ini.iniciales,datetime.today().strftime("%d%m%Y"))
-            try:
-                obj=Pgcs.objects.get(archivo='pgcs/'+filename)
-            except:
-                num = Pgcs.objects.values("numpgcs").order_by("-numpgcs",)[:1]
-                num = 1 if len(num)==0 else int(num[0]["numpgcs"])+1
-                obj = Pgcs(numpgcs=num,organismo=profile.organismo,dependencia=profile.dependencia,idusuario_creac=profile.numero,tipopgcs=TipoOgcs.objects.get(codigo=1))
-            FileSystemStorage().delete('pgcs/'+filename)
-            request.FILES['archivo'].name = filename
-        formulario = PgcsForm(request.POST,request.FILES,instance=obj ) # A form bound to the POST data
-        if formulario.is_valid():
-            formulario.save()
-            obj.urlpgcs= obj.archivo.url
-            obj.save()
-            formmcca = MccaForm() # Crear un parametro en home para mostrar los mensajes de exito.
-            mensaje="Registro grabado satisfactoriamente."
-    else:
+                #actores
+                numtvac = request.POST.getlist('numtvac')
+		actores = request.POST.getlist('listactor')
+		instac = request.POST.getlist('instac')
+		#lideres
+		numtvli = request.POST.getlist('numtvli')
+		lideres = request.POST.getlist('listlider')
+		instli = request.POST.getlist('instli')
+		#observaciones
+		cobs = request.POST.getlist('cobs')
+		
+		num = Mcc.objects.values("nummcc").order_by("-nummcc",)[:1]
+		num = 1 if len(num)==0 else int(num[0]["nummcc"])+1
+		fecini = request.POST["fechaini"]
+		fecfin = request.POST["fechafin"]
+		fecini = datetime.strptime(fecini, "%d/%m/%Y").strftime("%Y-%m-%d")
+		fecfin = datetime.strptime(fecfin, "%d/%m/%Y").strftime("%Y-%m-%d")
+                #obj = Mcc(nummcc=num,nombremmc=request.POST["nombremmc"],fechaini=fecini,fechafin=fecfin,
+                #region = Region.objects.get(numreg = request.POST['region']),
+                #provincia = Provincia.objects.get(numpro = request.POST['provincia']),
+                #nummcctipo = MccTipo.objects.get(codigo = request.POST['nummcctipo']),
+                #nummccestado = MccEstado.objects.get(codigo = request.POST['nummccestado']),
+                #organismo=1,dependencia=1,idusuario_creac=1)
+		obj = Mcc(nummcc=num,nombremmc=request.POST["nombremmc"],fechaini=fecini,fechafin=fecfin,
+                region = Region.objects.get(numreg = request.POST['region']),
+                provincia = Provincia.objects.get(numpro = request.POST['provincia']),
+                nummcctipo = MccTipo.objects.get(codigo = request.POST['nummcctipo']),
+                nummccestado = MccEstado.objects.get(codigo = request.POST['nummccestado']),
+                organismo=profile.organismo,dependencia=profile.dependencia,idusuario_creac=profile.numero)
+		formmcc = MccForm(request.POST,instance=obj)
+                if formmcc.is_valid():
+                    formmcc.save()
+                obj.save()
+		#actores_save
+		for c in range(len(numtvac)):
+			MccActor(nummcc = obj,item=c,numtipovarios=MccTipoVarios.objects.get(codigo=numtvac[c]),actor=actores[c],institucion=instac[c],auditoria=1).save()
+		#lideres_save
+		for c in range(len(numtvli)):
+			MccLider(nummcc = obj,item=c,numtipovarios=MccTipoVarios.objects.get(codigo=numtvli[c]),lider=lideres[c],institucion=instli[c],auditoria=1).save()
+		#observaciones_save
+		for c in range(len(cobs)):
+			MccObservacion(nummcc=obj,item=c,observacion=cobs[c],auditoria=1).save()
+		formmcca = MccForm() # Crear un parametro en home para mostrar los mensajes de exito.
+				
+		mensaje="Registro grabado satisfactoriamente."
+    
        
-        #query1 = [
-        #                {'item':'1','numtipovarios': '2','actor':'moises','institucion':'zzzz'},
-        #]
-        #
-        #query2 = [
-        #                {'item':'1','numtipovarios': '2','lider':'moises','institucion':'xxxx'},
-        #]
-        #
-        #query3 = [
-        #                {'item':'1','observacion': 'Django Reinhardt'},
-        #]        
+    tabla1 = MccForm_ActorTable(list())
+    tabla2 = MccForm_LiderTable(list())
+    tabla3 = MccForm_ObservacionTable(list())
 
-        tabla1 = MccForm_ActorTable(list())
-        config.configure(tabla1)
-
-        tabla2 = MccForm_LiderTable(list())
-        config.configure(tabla2)
-
-        tabla3 = MccForm_ObservacionTable(list())
-        config.configure(tabla3)
-
-        formmcc = MccForm()
-        formmcc_lider = MccForm_Lider()
-        formmcc_actor = MccForm_Actor()
-        formmcc_observacion = MccForm_Observacion()
+    formmcc = MccForm()
+    formmcc_lider = MccForm_Lider()
+    formmcc_actor = MccForm_Actor()
+    formmcc_observacion = MccForm_Observacion()
 
     return render_to_response('comunicacion/mcc.html', {'form': formmcc,'form_actor': formmcc_actor,'form_lider': formmcc_lider,'form_observacion':formmcc_observacion,'tabla1':tabla1,'tabla2':tabla2,'tabla3':tabla3,'mensaje':mensaje}, context_instance=RequestContext(request),)
 
-
-def mccadd_actor(request):
-    query = list()
-    if(request.GET['tipo']=="add"):
-        if("actores" in request.session):
-            query =request.session['actores']
-            num=len(query)+1
-        else:
-            num = 1
-        query.extend([{'item':num,'numtipovarios': request.GET['varios'],'actor':request.GET['actor'],'institucion':request.GET['inst']}])
-        request.session['actores'] = query
-    else:
-        if("actores" in request.session):
-            query =request.session['actores']
-        num=int(request.GET['actor'])-1
-        query.pop(num);
-        request.session['actores'] = query
-
-    return query
-
-def mccadd_lider(request):
-    query = list()
-    if(request.GET['tipo']=="add"):
-        if("lideres" in request.session):
-            query =request.session['lideres']
-            num=len(query)+1
-        else:
-            num = 1
-        query.extend([{'item':num,'numtipovarios': request.GET['varios'],'lider':request.GET['lider'],'institucion':request.GET['inst']}])
-        request.session['lideres'] = query
-    else:
-        if("lideres" in request.session):
-            query =request.session['lideres']
-        num=int(request.GET['lider'])-1
-        query.pop(num);
-        request.session['lideres'] = query
-
-    return query
-	
-def mccadd_observacion(request):
-    query = list()
-    if(request.GET['tipo']=="add"):
-        if("observaciones_mcc" in request.session):
-            query =request.session['observaciones_mcc']
-            num=len(query)+1
-        else:
-            num = 1
-        query.extend([{'item':num,'observacion': request.GET['obs']}])
-        request.session['observaciones_mcc'] = query
-    else:
-        if("observaciones_mcc" in request.session):
-            query =request.session['observaciones_mcc']
-        num=int(request.GET['obs'])-1
-        query.pop(num);
-        request.session['observaciones_mcc'] = query
-
-
-    return query
 
 
 

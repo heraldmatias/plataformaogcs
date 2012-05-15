@@ -76,6 +76,7 @@ class Mcca(models.Model):
     codigo = models.AutoField(verbose_name='Codigo Autoincrementado',primary_key=True)
     nummcca = models.IntegerField(verbose_name='Numero de la mcca', unique=True)
     organismo = models.ForeignKey(Organismo, verbose_name='Organismo')
+    #organismo = models.IntegerField(verbose_name='Organismo')
     dependencia = models.IntegerField(verbose_name='Dependencia',)
     nombremmca = models.CharField(verbose_name='Nombre de la mmca',max_length=70)
     fechaini = models.DateTimeField(verbose_name='Fecha de inicio de la campana',)
@@ -249,6 +250,9 @@ class MccTipoVarios(models.Model):
 class Mcc(models.Model):
     codigo = models.AutoField(verbose_name='Codigo Autoincrementado',primary_key=True)
     nummcc = models.IntegerField(verbose_name='Numero de la mcc', unique=True)
+    organismo = models.ForeignKey(Organismo, verbose_name='Organismo')
+    #organismo = models.IntegerField(verbose_name='Organismo')
+    dependencia = models.IntegerField(verbose_name='Dependencia',)
     nombremmc = models.CharField(verbose_name='Nombre de la mmca',max_length=120)
     fechaini = models.DateTimeField(verbose_name='Fecha de inicio de la campana',)
     fechafin = models.DateTimeField(verbose_name='Fecha de final de la campana',)	
