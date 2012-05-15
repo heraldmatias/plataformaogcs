@@ -224,8 +224,8 @@ class ConsultaMccaForm(forms.ModelForm):
 class MccaTable(tables.Table):
     item = tables.Column()
     fechaini = tables.Column(orderable=True, verbose_name='Fecha')
-    organismo = tables.Column(orderable=True, verbose_name='Usuario')
-    dependencia = tables.Column(orderable=True, verbose_name='Usuario')
+    organismo = tables.Column(orderable=True, verbose_name='Organismo')
+    dependencia = tables.Column(orderable=True, verbose_name='Dependecia')
     nombremmca = tables.Column(orderable=True, verbose_name='Nombre de Campaña')
     usuario = tables.Column(orderable=True, verbose_name='Usuario')
     fec_creac = tables.Column(orderable=True, verbose_name='Fecha de Creación')
@@ -343,30 +343,31 @@ class ConsultaMccForm(forms.ModelForm):
         }
 
 class MccTable(tables.Table):
-    item = tables.Column()
-    fechaini = tables.Column(orderable=True, verbose_name='Fecha')
-    organismo = tables.Column(orderable=True,verbose_name='Organismo')
-    dependencia = tables.Column(orderable=True, verbose_name='Dependencia')
-    nummcctipo = tables.Column(orderable=True, verbose_name='Tipo')
-    nummccestado = tables.Column(orderable=True, verbose_name='Estado')
-    region = tables.Column(orderable=True, verbose_name='Región')
-    provincia = tables.Column(orderable=True, verbose_name='Provincia')
-    usuario = tables.Column(orderable=True, verbose_name='Usuario')
-    fec_creac = tables.Column(orderable=True, verbose_name='Fecha de Creación')
-    idusuario_mod = tables.Column(orderable=True, verbose_name='Usu Mod')
-    fec_mod = tables.Column(orderable=True, verbose_name='Fecha Usu Mod')
-    idadministrador_mod = tables.Column(orderable=True, verbose_name='Admin Mod')
-    fec_modadm = tables.Column(orderable=True, verbose_name='Fecha Admin Mod')
-    Modificar = tables.TemplateColumn('<a href=/mcca/edit/>moidificar</a>')
+	item = tables.Column()
+	fechaini = tables.Column(orderable=True, verbose_name='Fecha')
+	organismo = tables.Column(orderable=True,verbose_name='Organismo')
+	dependencia = tables.Column(orderable=True, verbose_name='Dependencia')
+	nombremmc = tables.Column(orderable=True, verbose_name='Nombre de caso de crisis')
+	nummcctipo = tables.Column(orderable=True, verbose_name='Tipo')
+	nummccestado = tables.Column(orderable=True, verbose_name='Estado')
+	region = tables.Column(orderable=True, verbose_name='Región')
+	provincia = tables.Column(orderable=True, verbose_name='Provincia')
+	usuario = tables.Column(orderable=True, verbose_name='Usuario')
+	fec_creac = tables.Column(orderable=True, verbose_name='Fecha de Creación')
+	idusuario_mod = tables.Column(orderable=True, verbose_name='Usu Mod')
+	fec_mod = tables.Column(orderable=True, verbose_name='Fecha Usu Mod')
+	idadministrador_mod = tables.Column(orderable=True, verbose_name='Admin Mod')
+	fec_modadm = tables.Column(orderable=True, verbose_name='Fecha Admin Mod')
+	Modificar = tables.TemplateColumn('<a href=/mcca/edit/>moidificar</a>')
+	
+	def render_item(self):
+		value = getattr(self, '_counter', 1)
+		self._counter = value + 1
+		return '%d' % value
 
-    def render_item(self):
-        value = getattr(self, '_counter', 1)
-        self._counter = value + 1
-        return '%d' % value
-
-    class Meta:
-        attrs = {"class": "table table-bordered table-condensed table-striped"}
-        orderable = False
+	class Meta:
+		attrs = {"class": "table table-bordered table-condensed table-striped"}
+		orderable = False
 
 ######################## MCC FINAL ################################################
 ####################################################################################

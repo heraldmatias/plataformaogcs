@@ -305,22 +305,23 @@ def mcca_query(request):
                 dependencia=request.GET['dependencia']
     if 'nombremmca' in request.GET:
         if request.GET['nombremmca']:
-            filtro.append(u"mcca.nombremmca like '%s'"%request.GET['nombremmca'])
+            filtro.append(u"nombremmca = '%s'"%request.GET['nombremmca'])
     if 'fechaini' in request.GET:
         if request.GET['fechaini']:
             fecini = request.GET["fechaini"]
             fecini = datetime.strptime(fecini, "%d/%m/%Y").strftime("%Y-%m-%d")
-            filtro.append(u"mcca.fechaini >='%s'"%fecini)
+            filtro.append(u"fechaini ='%s'"%fecini)
     if 'fechafin' in request.GET:
         if request.GET['fechafin']:
             fecfin = request.GET["fechafin"]
             fecfin = datetime.strptime(fecfin, "%d/%m/%Y").strftime("%Y-%m-%d")
-            filtro.append(u"mcca.fechafin <='%s'"%fecfin)
+            filtro.append(u"fechafin ='%s'"%fecfin)
 
-    filtro.append(u"idusuario_creac=usuario.numero")
+    #filtro.append(u"mcca.idusuario_mod=usuario.numero")
     #filtro.append(u"tipopgcs_id=2")
-    query = Mcca.objects.extra(tables=['usuario',],where=filtro,select={'usuario':'usuario.usuario','dependencia':"case pgcs.organismo_id when 1 then (select ministerio from ministerio where nummin=pgcs.dependencia) when 2 then (select odp from odp where numodp=pgcs.dependencia) when 3 then (select gobernacion from gobernacion where numgob=pgcs.dependencia) end"})
-    #tabla = query.order_by(col)
+    query = Mcca.objects.extra(tables=['usuario',],where=filtro,select={'usuario':'usuario.usuario','idusuario_mod':'usuario.usuario','dependencia':"case mcca.organismo_id when 1 then (select ministerio from ministerio where nummin=mcca.dependencia) when 2 then (select odp from odp where numodp=mcca.dependencia) when 3 then (select gobernacion from gobernacion where numgob=mcca.dependencia) end"})
+    #query = Mcca.objects.extra(where=filtro)
+	#tabla = query.order_by(col)
     #return HttpResponse(serializers.serialize("json", tabla, ensure_ascii=False),mimetype='application/json')
 
     tabla = MccaTable(query.order_by(col))
@@ -341,8 +342,8 @@ def mcca_query(request):
 def mccadd(request):
     mensaje=""
     if request.method == 'POST':
-                #actores
-                numtvac = request.POST.getlist('numtvac')
+		#actores
+		numtvac = request.POST.getlist('numtvac')
 		actores = request.POST.getlist('listactor')
 		instac = request.POST.getlist('instac')
 		#lideres
@@ -418,34 +419,35 @@ def mcc_query(request):
                 filtro.append(u"mcc.dependencia =%s"%request.GET['dependencia'])
     if 'nombremmc' in request.GET:
         if request.GET['nombremmc']:
-            filtro.append(u"mcc.nombremmc like '%\%s\%'"%request.GET['nombremmc'])
+            filtro.append(u"nombremmc like '%s'"%request.GET['nombremmc'])
     if 'fechaini' in request.GET:
         if request.GET['fechaini']:
             fecini = request.GET["fechaini"]
             fecini = datetime.strptime(fecini, "%d/%m/%Y").strftime("%Y-%m-%d")
-            filtro.append(u"mcc.fechaini >= '%s'"%fecini)
+            filtro.append(u"fechaini = '%s'"%fecini)
     if 'fechafin' in request.GET:
         if request.GET['fechafin']:
             fecfin = request.GET["fechafin"]
             fecfin = datetime.strptime(fecfin, "%d/%m/%Y").strftime("%Y-%m-%d")
-            filtro.append(u"mcc.fechafin <= '%s'"%fecfin)
+            filtro.append(u"fechafin = '%s'"%fecfin)
     if 'nummcctipo' in request.GET:
         if request.GET['nummcctipo']:
-            filtro.append(u"mcc.nummcctipo_id =%s"%request.GET['nummcctipo'])
+            filtro.append(u"nummcctipo_id =%s"%request.GET['nummcctipo'])
     if 'nummccestado' in request.GET:
         if request.GET['nummccestado']:
-            filtro.append(u"mcc.nummccestado_id >=%s"%request.GET['nummccestado'])
+            filtro.append(u"nummccestado_id =%s"%request.GET['nummccestado'])
     if 'region' in request.GET:
         if request.GET['region']:
-            filtro.append(u"mcc.region_id <=%s"%request.GET['region'])
+            filtro.append(u"region_id =%s"%request.GET['region'])
         if 'provincia' in request.GET:
             if request.GET['provincia']:
-                filtro.append(u"mcc.provincia_id =%s"%request.GET['provincia'])
+                filtro.append(u"provincia_id =%s"%request.GET['provincia'])
 
-    filtro.append(u"idusuario_creac=usuario.numero")
+    #filtro.append(u"idusuario_creac=usuario.numero")
     #filtro.append(u"tipopgcs_id=2")
-    query = Mcc.objects.extra(tables=['usuario',],where=filtro,select={'usuario':'usuario.usuario','dependencia':"case pgcs.organismo_id when 1 then (select ministerio from ministerio where nummin=pgcs.dependencia) when 2 then (select odp from odp where numodp=pgcs.dependencia) when 3 then (select gobernacion from gobernacion where numgob=pgcs.dependencia) end"})
-    #tabla = query.order_by(col)
+    query = Mcc.objects.extra(tables=['usuario',],where=filtro,select={'usuario':'usuario.usuario','idusuario_mod':'usuario.usuario','dependencia':"case mcc.organismo_id when 1 then (select ministerio from ministerio where nummin=mcc.dependencia) when 2 then (select odp from odp where numodp=mcc.dependencia) when 3 then (select gobernacion from gobernacion where numgob=mcc.dependencia) end"})
+    #query = Mcc.objects.extra(where=filtro)
+	#tabla = query.order_by(col)
     #return HttpResponse(serializers.serialize("json", tabla, ensure_ascii=False),mimetype='application/json')
 
     tabla = MccTable(query.order_by(col))
