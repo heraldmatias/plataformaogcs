@@ -305,17 +305,17 @@ def mcca_query(request):
                 dependencia=request.GET['dependencia']
     if 'nombremmca' in request.GET:
         if request.GET['nombremmca']:
-            filtro.append(u"mcca.nombremmca =%s"%request.GET['nombremmca'])
+            filtro.append(u"mcca.nombremmca like '%s'"%request.GET['nombremmca'])
     if 'fechaini' in request.GET:
         if request.GET['fechaini']:
             fecini = request.GET["fechaini"]
             fecini = datetime.strptime(fecini, "%d/%m/%Y").strftime("%Y-%m-%d")
-            filtro.append(u"mcca.fechaini >=%s"%fecini)
+            filtro.append(u"mcca.fechaini >='%s'"%fecini)
     if 'fechafin' in request.GET:
         if request.GET['fechafin']:
             fecfin = request.GET["fechafin"]
             fecfin = datetime.strptime(fecfin, "%d/%m/%Y").strftime("%Y-%m-%d")
-            filtro.append(u"mcca.fechafin <=%s"%fecfin)
+            filtro.append(u"mcca.fechafin <='%s'"%fecfin)
 
     filtro.append(u"idusuario_creac=usuario.numero")
     #filtro.append(u"tipopgcs_id=2")
@@ -418,17 +418,17 @@ def mcc_query(request):
                 filtro.append(u"mcc.dependencia =%s"%request.GET['dependencia'])
     if 'nombremmc' in request.GET:
         if request.GET['nombremmc']:
-            filtro.append(u"mcc.nombremmc like %s"%request.GET['nombremmc'])
+            filtro.append(u"mcc.nombremmc like '%\%s\%'"%request.GET['nombremmc'])
     if 'fechaini' in request.GET:
         if request.GET['fechaini']:
             fecini = request.GET["fechaini"]
             fecini = datetime.strptime(fecini, "%d/%m/%Y").strftime("%Y-%m-%d")
-            filtro.append(u"mcc.fechaini >=%s"%fecini)
+            filtro.append(u"mcc.fechaini >= '%s'"%fecini)
     if 'fechafin' in request.GET:
         if request.GET['fechafin']:
             fecfin = request.GET["fechafin"]
             fecfin = datetime.strptime(fecfin, "%d/%m/%Y").strftime("%Y-%m-%d")
-            filtro.append(u"mcc.fechafin <=%s"%fecfin)
+            filtro.append(u"mcc.fechafin <= '%s'"%fecfin)
     if 'nummcctipo' in request.GET:
         if request.GET['nummcctipo']:
             filtro.append(u"mcc.nummcctipo_id =%s"%request.GET['nummcctipo'])
