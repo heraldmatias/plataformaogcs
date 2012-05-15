@@ -7,7 +7,7 @@
 
 <div class="tab-content" id="contenido_izq" style="height:auto" >
 
-<form class="form-inline span7" name="frmoac" method="get" action="{% url ogcs-mantenimiento-mcc-query %}"><!--data-toggle="modal"-->
+<form class="form-inline span7" name="frmmcc_consulta" id="frmmcc_consulta" method="get" action="{% url ogcs-mantenimiento-mcc-query %}"><!--data-toggle="modal"-->
 <div id="frmregion" class="modal span7" style="position: relative; top: auto; left: auto; margin: 0 auto auto -1.3em; z-index: 1;width:720px;height:auto"><!--class="modal hide fade">-->
     <div class="modal-header">
       <a class="close" data-dismiss="modal" href="javascript: cerrarformulario('contenido');">&times;</a>
@@ -56,9 +56,9 @@
 <script>
 
 function imprimir(){
-var org=$('#id_organismo').val();var dep=$('#id_dependencia').val();
+var from_data =  $("#frmmcc_consulta").serialize();
 
-var url="{% url ogcs-mantenimiento-pgcs-print 1 %}?organismo="+org+'&dependencia='+dep;
+var url="{% url ogcs-mantenimiento-mcc-print %}?"+from_data;
 
 location.href=url;
 }
