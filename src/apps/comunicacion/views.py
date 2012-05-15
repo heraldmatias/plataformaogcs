@@ -289,33 +289,45 @@ def mccaadd(request):
 
 
 def mcca_query(request):
-    col = "-organismo"
-    query = list()
-    dependencia=''
-    nombremmca=''
-    fechaini=''
-    fechafin=''
+    col = "-fechaini"
+    query = None
     filtro = list()
     if "2-sort" in request.GET:
         col = request.GET['2-sort']
     config = RequestConfig(request)
-    form_estado = MccaForm_Estado(request.GET)
-    form = MccaForm(request.GET)
-    #if 'organismo' in request.GET:
-    #    if request.GET['organismo']:
-    #        filtro.append(u"pgcs.organismo_id =%s"%request.GET['organismo'])
-    #    if 'dependencia' in request.GET:
-    #        if request.GET['dependencia']:
-    #            filtro.append(u"pgcs.dependencia =%s"%request.GET['dependencia'])
-    #            dependencia=request.GET['dependencia']
-    #filtro.append(u"idusuario_creac=usuario.numero")
-    #filtro.append(u"tipopgcs_id=1")
-    #query = Pgcs.objects.extra(tables=['usuario',],where=filtro,select={'usuario':'usuario.usuario','dependencia':"case pgcs.organismo_id when 1 then (select ministerio from ministerio where nummin=pgcs.dependencia) when 2 then (select odp from odp where numodp=pgcs.dependencia) when 3 then (select gobernacion from gobernacion where numgob=pgcs.dependencia) end"})
-    #tabla = PgcsTable(query.order_by(col))
-    tabla = MccaTable(query)
+    formulario = ConsultaMccaForm(request.GET)
+    if 'organismo' in request.GET:
+        if request.GET['organismo']:
+            filtro.append(u"mcca.organismo_id =%s"%request.GET['organismo'])
+        if 'dependencia' in request.GET:
+            if request.GET['dependencia']:
+                filtro.append(u"mcca.dependencia =%s"%request.GET['dependencia'])
+                dependencia=request.GET['dependencia']
+    if 'nombremmca' in request.GET:
+        if request.GET['nombremmca']:
+            filtro.append(u"mcca.nombremmca =%s"%request.GET['nombremmca'])
+    if 'fechaini' in request.GET:
+        if request.GET['fechaini']:
+            fecini = request.GET["fechaini"]
+            fecini = datetime.strptime(fecini, "%d/%m/%Y").strftime("%Y-%m-%d")
+            filtro.append(u"mcca.fechaini >=%s"%fecini)
+    if 'fechafin' in request.GET:
+        if request.GET['fechafin']:
+            fecfin = request.GET["fechafin"]
+            fecfin = datetime.strptime(fecfin, "%d/%m/%Y").strftime("%Y-%m-%d")
+            filtro.append(u"mcca.fechafin <=%s"%fecfin)
+
+    filtro.append(u"idusuario_creac=usuario.numero")
+    #filtro.append(u"tipopgcs_id=2")
+    query = Mcca.objects.extra(tables=['usuario',],where=filtro,select={'usuario':'usuario.usuario','dependencia':"case pgcs.organismo_id when 1 then (select ministerio from ministerio where nummin=pgcs.dependencia) when 2 then (select odp from odp where numodp=pgcs.dependencia) when 3 then (select gobernacion from gobernacion where numgob=pgcs.dependencia) end"})
+    #tabla = query.order_by(col)
+    #return HttpResponse(serializers.serialize("json", tabla, ensure_ascii=False),mimetype='application/json')
+
+    tabla = MccaTable(query.order_by(col))
     config.configure(tabla)
     tabla.paginate(page=request.GET.get('page', 1), per_page=6)
-    return render_to_response('comunicacion/mcca_consulta.html', {'form':form,'form_estado':form_estado,'tabla':tabla}, context_instance=RequestContext(request),)
+    return render_to_response('comunicacion/mcca_consulta.html', {'form':formulario,'tabla':tabla}, context_instance=RequestContext(request),)
+
 
 
 ######################## MCCA FINAL ################################################
@@ -391,30 +403,52 @@ def mccadd(request):
 
 
 def mcc_query(request):
-    col = "-organismo"
+    col = "-fechaini"
     query = list()
-    dependencia=''
-    nombremmca=''
-    fechaini=''
-    fechafin=''
     filtro = list()
     if "2-sort" in request.GET:
         col = request.GET['2-sort']
     config = RequestConfig(request)
-    #form_estado = MccaForm_Estado(request.GET)
-    form = MccForm(request.GET)
-    #if 'organismo' in request.GET:
-    #    if request.GET['organismo']:
-    #        filtro.append(u"pgcs.organismo_id =%s"%request.GET['organismo'])
-    #    if 'dependencia' in request.GET:
-    #        if request.GET['dependencia']:
-    #            filtro.append(u"pgcs.dependencia =%s"%request.GET['dependencia'])
-    #            dependencia=request.GET['dependencia']
-    #filtro.append(u"idusuario_creac=usuario.numero")
-    #filtro.append(u"tipopgcs_id=1")
-    #query = Pgcs.objects.extra(tables=['usuario',],where=filtro,select={'usuario':'usuario.usuario','dependencia':"case pgcs.organismo_id when 1 then (select ministerio from ministerio where nummin=pgcs.dependencia) when 2 then (select odp from odp where numodp=pgcs.dependencia) when 3 then (select gobernacion from gobernacion where numgob=pgcs.dependencia) end"})
-    #tabla = PgcsTable(query.order_by(col))
-    tabla = MccTable(query)
+    form = ConsultaMccForm(request.GET)
+    if 'organismo' in request.GET:
+        if request.GET['organismo']:
+            filtro.append(u"mcc.organismo_id =%s"%request.GET['organismo'])
+        if 'dependencia' in request.GET:
+            if request.GET['dependencia']:
+                filtro.append(u"mcc.dependencia =%s"%request.GET['dependencia'])
+    if 'nombremmc' in request.GET:
+        if request.GET['nombremmc']:
+            filtro.append(u"mcc.nombremmc like %s"%request.GET['nombremmc'])
+    if 'fechaini' in request.GET:
+        if request.GET['fechaini']:
+            fecini = request.GET["fechaini"]
+            fecini = datetime.strptime(fecini, "%d/%m/%Y").strftime("%Y-%m-%d")
+            filtro.append(u"mcc.fechaini >=%s"%fecini)
+    if 'fechafin' in request.GET:
+        if request.GET['fechafin']:
+            fecfin = request.GET["fechafin"]
+            fecfin = datetime.strptime(fecfin, "%d/%m/%Y").strftime("%Y-%m-%d")
+            filtro.append(u"mcc.fechafin <=%s"%fecfin)
+    if 'nummcctipo' in request.GET:
+        if request.GET['nummcctipo']:
+            filtro.append(u"mcc.nummcctipo_id =%s"%request.GET['nummcctipo'])
+    if 'nummccestado' in request.GET:
+        if request.GET['nummccestado']:
+            filtro.append(u"mcc.nummccestado_id >=%s"%request.GET['nummccestado'])
+    if 'region' in request.GET:
+        if request.GET['region']:
+            filtro.append(u"mcc.region_id <=%s"%request.GET['region'])
+        if 'provincia' in request.GET:
+            if request.GET['provincia']:
+                filtro.append(u"mcc.provincia_id =%s"%request.GET['provincia'])
+
+    filtro.append(u"idusuario_creac=usuario.numero")
+    #filtro.append(u"tipopgcs_id=2")
+    query = Mcc.objects.extra(tables=['usuario',],where=filtro,select={'usuario':'usuario.usuario','dependencia':"case pgcs.organismo_id when 1 then (select ministerio from ministerio where nummin=pgcs.dependencia) when 2 then (select odp from odp where numodp=pgcs.dependencia) when 3 then (select gobernacion from gobernacion where numgob=pgcs.dependencia) end"})
+    #tabla = query.order_by(col)
+    #return HttpResponse(serializers.serialize("json", tabla, ensure_ascii=False),mimetype='application/json')
+
+    tabla = MccTable(query.order_by(col))
     config.configure(tabla)
     tabla.paginate(page=request.GET.get('page', 1), per_page=6)
     return render_to_response('comunicacion/mcc_consulta.html', {'form':form, 'tabla':tabla }, context_instance=RequestContext(request),)

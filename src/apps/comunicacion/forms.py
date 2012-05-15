@@ -74,8 +74,10 @@ class PgcsTable(tables.Table):
 class MccaForm(forms.ModelForm):
     class Meta:
         model = Mcca
-        fields = ('nombremmca', 'fechaini', 'fechafin', )
+        fields = ('nombremmca', 'fechaini', 'fechafin','organismo', 'dependencia' )
         widgets = {
+            'organismo': forms.Select(attrs={'onChange':'dependencias(0);',}),
+            'dependencia':forms.Select(attrs={'disabled':'disabled',}),
             'fechaini': forms.TextInput(attrs={'size':'15','id':'id_fechaini_mcca'}),
             'fechafin': forms.TextInput(attrs={'size':'15','id':'id_fechafin_mcca'}),
         }
@@ -218,27 +220,20 @@ class ConsultaMccaForm(forms.ModelForm):
             'organismo': forms.Select(attrs={'onChange':'dependencias(0);',}),
             'dependencia':forms.Select(),
         }
-    class Meta:
-        model = MccaEstado
-        fields = ('organismo', 'dependencia')
-        widgets = {
-            'organismo': forms.Select(attrs={'onChange':'dependencias(0);',}),
-            'dependencia':forms.Select(),
-        }
-
+        
 class MccaTable(tables.Table):
     item = tables.Column()
     fechaini = tables.Column(orderable=True, verbose_name='Fecha')
     organismo = tables.Column(orderable=True, verbose_name='Usuario')
     dependencia = tables.Column(orderable=True, verbose_name='Usuario')
-    nombremmca = tables.Column(orderable=True, verbose_name='Nombre Campa&ntilde;a')
+    nombremmca = tables.Column(orderable=True, verbose_name='Nombre de Campaña')
     usuario = tables.Column(orderable=True, verbose_name='Usuario')
     fec_creac = tables.Column(orderable=True, verbose_name='Fecha de Creación')
     idusuario_mod = tables.Column(orderable=True, verbose_name='Usu Mod')
     fec_mod = tables.Column(orderable=True, verbose_name='Fecha Usu Mod')
     idadministrador_mod = tables.Column(orderable=True, verbose_name='Admin Mod')
     fec_modadm = tables.Column(orderable=True, verbose_name='Fecha Admin Mod')
-    Modificar = tables.TemplateColumn('<a href=/mcca/edit/>moidificar</a>')
+    Modificar = tables.TemplateColumn('<a href=/mcca/edit/>modificar</a>')
 
     def render_item(self):
         value = getattr(self, '_counter', 1)
@@ -246,7 +241,7 @@ class MccaTable(tables.Table):
         return '%d' % value
 
     class Meta:
-        attrs = {"class": "table table-bordered table-condensed table-striped"}
+        attrs = {"class": "table table-bordered table-condensed table-striped","name":"tabla_consulta","id":"tabla_consulta"}
         orderable = False
         
 ######################## MCCA FINAL ################################################
@@ -337,10 +332,12 @@ class ConsultaMccForm(forms.ModelForm):
     class Meta:
         model = Mcc
         #fields = ('nombremmc','nummcctipo','nummccestado_id','region_id','provincia_id','fechaini','fechafin')
-        fields = ('nombremmc', 'nummcctipo', 'codigo', 'fechaini', 'fechafin', 'region', 'provincia')
+        fields = ('nombremmc', 'organismo', 'dependencia', 'nummcctipo', 'codigo', 'fechaini', 'fechafin', 'region', 'provincia','nummcctipo','nummccestado')
         widgets = {
-            #'organismo': forms.Select(attrs={'onChange':'dependencias(0);',}),
-            #'dependencia':forms.Select(),
+            'nummcctipo': forms.Select(),
+            'nummccestado': forms.Select(),
+            'organismo': forms.Select(attrs={'onChange':'dependencias(0);',}),
+            'dependencia':forms.Select(),
             'region': forms.Select(attrs={'onChange':'provincias(0);',}),
             'provincia':forms.Select(),
         }
@@ -348,8 +345,8 @@ class ConsultaMccForm(forms.ModelForm):
 class MccTable(tables.Table):
     item = tables.Column()
     fechaini = tables.Column(orderable=True, verbose_name='Fecha')
-    #organismo = tables.Column(orderable=True,verbose_name='Organismo')
-    #dependencia = tables.Column(orderable=True, verbose_name='Dependencia')
+    organismo = tables.Column(orderable=True,verbose_name='Organismo')
+    dependencia = tables.Column(orderable=True, verbose_name='Dependencia')
     nummcctipo = tables.Column(orderable=True, verbose_name='Tipo')
     nummccestado = tables.Column(orderable=True, verbose_name='Estado')
     region = tables.Column(orderable=True, verbose_name='Región')
