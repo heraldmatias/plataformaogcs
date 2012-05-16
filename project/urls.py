@@ -6,6 +6,7 @@ admin.autodiscover()
 
 urlpatterns = patterns('',
     (r'^admin/', include(admin.site.urls)),
+    (r'^chat/', include('jqchat.urls')),
     (r'^grappelli/', include('grappelli.urls')),
     (r'^$', 'home.views.index'),
     (r'^home/', include('home.urls')),

@@ -109,10 +109,10 @@
   {% endblock %}
 {% if not login %}<div id="contenido_der">
             <div id="foros">
-           	<div class="links">Foro OGCS </div>
-                <div class="links">Chat OGCS </div>
-                <div class="links">Documentos</div>
-                <div class="links">Acta de Reunión</div>
+           	<div class="links"><a href="#">Foro OGCS</a> </div>
+                <div class="links"><a href="{% url jqchat_test_window 1 %}"> Chat OGCS </a></div>
+                <div class="links"><a href="#">Documentos</a></div>
+                <div class="links"><a href="#">Acta de Reunión</a></div>
             </div>
         </div>  </div>{% endif %}
 </div>

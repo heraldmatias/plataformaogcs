@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% block title %}Chat Client{% endblock %}
+{% block scriptjs %}
+<script type="text/javascript" src="{{ STATIC_URL }}js/jqchat.js"></script>
+<script type="text/javascript">
+	$(document).ready(function(){
+                //ExceptionHandler();
+		InitChatWindow("{% url jqchat_ajax room.id %}", null);
+	});
+</script>
+<script type="text/javascript">document.getElementById("msg").focus();</script>
+<style type="text/css">
+	/* Example styling for the chat window */
+   #chatwindow {
+     height: 250px;
+     width: 400px;
+     border: 1px solid;
+     padding: 5px;
+     margin: 10px 0;
+     overflow: auto;
+     background-color: white;
+   }
+</style>
+{% endblock %}
+{% block content %}
+<div class="tab-content" id="contenido_izq">
+<form id="chatform">
+<div id="frmregion" class="modal" style="position: relative; top: auto; left: auto; margin: 0 auto auto 20px; z-index: 1">
+    <div class="modal-header">
+      <a class="close" data-dismiss="modal" href="javascript: cerrarformulario('contenido');" >&times;</a>
+      <h3>CHAT OGCS: {{ room }}</h3>
+    </div>
+    <div class="modal-body">
+	<div id="chatwindow"><span id="loading">Loading...</span></div>
+	
+                {% csrf_token %}
+		<div class="row-fluid"><label for="msg">Mensaje:</label>                
+		<input type="text" id="msg" />
+		<input type="submit" class="btn btn-primary" value="Enviar Mensaje" /><br /></div>
+
+    </div>
+    <div class="modal-footer"></div>
+</div>	</form>      </div>
+{% endblock %}
