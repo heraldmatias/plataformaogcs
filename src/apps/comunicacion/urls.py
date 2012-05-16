@@ -14,9 +14,11 @@ urlpatterns = patterns('comunicacion.views',
 	######################## MCCA ###############################################
 	url(r'^mcca/add/$','mccaadd', name='ogcs-mantenimiento-mcca-add'),
 	url(r'^mcca/consulta/$','mcca_query', name='ogcs-mantenimiento-mcca-query'),
+	url(r'^mcca/print/$','mccaprint', name='ogcs-mantenimiento-mcca-print'),
 	
 	
 	######################## MCC ################################################
 	url(r'^mcc/add/$','mccadd', name='ogcs-mantenimiento-mcc-add'),
 	url(r'^mcc/consulta/$','mcc_query', name='ogcs-mantenimiento-mcc-query'),
+	url(r'^mcc/print/$','mccprint', name='ogcs-mantenimiento-mcc-print'),
 )

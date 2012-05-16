@@ -330,6 +330,45 @@ def mcca_query(request):
     return render_to_response('comunicacion/mcca_consulta.html', {'form':formulario,'tabla':tabla}, context_instance=RequestContext(request),)
 
 
+def mccaprint(request):
+    col = "-fechaini"
+    query = None
+    filtro = list()
+    if "2-sort" in request.GET:
+        col = request.GET['2-sort']
+    config = RequestConfig(request)
+    formulario = ConsultaMccaForm(request.GET)
+    if 'organismo' in request.GET:
+        if request.GET['organismo']:
+            filtro.append(u"mcca.organismo_id =%s"%request.GET['organismo'])
+        if 'dependencia' in request.GET:
+            if request.GET['dependencia']:
+                filtro.append(u"mcca.dependencia =%s"%request.GET['dependencia'])
+                dependencia=request.GET['dependencia']
+    if 'nombremmca' in request.GET:
+        if request.GET['nombremmca']:
+            filtro.append(u"nombremmca = '%s'"%request.GET['nombremmca'])
+    if 'fechaini' in request.GET:
+        if request.GET['fechaini']:
+            fecini = request.GET["fechaini"]
+            fecini = datetime.strptime(fecini, "%d/%m/%Y").strftime("%Y-%m-%d")
+            filtro.append(u"fechaini ='%s'"%fecini)
+    if 'fechafin' in request.GET:
+        if request.GET['fechafin']:
+            fecfin = request.GET["fechafin"]
+            fecfin = datetime.strptime(fecfin, "%d/%m/%Y").strftime("%Y-%m-%d")
+            filtro.append(u"fechafin ='%s'"%fecfin)
+
+    #filtro.append(u"mcca.idusuario_mod=usuario.numero")
+    #filtro.append(u"tipopgcs_id=2")
+	query = Mcca.objects.extra(tables=['usuario',],where=filtro,select={'usuario':'usuario.usuario','idusuario_mod':'usuario.usuario','dependencia':"case mcca.organismo_id when 1 then (select ministerio from ministerio where nummin=mcca.dependencia) when 2 then (select odp from odp where numodp=mcca.dependencia) when 3 then (select gobernacion from gobernacion where numgob=mcca.dependencia) end"})
+    #query = Mcca.objects.extra(where=filtro)
+	#tabla = query.order_by(col)
+    #return HttpResponse(serializers.serialize("json", tabla, ensure_ascii=False),mimetype='application/json')
+	query = query.order_by(col)
+		
+	filename= ("mcca_%s.csv") % datetime.today().strftime("%Y%m%d")
+	return imprimirToExcel('comunicacion/reporte_mcca.html', {'data': query,'fecha':datetime.today().date(),'hora':datetime.today().time(),'usuario':'nombre'},filename)
 
 ######################## MCCA FINAL ################################################
 ####################################################################################
@@ -456,6 +495,57 @@ def mcc_query(request):
     return render_to_response('comunicacion/mcc_consulta.html', {'form':form, 'tabla':tabla }, context_instance=RequestContext(request),)
 
 	
+def mccprint(request):
+    col = "-fechaini"
+    query = list()
+    filtro = list()
+    if "2-sort" in request.GET:
+        col = request.GET['2-sort']
+    config = RequestConfig(request)
+    form = ConsultaMccForm(request.GET)
+    if 'organismo' in request.GET:
+        if request.GET['organismo']:
+            filtro.append(u"mcc.organismo_id =%s"%request.GET['organismo'])
+        if 'dependencia' in request.GET:
+            if request.GET['dependencia']:
+                filtro.append(u"mcc.dependencia =%s"%request.GET['dependencia'])
+    if 'nombremmc' in request.GET:
+        if request.GET['nombremmc']:
+            filtro.append(u"nombremmc like '%s'"%request.GET['nombremmc'])
+    if 'fechaini' in request.GET:
+        if request.GET['fechaini']:
+            fecini = request.GET["fechaini"]
+            fecini = datetime.strptime(fecini, "%d/%m/%Y").strftime("%Y-%m-%d")
+            filtro.append(u"fechaini = '%s'"%fecini)
+    if 'fechafin' in request.GET:
+        if request.GET['fechafin']:
+            fecfin = request.GET["fechafin"]
+            fecfin = datetime.strptime(fecfin, "%d/%m/%Y").strftime("%Y-%m-%d")
+            filtro.append(u"fechafin = '%s'"%fecfin)
+    if 'nummcctipo' in request.GET:
+        if request.GET['nummcctipo']:
+            filtro.append(u"nummcctipo_id =%s"%request.GET['nummcctipo'])
+    if 'nummccestado' in request.GET:
+        if request.GET['nummccestado']:
+            filtro.append(u"nummccestado_id =%s"%request.GET['nummccestado'])
+    if 'region' in request.GET:
+        if request.GET['region']:
+            filtro.append(u"region_id =%s"%request.GET['region'])
+        if 'provincia' in request.GET:
+            if request.GET['provincia']:
+                filtro.append(u"provincia_id =%s"%request.GET['provincia'])
+
+    #filtro.append(u"idusuario_creac=usuario.numero")
+    #filtro.append(u"tipopgcs_id=2")
+	query = Mcc.objects.extra(tables=['usuario',],where=filtro,select={'usuario':'usuario.usuario','idusuario_mod':'usuario.usuario','dependencia':"case mcc.organismo_id when 1 then (select ministerio from ministerio where nummin=mcc.dependencia) when 2 then (select odp from odp where numodp=mcc.dependencia) when 3 then (select gobernacion from gobernacion where numgob=mcc.dependencia) end"})
+	#query = Mcc.objects.extra(where=filtro)
+	#tabla = query.order_by(col)
+    #return HttpResponse(serializers.serialize("json", tabla, ensure_ascii=False),mimetype='application/json')
+
+	query = query.order_by(col)
+		
+	filename= ("mcc_%s.csv") % datetime.today().strftime("%Y%m%d")
+	return imprimirToExcel('comunicacion/reporte_mcc.html', {'data': query,'fecha':datetime.today().date(),'hora':datetime.today().time(),'usuario':'nombre'},filename)
 
 ######################## MCC FINAL ################################################
 ####################################################################################

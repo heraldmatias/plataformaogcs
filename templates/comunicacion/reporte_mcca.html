@@ -1,0 +1,5 @@
+"Reporte de la MCCA"
+"Item","Fecha","Organismo","Dependencia","Nombre de Campana","Usuario","Fecha de Creacion","Usu Mod","Fecha Usu Mod","Admin Mod","Fecha Admin Mod"
+{% for row in data %}{{ forloop.counter }},{{ row.fechaini|addslashes }},{{ row.organismo|addslashes }}, {{ row.dependencia|addslashes }}, {{ row.nombremmca|addslashes }}, {{ row.usuario|addslashes }} , {{ row.fec_creac|addslashes }}, {{ row.idusuario_mod|addslashes }} , {{ row.fec_mod|addslashes }}, {{ row.idadministrador_mod|addslashes }} , {{ row.fec_modadm|addslashes }}
+{% endfor %}
+Fecha: {{ fecha }},Hora: {{ hora }},Usuario: {{ usuario }}
