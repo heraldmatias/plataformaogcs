@@ -139,7 +139,9 @@ INSTALLED_APPS = (
     'dependencia',
     'home',
     'comunicacion',
-    'extras',  
+    'extras', 
+    'jqchat',   
+    'timezones',
 )
 
 GRAPPELLI_ADMIN_TITLE = 'Sitio Administrativo de la Plataforma Intersectorial de Comunicaión Social'
