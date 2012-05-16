@@ -54,7 +54,7 @@ def mgadd(request):
         formulario = MGForm() # Crear un parametro en home para mostrar los mensajes de exito.            
     else:        
         formulario = MGForm()
-    return render_to_response('extras/mg.html', {'formulario': formulario,'usuario':request.session['nombres'],'fecha':request.session['login_date'],'mensaje':mensaje,'dep':request.session['dependencia']}, context_instance=RequestContext(request),)
+    return render_to_response('extras/mg.html', {'formulario': formulario,'usuario':request.session['nombres'],'fecha':request.session['login_date'],'mensaje':mensaje,'dep':request.session['dependencia'],'foto':request.session['foto']}, context_instance=RequestContext(request),)
 
 @login_required()
 def mgquery(request):
@@ -86,7 +86,7 @@ def mgquery(request):
         tabla = MGTable(data)
         config.configure(tabla)
         tabla.paginate(page=request.GET.get('page', 1), per_page=6)
-        return render_to_response('extras/mg_consulta.html', {'formulario':formulario,'tabla':tabla,'usuario':request.session['nombres'],'fecha':request.session['login_date'],'dependencia':dependencia,'dep':request.session['dependencia']}, context_instance=RequestContext(request),)
+        return render_to_response('extras/mg_consulta.html', {'formulario':formulario,'tabla':tabla,'usuario':request.session['nombres'],'fecha':request.session['login_date'],'dependencia':dependencia,'dep':request.session['dependencia'],'foto':request.session['foto']}, context_instance=RequestContext(request),)
     except:
         raise Http404
 
@@ -156,7 +156,7 @@ def digadd(request):
         formulario = DIGForm() # Crear un parametro en home para mostrar los mensajes de exito.            
     else:        
         formulario = DIGForm()
-    return render_to_response('extras/dig.html', {'formulario': formulario,'usuario':request.session['nombres'],'fecha':request.session['login_date'],'mensaje':mensaje,'dep':request.session['dependencia']}, context_instance=RequestContext(request),)
+    return render_to_response('extras/dig.html', {'formulario': formulario,'usuario':request.session['nombres'],'fecha':request.session['login_date'],'mensaje':mensaje,'dep':request.session['dependencia'],'foto':request.session['foto']}, context_instance=RequestContext(request),)
 
 @login_required()
 def digquery(request):
@@ -189,7 +189,7 @@ def digquery(request):
         tabla = DIGTable(data)
         config.configure(tabla)
         tabla.paginate(page=request.GET.get('page', 1), per_page=6)
-        return render_to_response('extras/dig_consulta.html', {'formulario':formulario,'tabla':tabla,'usuario':request.session['nombres'],'fecha':request.session['login_date'],'dependencia':dependencia,'dep':request.session['dependencia']}, context_instance=RequestContext(request),)
+        return render_to_response('extras/dig_consulta.html', {'formulario':formulario,'tabla':tabla,'usuario':request.session['nombres'],'fecha':request.session['login_date'],'dependencia':dependencia,'dep':request.session['dependencia'],'foto':request.session['foto']}, context_instance=RequestContext(request),)
     except:
         raise Http404
 
@@ -246,7 +246,7 @@ def ariadd(request):
             mensaje="Registro grabado satisfactoriamente."
     else:        
         formulario = AriForm()
-    return render_to_response('extras/ari.html', {'formulario': formulario,'usuario':request.session['nombres'],'fecha':request.session['login_date'],'mensaje':mensaje,'dep':request.session['dependencia']}, context_instance=RequestContext(request),)
+    return render_to_response('extras/ari.html', {'formulario': formulario,'usuario':request.session['nombres'],'fecha':request.session['login_date'],'mensaje':mensaje,'dep':request.session['dependencia'],'foto':request.session['foto']}, context_instance=RequestContext(request),)
 
 
 @login_required()
@@ -273,7 +273,7 @@ def ariquery(request):
     tabla = AriTable(query.order_by(col))
     config.configure(tabla)
     tabla.paginate(page=request.GET.get('page', 1), per_page=6)
-    return render_to_response('extras/ari_consulta.html', {'formulario':formulario,'tabla':tabla,'usuario':request.session['nombres'],'fecha':request.session['login_date'],'dependencia':dependencia,'dep':request.session['dependencia']}, context_instance=RequestContext(request),)
+    return render_to_response('extras/ari_consulta.html', {'formulario':formulario,'tabla':tabla,'usuario':request.session['nombres'],'fecha':request.session['login_date'],'dependencia':dependencia,'dep':request.session['dependencia'],'foto':request.session['foto']}, context_instance=RequestContext(request),)
 
 @login_required()
 def ariprint(request):

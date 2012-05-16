@@ -47,7 +47,7 @@ def useradd(request,nivel):
                 user.last_name = request.POST['apellidos']
                 user.save()
                 usuario = Usuario(user=user,numero=num,usuario=usernamee)
-                frmusuario = UsuarioForm(request.POST, instance=usuario)
+                frmusuario = UsuarioForm(request.POST,request.FILES, instance=usuario)
                 frmusuario.save()
                 usuario.contrasena = user.password
                 usuario.save() 
@@ -64,7 +64,7 @@ def useradd(request,nivel):
                 return redirect('/home/?m=usadd',)
     else:        
         frmusuario = UsuarioForm()
-    return render_to_response('usuario/usuario.html', {'frmusuario': frmusuario,'opcion':'add','usuario':request.session['nombres'],'fecha':request.session['login_date'],'existe':existe,'nivel':nivel,'dependencia': request.POST['dependencia'] if 'dependencia' in request.POST else 0,'dep':request.session['dependencia']}, context_instance=RequestContext(request),)
+    return render_to_response('usuario/usuario.html', {'frmusuario': frmusuario,'opcion':'add','usuario':request.session['nombres'],'fecha':request.session['login_date'],'existe':existe,'nivel':nivel,'dependencia': request.POST['dependencia'] if 'dependencia' in request.POST else 0,'dep':request.session['dependencia'],'foto':request.session['foto']}, context_instance=RequestContext(request),)
 
 @login_required()
 def useredit(request,nivel, codigo):
@@ -73,7 +73,7 @@ def useredit(request,nivel, codigo):
         profile = Usuario.objects.get(user = request.user)
         usuario = Usuario.objects.get(numero=int(codigo))
         usuario.idusuario_mod=profile.numero
-        frmusuario = EditUsuarioForm(request.POST, instance=usuario) 
+        frmusuario = EditUsuarioForm(request.POST,request.FILES, instance=usuario) 
         dependencia = request.POST['dependencia']
         if frmusuario.is_valid():
             usuario.user.is_active= 0 if request.POST['estado']=="2" else 1
@@ -87,7 +87,7 @@ def useredit(request,nivel, codigo):
         usuario = get_object_or_404(Usuario, numero=int(codigo))
         dependencia = usuario.dependencia
         frmusuario = EditUsuarioForm(instance=usuario)
-    return render_to_response('usuario/usuario.html', {'frmusuario': frmusuario,'opcion':'edit','codigo':codigo,'usuario':request.session['nombres'],'fecha':request.session['login_date'],'dependencia':dependencia,'mensaje':mensaje,'nivel':nivel,'dep':request.session['dependencia']}, context_instance=RequestContext(request),)
+    return render_to_response('usuario/usuario.html', {'frmusuario': frmusuario,'opcion':'edit','codigo':codigo,'usuario':request.session['nombres'],'fecha':request.session['login_date'],'dependencia':dependencia,'mensaje':mensaje,'nivel':nivel,'dep':request.session['dependencia'],'foto':request.session['foto']}, context_instance=RequestContext(request),)
 
 @login_required()
 def userquery(request, nivel):
@@ -127,7 +127,7 @@ def userquery(request, nivel):
     tblusuarios = UsuarioTable(usuarios.order_by(col))
     config.configure(tblusuarios)
     tblusuarios.paginate(page=request.GET.get('page', 1), per_page=6)
-    return render_to_response('usuario/usuario_consulta.html', {'consultausuarioform':consultausuarioform,'tabla':tblusuarios,'usuario':request.session['nombres'],'fecha':request.session['login_date'],'dependencia':dependencia,'nivel':nivel,'dep':request.session['dependencia']}, context_instance=RequestContext(request),)
+    return render_to_response('usuario/usuario_consulta.html', {'consultausuarioform':consultausuarioform,'tabla':tblusuarios,'usuario':request.session['nombres'],'fecha':request.session['login_date'],'dependencia':dependencia,'nivel':nivel,'dep':request.session['dependencia'],'foto':request.session['foto']}, context_instance=RequestContext(request),)
 
 @login_required()
 def userprint(request, nivel):

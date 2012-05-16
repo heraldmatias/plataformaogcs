@@ -10,6 +10,7 @@ from django.template import RequestContext
 from usuario.models import Usuario
 from dependencia.models import Odp, Ministerio, Gobernacion
 from datetime import datetime
+from django.conf import settings
 
 def index(request):
     form = LoginForm()
@@ -38,7 +39,12 @@ def singin(request):
             elif profile.organismo.codigo == 3:
                 ini = Gobernacion.objects.get(numgob=profile.dependencia)
             request.session['dependencia'] = ini
-            return redirect('/home/')
+            if profile.foto: 
+                request.session['foto'] = profile.foto.url
+            else:
+                request.session['foto'] = settings.STATIC_URL+'images/varon.png'
+            DATA = DataSession(request)
+            return redirect('ogcs-index')
         else:    
             form = LoginForm()
             return render(request,
@@ -50,12 +56,21 @@ def singin(request):
                         "home/index.html",
                         {"error_message":"Por favor ingrese valores correctos.",'form':form,'login':'login'})
 
+class DataSession(object):
+    def __init__(self,request):
+        self.request = request
+
+    def foto():
+        return request.session['foto']
+
+DATA = None
+
 @login_required()
 def main(request): 
     if 'm' in request.GET:
-        return render_to_response('home/home.html',{'m':request.GET['m'],'usuario':request.session['nombres'],'fecha':request.session['login_date']}, context_instance=RequestContext(request),)
+        return render_to_response('home/home.html',{'m':request.GET['m'],'usuario':request.session['nombres'],'fecha':request.session['login_date'],'foto':request.session['foto'],}, context_instance=RequestContext(request),)
     else: 
-        return render_to_response('home/home.html',{'usuario':request.session['nombres'],'fecha':request.session['login_date'],'user':request.user,'dep':request.session['dependencia']}, context_instance=RequestContext(request),)
+        return render_to_response('home/home.html',{'usuario':request.session['nombres'],'fecha':request.session['login_date'],'user':request.user,'dep':request.session['dependencia'],'foto':request.session['foto']}, context_instance=RequestContext(request),)
 
 @login_required()
 def singout(request):

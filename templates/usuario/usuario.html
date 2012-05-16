@@ -16,8 +16,8 @@
 <div class="tab-content" id="contenido_izq">
 <div id="nuevo" class="tab-pane fade in active">
 {% if opcion == "add" %}
-<form class="form-inline" name="frmusu" id="frmusu" method="post" action="{% url ogcs-mantenimiento-usuario-add nivel %}" >{% else %}
-<form class="form-inline" name="frmusu" id="frmusu" method="post" action="{% url ogcs-mantenimiento-usuario-edit nivel codigo %}" >{% endif %}
+<form enctype="multipart/form-data" class="form-inline" name="frmusu" id="frmusu" method="post" action="{% url ogcs-mantenimiento-usuario-add nivel %}" >{% else %}
+<form enctype="multipart/form-data" class="form-inline" name="frmusu" id="frmusu" method="post" action="{% url ogcs-mantenimiento-usuario-edit nivel codigo %}" >{% endif %}
 <div id="frminformacion" class="modal" style="position: relative; top: auto; left: auto; margin: 0 auto auto 20px; z-index: 1"><!--class="modal hide fade">-->
     <div class="modal-header">
       <a class="close" data-dismiss="modal" >&times;</a>

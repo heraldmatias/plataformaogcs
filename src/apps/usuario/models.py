@@ -66,6 +66,7 @@ class Usuario(models.Model):
     politica = models.BooleanField(verbose_name='Acepto Politica de Uso',)
     idusuario_mod = models.IntegerField(verbose_name='Usuario modifico', null=True, blank=True)
     fec_mod = models.DateTimeField(verbose_name='Fecha modifico', auto_now=True, null=True, blank=True)
+    foto = models.ImageField(upload_to='users/',verbose_name='Foto', null=True, blank=True)
 
     class Meta:
         db_table = u'usuario'
