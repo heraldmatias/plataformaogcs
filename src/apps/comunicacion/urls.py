@@ -12,13 +12,14 @@ urlpatterns = patterns('comunicacion.views',
     url(r'^pgcs/print/(?P<tipo>\d+)/$','pgcsprint', name='ogcs-mantenimiento-pgcs-print'),
 	
 	######################## MCCA ###############################################
-	url(r'^mcca/add/$','mccaadd', name='ogcs-mantenimiento-mcca-add'),
-	url(r'^mcca/consulta/$','mcca_query', name='ogcs-mantenimiento-mcca-query'),
-	url(r'^mcca/print/$','mccaprint', name='ogcs-mantenimiento-mcca-print'),
+    url(r'^mcca/add/$', 'mccaadd', name='ogcs-mantenimiento-mcca-add'),
+    url(r'^mcca/consulta/$', 'mcca_query', name='ogcs-mantenimiento-mcca-query'),
+    url(r'^mcca/print/$', 'mccaprint', name='ogcs-mantenimiento-mcca-print'),
+    url(r'^mcca/edit/(?P<nummcca>\d+)/$', 'mccaedit', name='ogcs-mantenimiento-mcca-edit'),
 	
-	
-	######################## MCC ################################################
-	url(r'^mcc/add/$','mccadd', name='ogcs-mantenimiento-mcc-add'),
-	url(r'^mcc/consulta/$','mcc_query', name='ogcs-mantenimiento-mcc-query'),
-	url(r'^mcc/print/$','mccprint', name='ogcs-mantenimiento-mcc-print'),
+    ######################## MCC ################################################
+    url(r'^mcc/add/$', 'mccadd', name='ogcs-mantenimiento-mcc-add'),
+    url(r'^mcc/consulta/$', 'mcc_query', name='ogcs-mantenimiento-mcc-query'),
+    url(r'^mcc/print/$', 'mccprint', name='ogcs-mantenimiento-mcc-print'),
+    url(r'^mcc/edit/(?P<nummcc>\d+)/$', 'mccedit', name='ogcs-mantenimiento-mcc-edit'),
 )

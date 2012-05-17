@@ -73,7 +73,7 @@ function actores(){
     });
     if(ok==true){
         n+=1;
-        fila="<tr class='fila"+n+"'><td>"+n+"</td><td><input type='hidden' name='numtvac' value='"+numtv.val()+"'>"+nnumtv+"</td><td><input type='hidden' name='listactor' value='"+actor.val()+"'>"+actor.val()+"</td><td><input type='hidden' name='instac' value='"+inst.val()+"'>"+inst.val()+"</td><td> <a class='close' href='javascript: removedetalle(0,"+n+")'>&times;</a></td></tr>"
+        fila="<tr class='"+n+"'><td>"+n+"</td><td><input type='hidden' name='numtvac' value='"+numtv.val()+"'>"+nnumtv+"</td><td><input type='hidden' name='listactor' value='"+actor.val()+"'>"+actor.val()+"</td><td><input type='hidden' name='instac' value='"+inst.val()+"'>"+inst.val()+"</td><td> <a class='close' href='javascript: removedetalle(0,"+n+")'>&times;</a></td></tr>"
         tabla.append(fila);
 		$('#alert1').hide();
     }else{
@@ -126,7 +126,7 @@ function lideres(){
     });
     if(ok==true){
         n+=1;
-        fila="<tr class='fila"+n+"'><td>"+n+"</td><td><input type='hidden' name='numtvli' value='"+numtv.val()+"'>"+nnumtv+"</td><td><input type='hidden' name='listlider' value='"+lider.val()+"'>"+lider.val()+"</td><td><input type='hidden' name='instli' value='"+inst.val()+"'>"+inst.val()+"</td><td> <a class='close' href='javascript: removedetalle(1,"+n+")'>&times;</a></td></tr>"
+        fila="<tr class='"+n+"'><td>"+n+"</td><td><input type='hidden' name='numtvli' value='"+numtv.val()+"'>"+nnumtv+"</td><td><input type='hidden' name='listlider' value='"+lider.val()+"'>"+lider.val()+"</td><td><input type='hidden' name='instli' value='"+inst.val()+"'>"+inst.val()+"</td><td> <a class='close' href='javascript: removedetalle(1,"+n+")'>&times;</a></td></tr>"
         tabla.append(fila);
 		$('#alert2').hide();
     }else{
@@ -163,7 +163,7 @@ function observaciones(){
     });
     if(ok==true){
         n+=1;
-        fila="<tr class='fila"+n+"'><td>"+n+"</td><td><input type='hidden' name='cobs' value='"+privado.val()+"'>"+privado.val()+"</td><td> <a class='close' href='javascript: removedetalle(2,"+n+")'>&times;</a></td></tr>"
+        fila="<tr class='"+n+"'><td>"+n+"</td><td><input type='hidden' name='cobs' value='"+privado.val()+"'>"+privado.val()+"</td><td> <a class='close' href='javascript: removedetalle(2,"+n+")'>&times;</a></td></tr>"
         tabla.append(fila);
 		$('#alert3').hide();
     }else{
@@ -178,7 +178,7 @@ function observaciones(){
 
 function removedetalle(t,fila){
     tabla=tablas[t];
-    $(tabla+" tr.fila"+fila).remove();
+    $(tabla+" tr."+fila).remove();
     var n=1;
     var tdetalle= $(tabla);
     /*AUTO REORDENAMIENTO DE ITEMS LUEGO DE ELIMINAR*/

@@ -22,7 +22,7 @@
 
 <div class="tab-content" id="contenido_izq">
 <div id="nuevo" class="tab-pane fade in active" style="width:500px">
-<form class="form-inline" id="frmcca" name="frmcca" method="post" action="{% url ogcs-mantenimiento-mcca-add %}" onsubmit="return guardar_mcca();" ><!--data-toggle="modal"-->
+<form class="form-inline" id="frmcca" name="frmcca" method="post" action="{% if accion %}{% url ogcs-mantenimiento-mcca-add %}{% else %}{% url ogcs-mantenimiento-mcca-edit codigo %}{% endif %}" onsubmit="return guardar_mcca();" ><!--data-toggle="modal"-->
 <div id="frmprovincia" class="modal" style="position: relative; top: auto; left: auto; margin: 0 auto auto 20px; z-index: 1;width:720px;height:auto"><!--class="modal hide fade">-->
     <div class="modal-header">
       <h3>Nuevo MCCA (Matriz de Campaña de Comunicaciones Anuales)</h3>

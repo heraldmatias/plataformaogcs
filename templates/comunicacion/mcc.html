@@ -11,7 +11,7 @@
 
 <div class="tab-content" id="contenido_izq">
 <div id="nuevo" class="tab-pane fade in active" style="width:500px">
-<form enctype="multipart/form-data" class="form-inline" id="frmcc" name="frmcc" method="post" action="{% url ogcs-mantenimiento-mcc-add  %}" onsubmit="return guardar_mcc();" ><!--data-toggle="modal"-->
+<form enctype="multipart/form-data" class="form-inline" id="frmcc" name="frmcc" method="post" action="{% if accion %}{% url ogcs-mantenimiento-mcc-add %}{% else %}{% url ogcs-mantenimiento-mcc-edit codigo %}{% endif %}" onsubmit="return guardar_mcc();" ><!--data-toggle="modal"-->
 <div id="frmprovincia" class="modal" style="position: relative; top: auto; left: auto; margin: 0 auto auto 20px; z-index: 1;width:720px;height:auto"><!--class="modal hide fade">-->
     <div class="modal-header">
       <h3>Nuevo MCC(Matriz de Campaña de Crisis)</h3>
