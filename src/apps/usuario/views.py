@@ -2,7 +2,7 @@
 from django.shortcuts import render_to_response, redirect
 from forms import UsuarioForm, UsuarioTable, ConsultaUsuarioForm,EditUsuarioForm 
 from django.template import RequestContext
-from usuario.models import Usuario, Estado, Organismo
+from usuario.models import Usuario, Estado, Organismo, Nivel
 from dependencia.models import Ministerio, Odp, Gobernacion
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
@@ -46,7 +46,7 @@ def useradd(request,nivel):
                 user.first_name = request.POST['nombres']
                 user.last_name = request.POST['apellidos']
                 user.save()
-                usuario = Usuario(user=user,numero=num,usuario=usernamee)
+                usuario = Usuario(user=user,numero=num,usuario=usernamee,nivel=Nivel.objects.get(codigo=request.POST['nivel']))
                 frmusuario = UsuarioForm(request.POST,request.FILES, instance=usuario)
                 frmusuario.save()
                 usuario.contrasena = user.password

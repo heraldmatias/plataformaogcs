@@ -36,7 +36,7 @@
       <div class="span4">{{ campo.label_tag }}:</div><div class="span5">{{ campo }} </div>{% if campo.label == "Contraseña" %}<div class="span2" id="sclave" name="sclave"> </div>{% endif %}</div><p></p>{% endif %}
       {% endfor %}
       <input type="hidden" name="estado" id="id_estado" value="2">
-      <input type="hidden" name="nivel" id="id_nivel" value="1">
+     {% if nivel == "1" %} <input type="hidden" name="nivel" id="id_nivel" value="1">{% else %} <input type="hidden" name="nivel" id="id_nivel" value="2">{% endif %}
       {% else %}
       {% for campo in frmusuario %}      
       {{ campo.errors }}
