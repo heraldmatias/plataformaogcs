@@ -1,0 +1,32 @@
+ {% extends 'base.html' %}
+  {% load static %}
+  {% block title %} Plataforma Intersectorial de Comunicaci&oacute;n OGCS {% endblock %}
+  {% block content %}
+  <div id="contenido">
+    	<div id="contenido_izq">
+             <form class="form-inline fondo" name="login" method="post" action="{% url ogcs-reset-pass %}">                   
+                 <div id="frmprovincia" class="modal" style="position: relative; top: auto; left: auto; margin: 0 auto auto 20px; z-index: 1">
+		    <div class="modal-header">             
+			<a class="close" data-dismiss="modal" >&times;</a>
+			<h3>Recuperar Contraseña</h3>         
+                   </div>
+		   <div class="modal-body">
+                       {% csrf_token %}
+                       {% if form.errors %}<div class="row-fluid">
+                       <div class="span12"><div class="alert alert-error"><!--<a class="close" data-dismiss="alert">×</a>-->
+                       <strong>Error!</strong> {{ form.email.errors }}</div></div></div>{% endif %}
+                       <div class="row-fluid">
+                       {{ form.email.label_tag }}:{{ form.email }} </div><p></p><!--<input type='submit' class="btn btn-primary" value="Aceptar">-->
+                  </div>
+                    <div class="modal-footer">
+			     <input class="btn-primary" name="grabar" value="Aceptar" type="submit">
+			     <a class="btn btn-inverse" href="{% url ogcs-login %}"><i class="icon-remove icon-white"></i>Cancelar</a>
+		    </div>
+                </div>
+             </form>
+       </div> 
+       <div id="contenido_der"></div>    
+</div>
+{% endblock %}
+ {% block scriptjs %}    
+  {% endblock %}

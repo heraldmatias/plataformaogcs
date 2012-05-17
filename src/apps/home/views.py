@@ -43,7 +43,6 @@ def singin(request):
                 request.session['foto'] = profile.foto.url
             else:
                 request.session['foto'] = settings.STATIC_URL+'images/varon.png'
-            DATA = DataSession(request)
             return redirect('ogcs-index')
         else:    
             form = LoginForm()
@@ -55,15 +54,6 @@ def singin(request):
         return render(request,
                         "home/index.html",
                         {"error_message":"Por favor ingrese valores correctos.",'form':form,'login':'login'})
-
-class DataSession(object):
-    def __init__(self,request):
-        self.request = request
-
-    def foto():
-        return request.session['foto']
-
-DATA = None
 
 @login_required()
 def main(request): 

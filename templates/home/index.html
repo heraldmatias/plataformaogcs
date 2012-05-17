@@ -10,7 +10,7 @@
 <form class="form-inline fondo" name="login" method="post" action="{% url ogcs-login %}">                
                 {% csrf_token %}
         	<div id="login">
-            	<a href="#"><div class="titulo"> ¿olvidaste tu contraseña?</div></a>
+            	<a href="{% url ogcs-reset-pass %}"><div class="titulo"> ¿olvidaste tu contraseña?</div></a>
                 <div class="tabla_login"> 
                 	<table width="400">
                         <tr>
@@ -28,7 +28,7 @@
             </div>
 </form>
         </div>
-    	<div id="contenido_der"></div>    
+    	<div id="contenido_der"></div>
     </div>
 {% endblock %}
  {% block scriptjs %}    
