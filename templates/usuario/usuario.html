@@ -54,12 +54,17 @@
   {% endblock %}
   {% block scriptjs %}    
 <script>
+var ok=true;
 $('#frmusu').submit(function() {
 if (!document.getElementById("id_politica").checked) {
 alert('Debe Aceptar las politicas de uso para poder registrarse.'); return false;}
-else{
-return confirmar('¿Desea grabar el registro?');}
+if(ok){return confirmar('¿Desea grabar el registro?');}else{ok=true;alert('Solo se acepta archivos de IMAGEN');return false;}
 });
+$('#id_foto').change(function() {
+ var ext = $('#id_foto').val().split('.').pop().toLowerCase();
+if($.inArray(ext, ['jpg','png','gif','jpeg']) == -1) {
+    alert('Solo se acepta archivos de IMAGEN');$('#id_foto').focus();ok=false;return false;
+}});
 $(document).ready(function() {
   dependencias();
 });

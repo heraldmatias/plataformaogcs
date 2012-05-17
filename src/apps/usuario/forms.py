@@ -39,11 +39,11 @@ class UsuarioTable(tables.Table):
     item = tables.Column()
     organismo = tables.Column(orderable=True)
     dependencia = tables.Column(orderable=True)
-    nombres = tables.LinkColumn('ogcs-mantenimiento-usuario-edit', args=[1,A('numero')],orderable=True)
+    nombres = tables.TemplateColumn('<a href={% url ogcs-mantenimiento-usuario-edit record.nivel_id record.numero %}>{{ record.nombres }}</a>',orderable=True)#tables.LinkColumn('ogcs-mantenimiento-usuario-edit', args=[1,A('numero')],orderable=True)
     apellidos = tables.Column(orderable=True) 
     sexo = tables.Column()
     usuario = tables.Column()
-    email = tables.LinkColumn('ogcs-mantenimiento-usuario-edit', args=[1,A('numero')],orderable=True)
+    email = tables.TemplateColumn('<a href={% url ogcs-mantenimiento-usuario-edit record.nivel_id record.numero %}>{{ record.email }}</a>',orderable=True)#tables.LinkColumn('ogcs-mantenimiento-usuario-edit', args=[1,A('numero')],orderable=True)
     estado = tables.Column(verbose_name='Estado')
 
     def render_item(self):
