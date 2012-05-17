@@ -1,0 +1,51 @@
+ {% extends 'base.html' %}
+  {% load static %}
+  {% block title %} Plataforma Intersectorial de Comunicaci&oacute;n OGCS {% endblock %}
+  {% block content %}
+  <div id="contenido">
+    	<div id="contenido_izq">
+             <form class="form-inline fondo" name="login" method="post" action="">                   
+                 <div id="frmprovincia" class="modal" style="position: relative; top: auto; left: auto; margin: 0 auto auto 20px; z-index: 1">
+                 {% if validlink %}
+		    <div class="modal-header">             
+			<a class="close" data-dismiss="modal" >&times;</a>
+			<h3>Confirmación de restablecimiento de contraseña</h3>         
+                   </div>
+		   <div class="modal-body">
+                       {% csrf_token %}
+                       {% if form.errors %}<div class="row-fluid">
+                       <div class="span12"><div class="alert alert-error"><!--<a class="close" data-dismiss="alert">×</a>-->
+                       <strong>Error!</strong> 
+                       {% if form.new_password1.errors %}Introduzca su nueva contraseña {% else %}{% if form.new_password2.errors  %} Las contraseñas no coinciden, corriga por favor. {% endif %}{% endif %}</div></div></div>{% endif %}
+                       <div class="row-fluid">
+                       {{ form.new_password1.label_tag }}:{{ form.new_password1 }} </div><p></p>
+                       <div class="row-fluid">
+                       {{ form.new_password2.label_tag }}{{ form.new_password2 }} </div><p></p>
+                  </div>
+                    <div class="modal-footer">
+			     <input class="btn-primary" name="grabar" value="Aceptar" type="submit">
+			     <a class="btn btn-inverse" href="{% url ogcs-login %}"><i class="icon-remove icon-white"></i>Cancelar</a>
+		    </div>
+                   {% else %}
+                   <div class="modal-header">             
+			<a class="close" data-dismiss="modal" >&times;</a>
+			<h3>Restablecimiento de contraseña fallido</h3>         
+                   </div>
+		   <div class="modal-body">
+                       <div class="row-fluid">
+                       <div class="span12"><div class="alert alert-error">
+			<stron> <h5>El link de reestablecimiento de contraseña ha expirado, posiblemente ya ha sido utilizado. Por favor haga una nueva petición de cambio de contraseña. Gracias!</h5></strong></div>
+                       </div></div>                       
+                  </div>
+                    <div class="modal-footer">
+			<a class="btn btn-primary" href="{% url ogcs-login %}"><i class="icon-user icon-white"></i>Aceptar</a>		     
+		    </div>
+                   {% endif %}
+                </div>
+             </form>
+       </div> 
+       <div id="contenido_der"></div>    
+</div>
+{% endblock %}
+ {% block scriptjs %}    
+  {% endblock %}
