@@ -16,6 +16,7 @@ def index(request):
     form = LoginForm()
     return render_to_response('home/index.html', {'form': form,'login':'login'}, context_instance=RequestContext(request),)
 
+@login_required()
 def view_calendar(request):
     return render_to_response('home/calendario.html',{'usuario':request.session['nombres'],'fecha':request.session['login_date'],'foto':request.session['foto']}, context_instance=RequestContext(request),)
 
