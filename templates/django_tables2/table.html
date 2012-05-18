@@ -49,15 +49,15 @@
 <ul class="pagination">
     {% if table.page.has_previous %}
     {% block pagination.previous %}
-    <li class="previous"><a href="{% querystring table.prefixed_page_field=table.page.previous_page_number %}">{% trans "Previous" %}</a></li>
+    <li class="previous"><a href="{% querystring table.prefixed_page_field=table.page.previous_page_number %}">{% trans "Anterior" %}</a></li>
     {% endblock pagination.previous %}
     {% endif %}
     {% block pagination.current %}
-    <li class="current">{% blocktrans with current=table.page.number total=table.paginator.num_pages %}Page {{ current }} of {{ total }}{% endblocktrans %}</li>
+    <li class="current">{% blocktrans with current=table.page.number total=table.paginator.num_pages %}Pagina {{ current }} de {{ total }}{% endblocktrans %}</li>
     {% endblock pagination.current %}
     {% if table.page.has_next %}
     {% block pagination.next %}
-    <li class="next"><a href="{% querystring table.prefixed_page_field=table.page.next_page_number %}">{% trans "Next" %}</a></li>
+    <li class="next"><a href="{% querystring table.prefixed_page_field=table.page.next_page_number %}">{% trans "Siguiente" %}</a></li>
     {% endblock pagination.next %}
     {% endif %}
 </ul>
