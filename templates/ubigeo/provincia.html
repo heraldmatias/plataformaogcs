@@ -27,8 +27,8 @@
     <div class="modal-body">
       {% csrf_token %}
       <div class="row-fluid">
-      {% if opcion == "add" %}
-      {{ frmprovincia.non_field_errors }} 
+      {% if opcion == "frmprovincia" %}
+      {{ add.non_field_errors }} 
       {{ frmprovincia.region.errors }}
       <div class="row-fluid">
       <div class="span2">{{ frmprovincia.region.label_tag }}:</div> {{ frmprovincia.region }}</div><p></p>
@@ -47,7 +47,7 @@
     </div>
     </div>
     <div class="modal-footer">
-     <input class="btn-primary" name="grabar" value="Guardar Cambios" type="submit">
+     <input class="btn-primary" name="grabar" value="Guardar" type="submit">
      <input class="btn" name="grabar" value="Cerrar" type="button" onclick="cerrarformulario('contenido');">
     </div>
 </div>
