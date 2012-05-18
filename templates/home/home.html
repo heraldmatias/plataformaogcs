@@ -4,16 +4,28 @@
   {% block content %}    
     <div id="contenido">
     	<div id="contenido_izq">
-        	<div id="banner">
+        	<!--<div id="banner">
   <object classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" codebase="http://fpdownload.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=7,0,0,0" width="705" height="225" id="test" align="middle">
                     <param name="allowScriptAccess" value="sameDomain" wmode="transparent" />
                     <param name="movie" value="{{ STATIC_URL }}swf/fotosportada.swf" wmode="transparent" />
                     <param name="wmode" value="transparent" />
                     <param name="quality" value="high" wmode="transparent" />
                     <param name="bgcolor" value="#EAEAEA" wmode="transparent" />
+
                     <embed src="{{ STATIC_URL }}swf/fotosportada.swf" quality="high" bgcolor="#EAEAEA" width="705" height="225" name="portada" align="top" wmode="transparent" allowScriptAccess="sameDomain" type="application/x-shockwave-flash" pluginspage="http://www.macromedia.com/go/getflashplayer" />
 				</object>
-            </div>
+            </div>-->
+       <div id="myCarousel" class="carousel slide">
+	<div class="carousel-inner">
+	   <div class="item active">
+	      <img alt="" src="{{ STATIC_URL }}images/intrito2.jpg">
+	      <div class="carousel-caption"><h4>Palacio de Gobierno</h4></div>
+	   </div>
+	   <div class="item">
+              <img alt="" src="{{ STATIC_URL }}images/intrito3.jpg">
+	      <div class="carousel-caption"><h4>Lo nuestro</h4></div>
+           </div>
+        </div>
       </div>
     </div>
 {% endblock %}
