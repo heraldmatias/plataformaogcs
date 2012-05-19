@@ -11,6 +11,8 @@ import django_tables2 as tables
 from django_tables2.config import RequestConfig
 from datetime import datetime
 from scripts.scripts import imprimirToExcel
+from django.core.urlresolvers import reverse
+
 serie = 3
 @login_required()
 def useradd(request,nivel):
@@ -68,7 +70,6 @@ def useradd(request,nivel):
 
 @login_required()
 def useredit(request,nivel, codigo):
-    mensaje=''
     if request.method == 'POST':
         profile = Usuario.objects.get(user = request.user)
         usuario = Usuario.objects.get(numero=int(codigo))
@@ -82,12 +83,12 @@ def useredit(request,nivel, codigo):
             #usuario.user.set_password = request.POST['contrasena']
             usuario.user.save()
             frmusuario.save()
-            mensaje='Regristro modificado satisfactoriamente' # Crear un parametro en home para mostrar los mensajes de exito.
+            return redirect(reverse('ogcs-mantenimiento-usuario-consulta',kwargs={'nivel':nivel})+'?m=edit')
     else:
         usuario = get_object_or_404(Usuario, numero=int(codigo))
         dependencia = usuario.dependencia
         frmusuario = EditUsuarioForm(instance=usuario)
-    return render_to_response('usuario/usuario.html', {'frmusuario': frmusuario,'opcion':'edit','codigo':codigo,'usuario':request.session['nombres'],'fecha':request.session['login_date'],'dependencia':dependencia,'mensaje':mensaje,'nivel':nivel,'dep':request.session['dependencia'],'foto':request.session['foto']}, context_instance=RequestContext(request),)
+    return render_to_response('usuario/usuario.html', {'frmusuario': frmusuario,'opcion':'edit','codigo':codigo,'usuario':request.session['nombres'],'fecha':request.session['login_date'],'dependencia':dependencia,'nivel':nivel,'dep':request.session['dependencia'],'foto':request.session['foto']}, context_instance=RequestContext(request),)
 
 @login_required()
 def userquery(request, nivel):
@@ -127,7 +128,7 @@ def userquery(request, nivel):
     tblusuarios = UsuarioTable(usuarios.order_by(col))
     config.configure(tblusuarios)
     tblusuarios.paginate(page=request.GET.get('page', 1), per_page=6)
-    return render_to_response('usuario/usuario_consulta.html', {'consultausuarioform':consultausuarioform,'tabla':tblusuarios,'usuario':request.session['nombres'],'fecha':request.session['login_date'],'dependencia':dependencia,'nivel':nivel,'dep':request.session['dependencia'],'foto':request.session['foto']}, context_instance=RequestContext(request),)
+    return render_to_response('usuario/usuario_consulta.html', {'consultausuarioform':consultausuarioform,'tabla':tblusuarios,'usuario':request.session['nombres'],'fecha':request.session['login_date'],'dependencia':dependencia,'nivel':nivel,'dep':request.session['dependencia'],'foto':request.session['foto'],'mensaje':(request.GET['m'] if 'm' in request.GET else '')}, context_instance=RequestContext(request),)
 
 @login_required()
 def userprint(request, nivel):

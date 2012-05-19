@@ -1,9 +1,12 @@
   {% extends 'base.html' %}
   {% load static %}
   {% block title %} Plataforma Intersectorial de Comunicaci&oacute;n OGCS {% endblock %}
-  {% block content %}
-  
+  {% block content %}  
   {% load render_table from django_tables2 %}
+{% if mensaje %}
+<h4><div class="alert alert-success"><a class="close" data-dismiss="alert">×</a><strong>Mensaje:</strong>
+<p>Registro modificado satisfactoriamente.</p></div></h4>
+{% endif %}
 <ul class="nav nav-tabs">
 <li><a href="{% url ogcs-mantenimiento-odp-add %}">Nuevo</a></li>
 <li class="active"><a href="{% url ogcs-mantenimiento-odp-consulta %}" >Consultar</a></li>

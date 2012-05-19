@@ -1,6 +1,12 @@
  {% extends 'base.html' %}
   {% load static %}
   {% block title %} Plataforma Intersectorial de Comunicaci&oacute;n OGCS {% endblock %}
+  {% block csspage %}
+  <style type="text/css"> 
+  .baja {height:15px;width:25px;float:left} .media {height:15px;width:25px;float:left} .alta {width:25px;height:15px;float:left}
+  .info {height:10px;width:100px;margin: auto auto 2px auto;font-style:italic;}
+  </style>
+  {% endblock %}
   {% block content %}
   
 {% if mensaje %}
@@ -22,7 +28,7 @@
     <div class="modal-header">
       <a class="close" data-dismiss="modal" >&times;</a>
       {% if nivel == "1" %}
-      <h3>Registro de Usuario</h3> {% else %}       <h3>Registro de Administrador</h3> {% endif %}
+      <h3>Mantenimiento de Usuario</h3> {% else %}       <h3>Mantenimiento de Administrador</h3> {% endif %}
     </div>
     <div class="modal-body">
       {% csrf_token %}              
@@ -33,7 +39,11 @@
       {{ campo.errors }}      
       {% if campo.label != "Estado" %} 
       <div class="row-fluid">
-      <div class="span4">{{ campo.label_tag }}:</div><div class="span5">{{ campo }} </div>{% if campo.label == "Contraseña" %}<div class="span2" id="sclave" name="sclave"> </div>{% endif %}</div><p></p>{% endif %}
+      <div class="span4">{{ campo.label_tag }}:</div><div class="span6">{{ campo }} </div>{% if campo.label == "Contraseña" %}<div class="row"><div class='span2'><b><div class="info" id="sclave" name="sclave"></div></b><div class="baja"> </div><div class="media"> </div><div class="alta"> </div> </div></div>
+{% endif %}</div><p></p>{% if campo.label == "Contraseña" %}
+<div class="row-fluid">
+<div class="span4"><label for="id_contrasena2">Contraseña (Confirmar)</label>:</div><div class="span6"><input id="id_contrasena2" type="password" name="contrasena2" maxlength="128" /> </div><div class="row"><div class='span2'><b><div class="info" style="color:red;" id="sclave2" name="sclave2"></div></b></div></div></div><p></p>
+ {% endif %}{% endif %}
       {% endfor %}
       <input type="hidden" name="estado" id="id_estado" value="2">
      {% if nivel == "1" %} <input type="hidden" name="nivel" id="id_nivel" value="1">{% else %} <input type="hidden" name="nivel" id="id_nivel" value="2">{% endif %}
@@ -46,7 +56,7 @@
       {% endif %}
     </div><input type="hidden" value="{{ dependencia }}" id="id_dep" name="id_dep">
     <div class="modal-footer">
-     <input class="btn-primary" name="grabar" value="Guardar" type="submit">
+     <input class="btn-primary" name="grabar" value="{% if opcion == 'add' %}Guardar {% else %} Modificar {% endif %}" type="submit">
      <input class="btn" name="grabar" value="Cerrar" type="button" onclick="javascript: $('#frmregion').modal('hide')">
     </div>
 </div>
@@ -57,8 +67,10 @@
 var ok=true;
 $('#frmusu').submit(function() {
 if (!document.getElementById("id_politica").checked) {
-alert('Debe Aceptar las politicas de uso para poder registrarse.'); return false;}
-if(ok){return confirmar('¿Desea grabar el registro?');}else{ok=true;alert('Solo se acepta archivos de IMAGEN');return false;}
+alert('Debe Aceptar las politicas de uso para poder registrarse.'); return false;
+}else if(validaclave('id_contrasena','sclave','id_contrasena2','sclave2')==false){
+alert('Revise su contraseña Por Favor!');return false;}
+if(ok){return confirmar("¿Desea {% if opcion == 'add' %}Guardar {% else %} Modificar {% endif %} el registro?");}else{ok=true;alert('Solo se acepta archivos de IMAGEN');return false;}
 });
 $('#id_foto').change(function() {
  var ext = $('#id_foto').val().split('.').pop().toLowerCase();
@@ -68,7 +80,7 @@ if($.inArray(ext, ['jpg','png','gif','jpeg']) == -1) {
 $(document).ready(function() {
   dependencias();
 });
-validaletra('id_nombres');validaclave('id_contrasena','sclave');
+validaletra('id_nombres');validaclave('id_contrasena','sclave','id_contrasena2','sclave2');
 validaletra('id_apellidos');comboelegir('id_organismo');comboelegir('id_sexo');
 validanumero('id_rpc');
 validanumero('id_rpm');

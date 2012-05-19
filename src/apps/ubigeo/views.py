@@ -12,6 +12,7 @@ from django_tables2.config import RequestConfig
 from datetime import datetime
 from scripts.scripts import imprimirToExcel
 from django.http import HttpResponse
+from django.core.urlresolvers import reverse
 
 @login_required()
 def regionadd(request):
@@ -34,7 +35,6 @@ def regionadd(request):
 
 @login_required()
 def regionedit(request, codigo):
-    mensaje=""
     if request.method == 'POST':
         profile = Usuario.objects.get(user = request.user)
         region = Region.objects.get(numreg=int(codigo))
@@ -42,11 +42,11 @@ def regionedit(request, codigo):
         frmregion = RegionForm(request.POST, instance=region) # A form bound to the POST data	
         if frmregion.is_valid():
             frmregion.save()
-            mensaje="Registro modificado satisfactoriamente." # Crear un parametro en home para mostrar los mensajes de exito.
+            return redirect(reverse('ogcs-mantenimiento-region-consulta')+'?m=edit')
     else:
         region = get_object_or_404(Region, numreg=int(codigo))
         frmregion = RegionForm(instance=region)
-    return render_to_response('ubigeo/region.html', {'frmregion': frmregion,'opcion':'edit','codigo':codigo,'usuario':request.session['nombres'],'fecha':request.session['login_date'],'mensaje':mensaje,'dep':request.session['dependencia'],'foto':request.session['foto']}, context_instance=RequestContext(request),)
+    return render_to_response('ubigeo/region.html', {'frmregion': frmregion,'opcion':'edit','codigo':codigo,'usuario':request.session['nombres'],'fecha':request.session['login_date'],'dep':request.session['dependencia'],'foto':request.session['foto']}, context_instance=RequestContext(request),)
 
 @login_required()
 def regionprint(request):
@@ -70,7 +70,7 @@ def regionquery(request):
     tblregiones = RegionTable(regiones.order_by(col))
     config.configure(tblregiones)
     tblregiones.paginate(page=request.GET.get('page', 1), per_page=6)
-    return render_to_response('ubigeo/region_consulta.html', {'consultaregionform':consultaregionform,'tblregiones':tblregiones,'usuario':request.session['nombres'],'fecha':request.session['login_date'],'dep':request.session['dependencia'],'foto':request.session['foto']}, context_instance=RequestContext(request),)
+    return render_to_response('ubigeo/region_consulta.html', {'consultaregionform':consultaregionform,'tblregiones':tblregiones,'usuario':request.session['nombres'],'fecha':request.session['login_date'],'dep':request.session['dependencia'],'foto':request.session['foto'],'mensaje':(request.GET['m'] if 'm' in request.GET else '')}, context_instance=RequestContext(request),)
 
 @login_required()
 def provinciaadd(request):
@@ -93,7 +93,6 @@ def provinciaadd(request):
 
 @login_required()
 def provinciaedit(request, codigo):
-    mensaje=""
     if request.method == 'POST':
         profile = Usuario.objects.get(user = request.user)
         provincia = Provincia.objects.get(numpro=int(codigo))
@@ -101,11 +100,11 @@ def provinciaedit(request, codigo):
         frmprovincia = ProvinciaForm(request.POST, instance=provincia) # A form bound to the POST data	
         if frmprovincia.is_valid():
             frmprovincia.save()
-            mensaje="Registro modificado satisfactoriamente." # Crear un parametro en home para mostrar los mensajes de exito.
+            return redirect(reverse('ogcs-mantenimiento-provincia-consulta')+'?m=edit')
     else:
         provincia = get_object_or_404(Provincia, numpro=int(codigo))
         frmprovincia = ProvinciaForm(instance=provincia)
-    return render_to_response('ubigeo/provincia.html', {'frmprovincia': frmprovincia,'opcion':'edit','codigo':codigo,'usuario':request.session['nombres'],'fecha':request.session['login_date'],'dep':request.session['dependencia'],'foto':request.session['foto'],'mensaje':mensaje}, context_instance=RequestContext(request),)
+    return render_to_response('ubigeo/provincia.html', {'frmprovincia': frmprovincia,'opcion':'edit','codigo':codigo,'usuario':request.session['nombres'],'fecha':request.session['login_date'],'dep':request.session['dependencia'],'foto':request.session['foto']}, context_instance=RequestContext(request),)
 
 @login_required()
 def provinciaquery(request):
@@ -126,7 +125,7 @@ def provinciaquery(request):
     tblprovincias = ProvinciaTable(provincias.order_by(col))
     config.configure(tblprovincias)
     tblprovincias.paginate(page=request.GET.get('page', 1), per_page=6)
-    return render_to_response('ubigeo/provincia_consulta.html', {'consultaprovinciaform':consultaprovinciaform,'tabla':tblprovincias,'usuario':request.session['nombres'],'dep':request.session['dependencia'],'foto':request.session['foto'],'fecha':request.session['login_date']}, context_instance=RequestContext(request),)
+    return render_to_response('ubigeo/provincia_consulta.html', {'consultaprovinciaform':consultaprovinciaform,'tabla':tblprovincias,'usuario':request.session['nombres'],'dep':request.session['dependencia'],'foto':request.session['foto'],'fecha':request.session['login_date'],'mensaje':(request.GET['m'] if 'm' in request.GET else '')}, context_instance=RequestContext(request),)
 
 @login_required()
 def provinciaprint(request):

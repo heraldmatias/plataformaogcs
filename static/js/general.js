@@ -94,12 +94,26 @@ passtatus[1]='La contraseña debe superar 5 caracteres';
 passtatus[2]='Contraseña baja';
 passtatus[3]='Contraseña media';
 passtatus[4]='Contraseña alta';
-function validaclave(campo,sclave){
+passtatus[5]='Las Contraseñas no coinciden';
+function validaclave(campo,sclave,campo2,sclave2){
+var pass='';var r=false;
+var estado=0;
+var clave = $('#'+sclave);var clave2 = $('#'+sclave2);
+
+if(($.trim($('#'+campo).val()).length<5)|$.trim($('#'+campo).val())!=$.trim($('#'+campo2).val())){
+estado=5; clave2.html(" ");clave2.html(passtatus[estado]); r=false;
+}else{clave2.html(" ");r=true;}
+
+$('#'+campo2).keyup(function () {
+if(pass.length>=5){
+if(pass!=$.trim($('#'+campo2).val())){
+estado=5; clave2.html(" ");clave2.html(passtatus[estado]); r=false;
+}else{clave2.html(" ");r=true;}}else{r=false;}
+});
 $('#'+campo).keyup(function () {
-this.value = this.value.replace(/[ ]/g,'');
-var clave = $('#'+sclave);var pass=$('#'+campo).val();
+this.value = this.value.replace(/[ ]/g,'');pass=$.trim($('#'+campo).val());
 var letras= /^[a-z]+$/gi;var numeros=/^\d+$/g;var caracteres=/^\W+$/g;
-var alfa=/^\w+$/g;var estado=0;
+var alfa=/^\w+$/g;
 if(pass.length>=5){
 	if(letras.test(pass)|numeros.test(pass)|caracteres.test(pass)){
         estado=2;
@@ -112,11 +126,19 @@ if(pass.length>=5){
         }
 }else if(pass.length==0){
 estado=0;
-}else{
+}else if(pass.length<5){
 estado=1;
 }
 clave.html(" ");clave.html(passtatus[estado]);
+if (estado<2){$("div.baja").css("background-color","white");$("div.media").css("background-color","white");$("div.alta").css("background-color","white");r=false;};
+if (estado==2){$("div.baja").css("background-color","green");$("div.media").css("background-color","white");$("div.alta").css("background-color","white");r=true;};
+if (estado==3){$("div.baja").css("background-color","green");$("div.media").css("background-color","yellow");$("div.alta").css("background-color","white");r=true;};
+if (estado==4){$("div.baja").css("background-color","green");$("div.media").css("background-color","yellow");$("div.alta").css("background-color","red");r=true;};
+if(pass!=$.trim($('#'+campo2).val())){
+estado=5; clave2.html(" ");clave2.html(passtatus[estado]); r=false;
+}else{clave2.html(" ");r=true;}
 });
+return r;
 }
 
 function combotodos(combo){
