@@ -68,8 +68,8 @@ var ok=true;
 $('#frmusu').submit(function() {
 if (!document.getElementById("id_politica").checked) {
 alert('Debe Aceptar las politicas de uso para poder registrarse.'); return false;
-}else if(validaclave('id_contrasena','sclave','id_contrasena2','sclave2')==false){
-alert('Revise su contraseña Por Favor!');return false;}
+}{% if opcion == "add" %}else if(validaclave('id_contrasena','sclave','id_contrasena2','sclave2')==false){
+alert('Revise su contraseña Por Favor!');return false;}{% endif %}
 if(ok){return confirmar("¿Desea {% if opcion == 'add' %}Guardar {% else %} Modificar {% endif %} el registro?");}else{ok=true;alert('Solo se acepta archivos de IMAGEN');return false;}
 });
 $('#id_foto').change(function() {
@@ -80,7 +80,7 @@ if($.inArray(ext, ['jpg','png','gif','jpeg']) == -1) {
 $(document).ready(function() {
   dependencias();
 });
-validaletra('id_nombres');validaclave('id_contrasena','sclave','id_contrasena2','sclave2');
+validaletra('id_nombres');{% if opcion == "add" %}validaclave('id_contrasena','sclave','id_contrasena2','sclave2');{% endif %}
 validaletra('id_apellidos');comboelegir('id_organismo');comboelegir('id_sexo');
 validanumero('id_rpc');
 validanumero('id_rpm');
