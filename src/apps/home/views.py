@@ -69,5 +69,5 @@ def main(request):
 @login_required()
 def singout(request):
     logout(request)
-    return redirect('/')
+    return redirect(settings.LOGIN_URL)
 

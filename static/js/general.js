@@ -74,7 +74,7 @@ dependencia.append("<option selected='selected' value=''>---ELEGIR---</option>")
 function validaletra(campo){
 var l='';
  $('#'+campo).keyup(function () {
-  this.value = this.value.replace(/[^A-Za-záéíóúÁÉÍÓÚÜü ]/g,'');
+  this.value = this.value.replace(/[^A-Za-záéíóúÁÉÍÓÚÜüñÑ ]/g,'');
   //l = this.value.toUpperCase();
   //$('#'+campo).val(l);
 });

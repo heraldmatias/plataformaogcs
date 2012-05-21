@@ -4,7 +4,7 @@
   {% block csspage %}
   <style type="text/css"> 
   .baja {height:15px;width:25px;float:left} .media {height:15px;width:25px;float:left} .alta {width:25px;height:15px;float:left}
-  .info {height:10px;width:100px;margin: auto auto 2px auto;font-style:italic;}
+  .info {height:10px;width:220px;margin: auto auto 2px auto;font-style:italic;}
   </style>
   {% endblock %}
   {% block content %}
@@ -20,11 +20,11 @@
     <li><a href="{% url ogcs-mantenimiento-usuario-consulta nivel %}" >Consultar</a></li>
 </ul>
 <div class="tab-content" id="contenido_izq">
-<div id="nuevo" class="tab-pane fade in active">
+<div id="nuevo" class="tab-pane fade in active" >
 {% if opcion == "add" %}
 <form enctype="multipart/form-data" class="form-inline" name="frmusu" id="frmusu" method="post" action="{% url ogcs-mantenimiento-usuario-add nivel %}" >{% else %}
 <form enctype="multipart/form-data" class="form-inline" name="frmusu" id="frmusu" method="post" action="{% url ogcs-mantenimiento-usuario-edit nivel codigo %}" >{% endif %}
-<div id="frminformacion" class="modal" style="position: relative; top: auto; left: auto; margin: 0 auto auto 20px; z-index: 1"><!--class="modal hide fade">-->
+<div id="frminformacion" class="modal" style="position: relative; top: auto; left: auto; margin: 0 auto auto 20px; z-index: 1;width:720px;height:auto"><!--class="modal hide fade">-->
     <div class="modal-header">
       <a class="close" data-dismiss="modal" >&times;</a>
       {% if nivel == "1" %}
@@ -39,10 +39,10 @@
       {{ campo.errors }}      
       {% if campo.label != "Estado" %} 
       <div class="row-fluid">
-      <div class="span4">{{ campo.label_tag }}:</div><div class="span6">{{ campo }} </div>{% if campo.label == "Contraseña" %}<div class="row"><div class='span2'><b><div class="info" id="sclave" name="sclave"></div></b><div class="baja"> </div><div class="media"> </div><div class="alta"> </div> </div></div>
+      <div class="span3">{{ campo.label_tag }}:</div><div class="span5">{{ campo }} </div>{% if campo.label == "Contraseña" %}<div class="row"><div class='span2'><b><div class="info" id="sclave" name="sclave"></div></b><div class="baja"> </div><div class="media"> </div><div class="alta"> </div> </div></div>
 {% endif %}</div><p></p>{% if campo.label == "Contraseña" %}
 <div class="row-fluid">
-<div class="span4"><label for="id_contrasena2">Contraseña (Confirmar)</label>:</div><div class="span6"><input id="id_contrasena2" type="password" name="contrasena2" maxlength="128" /> </div><div class="row"><div class='span2'><b><div class="info" style="color:red;" id="sclave2" name="sclave2"></div></b></div></div></div><p></p>
+<div class="span3"><label for="id_contrasena2">Contraseña (Confirmar)</label>:</div><div class="span5"><input id="id_contrasena2" type="password" name="contrasena2" maxlength="128" /> </div><div class="row"><div class='span2'><b><div class="info" style="color:red;" id="sclave2" name="sclave2"></div></b></div></div></div><p></p>
  {% endif %}{% endif %}
       {% endfor %}
       <input type="hidden" name="estado" id="id_estado" value="2">

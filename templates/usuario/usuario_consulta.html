@@ -13,8 +13,8 @@
 </ul>
 <div class="tab-content" id="contenido_izq">
 <div id="consulta" class="tab-pane fade in active">
-<form class="form-inline span8" name="frmreg" method="get" action="{% url ogcs-mantenimiento-usuario-consulta nivel %}"><!--data-toggle="modal"-->
-<div id="frmregion" class="modal span8" style="position: relative; top: auto; left: auto; margin: 0 auto auto -2.3em; z-index: 1"><!--class="modal hide fade">-->
+<form class="form-inline" name="frmreg" method="get" action="{% url ogcs-mantenimiento-usuario-consulta nivel %}"><!--data-toggle="modal"-->
+<div id="frmregion" class="modal" style="position: relative; top: auto; left: auto; margin: 0 auto auto 20px; z-index: 1;width:720px;height:auto"><!--class="modal hide fade">-->
     <div class="modal-header">
       <a class="close" data-dismiss="modal" href="javascript: cerrarformulario('contenido');">&times;</a>
        {% if nivel == "1" %}<h3>Consulta de Usuario</h3>{% else %}<h3>Consulta de Administrador</h3> {% endif %}

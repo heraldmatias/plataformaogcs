@@ -25,8 +25,8 @@ class RegionTable(tables.Table):
     estado = tables.Column()    
 
     def render_item(self):
-        value = getattr(self, '_counter', 1)
-        self._counter = value + 1
+        value = getattr(self, '_coo', 1)
+        self._coo = value+1
         return '%d' % value
 
     class Meta:
