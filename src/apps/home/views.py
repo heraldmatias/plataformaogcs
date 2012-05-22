@@ -18,7 +18,7 @@ def index(request):
 
 @login_required()
 def view_calendar(request):
-    return render_to_response('home/calendario.html',{'usuario':request.session['nombres'],'fecha':request.session['login_date'],'foto':request.session['foto'],'dep':request.session['dependencia']}, context_instance=RequestContext(request),)
+    return render_to_response('home/calendario.html', context_instance=RequestContext(request),)
 
 def singin(request):
     if request.method == 'POST':
@@ -42,11 +42,7 @@ def singin(request):
                 ini = Odp.objects.get(numodp=profile.dependencia)
             elif profile.organismo.codigo == 3:
                 ini = Gobernacion.objects.get(numgob=profile.dependencia)
-            request.session['dependencia'] = ini
-            if profile.foto: 
-                request.session['foto'] = profile.foto.url
-            else:
-                request.session['foto'] = settings.STATIC_URL+'images/varon.png'
+            request.session['dependencia'] = ini            
             return redirect('ogcs-index')
         else:    
             form = LoginForm()
@@ -62,9 +58,9 @@ def singin(request):
 @login_required()
 def main(request): 
     if 'm' in request.GET:
-        return render_to_response('home/home.html',{'m':request.GET['m'],'usuario':request.session['nombres'],'fecha':request.session['login_date'],'foto':request.session['foto'],}, context_instance=RequestContext(request),)
+        return render_to_response('home/home.html',{'m':request.GET['m']}, context_instance=RequestContext(request),)
     else: 
-        return render_to_response('home/home.html',{'usuario':request.session['nombres'],'fecha':request.session['login_date'],'user':request.user,'dep':request.session['dependencia'],'foto':request.session['foto']}, context_instance=RequestContext(request),)
+        return render_to_response('home/home.html', context_instance=RequestContext(request),)
 
 @login_required()
 def singout(request):

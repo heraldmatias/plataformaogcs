@@ -31,7 +31,7 @@ def ministerioadd(request):
             mensaje = "Registro grabado satisfactoriamente." 
     else:        
         frmministerio = MinisterioForm()
-    return render_to_response('dependencia/ministerio.html', {'frmministerio': frmministerio,'opcion':'add','usuario':request.session['nombres'],'fecha':request.session['login_date'],'mensaje':mensaje,'dep':request.session['dependencia'],'foto':request.session['foto']}, context_instance=RequestContext(request),)
+    return render_to_response('dependencia/ministerio.html', {'frmministerio': frmministerio,'opcion':'add','mensaje':mensaje}, context_instance=RequestContext(request),)
 
 @login_required()
 def ministerioedit(request, codigo):
@@ -46,7 +46,7 @@ def ministerioedit(request, codigo):
     else:
         ministerio = get_object_or_404(Ministerio, nummin=int(codigo))
         frmministerio = MinisterioForm(instance=ministerio)
-    return render_to_response('dependencia/ministerio.html', {'frmministerio': frmministerio,'opcion':'edit','codigo':codigo,'usuario':request.session['nombres'],'fecha':request.session['login_date'],'dep':request.session['dependencia'],'foto':request.session['foto']}, context_instance=RequestContext(request),)
+    return render_to_response('dependencia/ministerio.html', {'frmministerio': frmministerio,'opcion':'edit','codigo':codigo,}, context_instance=RequestContext(request),)
 
 @login_required()
 def ministerioquery(request):
@@ -62,7 +62,7 @@ def ministerioquery(request):
     tblministerios = MinisterioTable(ministerios.order_by(col))
     config.configure(tblministerios)
     tblministerios.paginate(page=request.GET.get('page', 1), per_page=6)
-    return render_to_response('dependencia/ministerio_consulta.html', {'consultaministerioform':consultaministerioform,'tabla':tblministerios,'usuario':request.session['nombres'],'dep':request.session['dependencia'],'foto':request.session['foto'],'fecha':request.session['login_date'],'mensaje':(request.GET['m'] if 'm' in request.GET else '')}, context_instance=RequestContext(request),)
+    return render_to_response('dependencia/ministerio_consulta.html', {'consultaministerioform':consultaministerioform,'tabla':tblministerios,'mensaje':(request.GET['m'] if 'm' in request.GET else '')}, context_instance=RequestContext(request),)
 
 @login_required()
 def ministerioprint(request):
@@ -89,7 +89,7 @@ def odpadd(request):
             mensaje = "Registro grabado satisfactoriamente." 
     else:        
         frmopd = OdpForm()
-    return render_to_response('dependencia/odp.html', {'frmodp': frmopd,'opcion':'add','usuario':request.session['nombres'],'fecha':request.session['login_date'],'mensaje':mensaje,'dep':request.session['dependencia'],'foto':request.session['foto']}, context_instance=RequestContext(request),)
+    return render_to_response('dependencia/odp.html', {'frmodp': frmopd,'opcion':'add','mensaje':mensaje,}, context_instance=RequestContext(request),)
 
 @login_required()
 def odpedit(request, codigo):
@@ -104,7 +104,7 @@ def odpedit(request, codigo):
     else:
         odp = get_object_or_404(Odp, numodp=int(codigo))
         frmodp = OdpForm(instance=odp)
-    return render_to_response('dependencia/odp.html', {'frmodp': frmodp,'opcion':'edit','codigo':codigo,'usuario':request.session['nombres'],'fecha':request.session['login_date'],'dep':request.session['dependencia'],'foto':request.session['foto']}, context_instance=RequestContext(request),)
+    return render_to_response('dependencia/odp.html', {'frmodp': frmodp,'opcion':'edit','codigo':codigo,}, context_instance=RequestContext(request),)
 
 @login_required()
 def odpquery(request):
@@ -125,7 +125,7 @@ def odpquery(request):
     tblodps = OdpTable(odps.order_by(col))
     config.configure(tblodps)
     tblodps.paginate(page=request.GET.get('page', 1), per_page=6)
-    return render_to_response('dependencia/odp_consulta.html', {'consultaodpform':consultaodpform,'tabla':tblodps,'usuario':request.session['nombres'],'fecha':request.session['login_date'],'dep':request.session['dependencia'],'foto':request.session['foto'],'mensaje':(request.GET['m'] if 'm' in request.GET else '')}, context_instance=RequestContext(request),)
+    return render_to_response('dependencia/odp_consulta.html', {'consultaodpform':consultaodpform,'tabla':tblodps,'mensaje':(request.GET['m'] if 'm' in request.GET else '')}, context_instance=RequestContext(request),)
 
 @login_required()
 def odpprint(request):
@@ -158,7 +158,7 @@ def gobernacionadd(request):
             mensaje = "Registro grabado satisfactoriamente."
     else:        
         frmgobernacion = GobernacionForm()
-    return render_to_response('dependencia/gobernacion.html', {'frmgobernacion': frmgobernacion,'opcion':'add','usuario':request.session['nombres'],'fecha':request.session['login_date'],'mensaje':mensaje,'dep':request.session['dependencia'],'foto':request.session['foto']}, context_instance=RequestContext(request),)
+    return render_to_response('dependencia/gobernacion.html', {'frmgobernacion': frmgobernacion,'opcion':'add','mensaje':mensaje,}, context_instance=RequestContext(request),)
 
 @login_required() 
 def gobernacionedit(request, codigo):
@@ -174,7 +174,7 @@ def gobernacionedit(request, codigo):
         gobernacion = get_object_or_404(Gobernacion, numgob=int(codigo))
         frmgobernacion = GobernacionForm(instance=gobernacion)
         #frmgobernacion.provincia.choices = Provincia.objects.filter(region=gobernacion.region).values_list('numpro','provincia')        
-    return render_to_response('dependencia/gobernacion.html', {'frmgobernacion': frmgobernacion,'opcion':'edit','codigo':codigo,'usuario':request.session['nombres'],'dep':request.session['dependencia'],'foto':request.session['foto'],'fecha':request.session['login_date']}, context_instance=RequestContext(request),)
+    return render_to_response('dependencia/gobernacion.html', {'frmgobernacion': frmgobernacion,'opcion':'edit','codigo':codigo,}, context_instance=RequestContext(request),)
 
 @login_required()
 def gobernacionquery(request):
@@ -196,7 +196,7 @@ def gobernacionquery(request):
     tblgobernaciones = GobernacionTable(gobernaciones.order_by(col))
     config.configure(tblgobernaciones)
     tblgobernaciones.paginate(page=request.GET.get('page', 1), per_page=6)
-    return render_to_response('dependencia/gobernacion_consulta.html', {'consultagobernacionform':consultagobernacionform,'tabla':tblgobernaciones,'usuario':request.session['nombres'],'fecha':request.session['login_date'],'dep':request.session['dependencia'],'foto':request.session['foto'],'mensaje':(request.GET['m'] if 'm' in request.GET else '')}, context_instance=RequestContext(request),)
+    return render_to_response('dependencia/gobernacion_consulta.html', {'consultagobernacionform':consultagobernacionform,'tabla':tblgobernaciones,'mensaje':(request.GET['m'] if 'm' in request.GET else '')}, context_instance=RequestContext(request),)
 
 @login_required()
 def gobernacionprint(request):

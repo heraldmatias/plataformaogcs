@@ -1,4 +1,5 @@
 {% load static %}
+{% load cache %}
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <html><head>
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
@@ -36,19 +37,23 @@
         	<img height="60" width="207" src="{{ STATIC_URL  }}images/logopcm.png" />
         </div>
     	{% else %}
+        {% cache 600 cabece %}
+        {% with USUARIO=request.user.get_profile %}
         <div id="cabecera_der">       	
             <table width="356" border="0" cellspacing="0" cellpadding="0" style="margin:12px 8px 0 0">
              <tr>
-               <td width="129" valign="top" class="ministerio">{{ dep }}</td>
-               <td width="61" rowspan="2"><img src="{{ foto }}" width="50" height="50" style="border:2px #999 solid;padding:1px"></td>
+               <td width="129" valign="top" class="ministerio">{{ USUARIO.get_dependencia }}</td>
+               <td width="49" rowspan="2"><img src="{% if USUARIO.foto %}{{ USUARIO.foto.url }} {% else %} {{ STATIC_URL }}images/varon.png {% endif %}" width="38" height="36"></td>
                <td width="178" class="gris2">Bienvenido</td>
              </tr>
              <tr>
-               <td valign="top" class="fecha">{{ fecha|date:"D d M Y H:i:s" }}</td>
-               <td width="178" class="azul">{{ usuario }}</td>
+               <td valign="top" class="fecha">{{ request.session.login_date|date:"D d M Y H:i:s" }}</td>
+               <td width="178" class="azul">{{ USUARIO.nombres }}</td>
              </tr>
            </table>
         </div>
+       {% endwith %}
+       {% endcache %}
        {% endif %}</div>
     <div class="clear"></div>    
     <div id="menu">
