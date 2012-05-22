@@ -63,7 +63,7 @@ def useradd(request,nivel):
                     user.email_user(subject=asunto, message=mensaje)
                 except:
                     return redirect(reverse('ogcs-index')+'?m=userr')
-                return redirect(reverse('ogcs-index')+'?m=userr')
+                return redirect(reverse('ogcs-index')+'?m=usadd')
     else:        
         frmusuario = UsuarioForm()
     return render_to_response('usuario/usuario.html', {'frmusuario': frmusuario,'opcion':'add','usuario':request.session['nombres'],'fecha':request.session['login_date'],'existe':existe,'nivel':nivel,'dependencia': request.POST['dependencia'] if 'dependencia' in request.POST else 0,'dep':request.session['dependencia'],'foto':request.session['foto']}, context_instance=RequestContext(request),)
