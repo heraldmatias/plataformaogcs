@@ -42,7 +42,7 @@ def oacadd(request):
             mensaje="Registro grabado satisfactoriamente."
     else:        
         formulario = OacForm()
-    return render_to_response('comunicacion/oac.html', {'formulario': formulario,'usuario':request.session['nombres'],'fecha':request.session['login_date'],'mensaje':mensaje,'dep':request.session['dependencia']}, context_instance=RequestContext(request),)
+    return render_to_response('comunicacion/oac.html', {'formulario': formulario,'usuario':request.session['nombres'],'foto':request.session['foto'],'fecha':request.session['login_date'],'mensaje':mensaje,'dep':request.session['dependencia']}, context_instance=RequestContext(request),)
 
 @login_required()
 def oacquery(request):
@@ -66,7 +66,7 @@ def oacquery(request):
     tabla = OacTable(query.order_by(col))
     config.configure(tabla)
     tabla.paginate(page=request.GET.get('page', 1), per_page=6)
-    return render_to_response('comunicacion/oac_consulta.html', {'formulario':formulario,'tabla':tabla,'usuario':request.session['nombres'],'fecha':request.session['login_date'],'dependencia':dependencia,'dep':request.session['dependencia']}, context_instance=RequestContext(request),)
+    return render_to_response('comunicacion/oac_consulta.html', {'formulario':formulario,'tabla':tabla,'usuario':request.session['nombres'],'fecha':request.session['login_date'],'foto':request.session['foto'],'dependencia':dependencia,'dep':request.session['dependencia']}, context_instance=RequestContext(request),)
 
 @login_required()
 def oacprint(request):
@@ -107,7 +107,7 @@ def pgcsadd(request):
             mensaje="Registro grabado satisfactoriamente."
     else:        
         formulario = PgcsForm()
-    return render_to_response('comunicacion/pgcs.html', {'formulario': formulario,'usuario':request.session['nombres'],'fecha':request.session['login_date'],'mensaje':mensaje,'dep':request.session['dependencia']}, context_instance=RequestContext(request),)
+    return render_to_response('comunicacion/pgcs.html', {'formulario': formulario,'usuario':request.session['nombres'],'fecha':request.session['login_date'],'foto':request.session['foto'],'mensaje':mensaje,'dep':request.session['dependencia']}, context_instance=RequestContext(request),)
 
 @login_required()
 def pgcsquery(request):
@@ -132,7 +132,7 @@ def pgcsquery(request):
     tabla = PgcsTable(query.order_by(col))
     config.configure(tabla)
     tabla.paginate(page=request.GET.get('page', 1), per_page=6)
-    return render_to_response('comunicacion/pgcs_consulta.html', {'formulario':formulario,'tabla':tabla,'usuario':request.session['nombres'],'fecha':request.session['login_date'],'dependencia':dependencia,'dep':request.session['dependencia']}, context_instance=RequestContext(request),)
+    return render_to_response('comunicacion/pgcs_consulta.html', {'formulario':formulario,'tabla':tabla,'usuario':request.session['nombres'],'foto':request.session['foto'],'fecha':request.session['login_date'],'dependencia':dependencia,'dep':request.session['dependencia']}, context_instance=RequestContext(request),)
 
 @login_required()
 def pgcsprint(request,tipo):
@@ -175,7 +175,7 @@ def pgcs_apor_add(request):
             mensaje="Registro grabado satisfactoriamente."
     else:        
         formulario = PgcsForm()
-    return render_to_response('comunicacion/pgcs.html', {'formulario': formulario,'usuario':request.session['nombres'],'fecha':request.session['login_date'],'mensaje':mensaje,'aporte':'aporte','dep':request.session['dependencia']}, context_instance=RequestContext(request),)
+    return render_to_response('comunicacion/pgcs.html', {'formulario': formulario,'usuario':request.session['nombres'],'fecha':request.session['login_date'],'foto':request.session['foto'],'mensaje':mensaje,'aporte':'aporte','dep':request.session['dependencia']}, context_instance=RequestContext(request),)
 
 @login_required()
 def pgcs_apor_query(request):
@@ -200,7 +200,7 @@ def pgcs_apor_query(request):
     tabla = PgcsTable(query.order_by(col))
     config.configure(tabla)
     tabla.paginate(page=request.GET.get('page', 1), per_page=6)
-    return render_to_response('comunicacion/pgcs_consulta.html', {'formulario':formulario,'tabla':tabla,'usuario':request.session['nombres'],'fecha':request.session['login_date'],'dependencia':dependencia,'aporte':'aporte','dep':request.session['dependencia']}, context_instance=RequestContext(request),)
+    return render_to_response('comunicacion/pgcs_consulta.html', {'formulario':formulario,'tabla':tabla,'usuario':request.session['nombres'],'fecha':request.session['login_date'],'dependencia':dependencia,'foto':request.session['foto'],'aporte':'aporte','dep':request.session['dependencia']}, context_instance=RequestContext(request),)
 
 ######################## MCCA INICIO ###############################################
 ####################################################################################
@@ -284,7 +284,7 @@ def mccaadd(request):
     formmcca_canal = MccaForm_Canal()
     formmcca_accion = MccaForm_Accion()
     formmcca_observacion = MccaForm_Observacion()
-    return render_to_response('comunicacion/mcca.html', {'form': formmcca,'usuario':request.session['nombres'],'fecha':request.session['login_date'],'dep':request.session['dependencia'], 'form_estado': formmcca_estado, 'form_privado': formmcca_privado, 'form_indicador': formmcca_indicador, 'form_mensaje': formmcca_mensaje, 'form_canal': formmcca_canal, 'form_accion': formmcca_accion, 'form_observacion': formmcca_observacion, 'tabla':tabla, 'tabla1':tabla1, 'tabla2':tabla2, 'tabla3':tabla3, 'tabla4':tabla4, 'tabla5':tabla5, 'tabla6':tabla6, 'mensaje':mensaje, 'accion': 'add'}, context_instance=RequestContext(request),)
+    return render_to_response('comunicacion/mcca.html', {'form': formmcca,'usuario':request.session['nombres'],'fecha':request.session['login_date'],'dep':request.session['dependencia'],'foto':request.session['foto'], 'form_estado': formmcca_estado, 'form_privado': formmcca_privado, 'form_indicador': formmcca_indicador, 'form_mensaje': formmcca_mensaje, 'form_canal': formmcca_canal, 'form_accion': formmcca_accion, 'form_observacion': formmcca_observacion, 'tabla':tabla, 'tabla1':tabla1, 'tabla2':tabla2, 'tabla3':tabla3, 'tabla4':tabla4, 'tabla5':tabla5, 'tabla6':tabla6, 'mensaje':mensaje, 'accion': 'add'}, context_instance=RequestContext(request),)
 
 @login_required()
 def mccaedit(request, nummcca):
@@ -523,7 +523,7 @@ def mcca_query(request):
     tabla = MccaTable(query.order_by(col))
     config.configure(tabla)
     tabla.paginate(page=request.GET.get('page', 1), per_page=6)
-    return render_to_response('comunicacion/mcca_consulta.html', {'form':formulario,'usuario':request.session['nombres'],'fecha':request.session['login_date'],'dep':request.session['dependencia'], 'tabla':tabla}, context_instance=RequestContext(request),)
+    return render_to_response('comunicacion/mcca_consulta.html', {'form':formulario,'usuario':request.session['nombres'],'fecha':request.session['login_date'],'dep':request.session['dependencia'],'foto':request.session['foto'], 'tabla':tabla}, context_instance=RequestContext(request),)
 
 @login_required()
 def mccaprint(request):
@@ -623,7 +623,7 @@ def mccadd(request):
     formmcc_actor = MccForm_Actor()
     formmcc_observacion = MccForm_Observacion()
 
-    return render_to_response('comunicacion/mcc.html', {'form': formmcc,'usuario':request.session['nombres'],'fecha':request.session['login_date'],'dep':request.session['dependencia'], 'form_actor': formmcc_actor, 'form_lider': formmcc_lider, 'form_observacion':formmcc_observacion, 'tabla1':tabla1, 'tabla2':tabla2, 'tabla3':tabla3, 'mensaje':mensaje, 'accion':'add'}, context_instance=RequestContext(request),)
+    return render_to_response('comunicacion/mcc.html', {'form': formmcc,'usuario':request.session['nombres'],'fecha':request.session['login_date'],'dep':request.session['dependencia'],'foto':request.session['foto'], 'form_actor': formmcc_actor, 'form_lider': formmcc_lider, 'form_observacion':formmcc_observacion, 'tabla1':tabla1, 'tabla2':tabla2, 'tabla3':tabla3, 'mensaje':mensaje, 'accion':'add'}, context_instance=RequestContext(request),)
 
 
 
@@ -730,7 +730,7 @@ def mccedit(request, nummcc):
     formmcc_actor = MccForm_Actor()
     formmcc_observacion = MccForm_Observacion()
 
-    return render_to_response('comunicacion/mcc.html', {'form': formmcc,'usuario':request.session['nombres'],'fecha':request.session['login_date'],'dep':request.session['dependencia'], 'form_actor': formmcc_actor, 'form_lider': formmcc_lider, 'form_observacion':formmcc_observacion, 'tabla1':tabla1, 'tabla2':tabla2, 'tabla3':tabla3, 'mensaje':mensaje, 'codigo':nummcc, 'accion': ''}, context_instance=RequestContext(request),)
+    return render_to_response('comunicacion/mcc.html', {'form': formmcc,'usuario':request.session['nombres'],'fecha':request.session['login_date'],'dep':request.session['dependencia'],'foto':request.session['foto'], 'form_actor': formmcc_actor, 'form_lider': formmcc_lider, 'form_observacion':formmcc_observacion, 'tabla1':tabla1, 'tabla2':tabla2, 'tabla3':tabla3, 'mensaje':mensaje, 'codigo':nummcc, 'accion': ''}, context_instance=RequestContext(request),)
 
 @login_required()
 def mcc_query(request):
@@ -783,7 +783,7 @@ def mcc_query(request):
     tabla = MccTable(query.order_by(col))
     config.configure(tabla)
     tabla.paginate(page=request.GET.get('page', 1), per_page=6)
-    return render_to_response('comunicacion/mcc_consulta.html', {'form':form,'usuario':request.session['nombres'],'fecha':request.session['login_date'],'dep':request.session['dependencia'], 'tabla':tabla}, context_instance=RequestContext(request),)
+    return render_to_response('comunicacion/mcc_consulta.html', {'form':form,'usuario':request.session['nombres'],'fecha':request.session['login_date'],'dep':request.session['dependencia'],'foto':request.session['foto'], 'tabla':tabla}, context_instance=RequestContext(request),)
 
 @login_required()	
 def mccprint(request):
