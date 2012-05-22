@@ -1,6 +1,21 @@
   {% extends 'base.html' %}
   {% load static %}
   {% block title %} Plataforma Intersectorial de Comunicaci&oacute;n OGCS {% endblock %}
+  {% block csspage %}
+  	<style type="text/css">
+  	ul#portfolio li img{
+	padding: 0px;
+	}
+	ul#portfolio {
+	margin-bottom: 2em;
+	list-style:none;
+	height:222px;
+	overflow:hidden
+	}
+	
+
+	</style>
+  {% endblock %}
   {% block content %}    
     <div id="contenido">
     	<div id="contenido_izq">
@@ -12,15 +27,30 @@
     <h3><div class="alert alert-success"><a class="close" data-dismiss="alert">×</a><strong>Mensaje:</strong>
     <p>Usuario creado correctamente, se ha enviado un email con los datos del registro.</p> </div></h3>
   {% endif %}
-       <div id="myCarousel" class="carousel slide" align="middle">
-	<div class="carousel-inner">
-	   <div class="item active">
-	      <img alt="" src="{{ STATIC_URL }}images/intrito2.jpg">
-	   </div>
-	   <div class="item">
-              <img alt="" src="{{ STATIC_URL }}images/intrito3.jpg">
-           </div>
-        </div>
-      </div>
+              
+                    <ul id="portfolio">					
+                            <li>
+                                <img src="{{ STATIC_URL }}images/intrito2.jpg" alt="" />
+                            </li>
+                            <li>
+                                <img src="{{ STATIC_URL }}images/intrito3.jpg" alt="" />
+                            </li>					
+                                    
+                        </ul>
+              
+      	</div>
     </div>
+{% endblock %}
+{% block scriptjs %}
+	<script type="text/javascript" src="{{ STATIC_URL }}js/jquery.innerfade.js"></script>
+    <script type="text/javascript">
+		$(document).ready(function(){
+			$('ul#portfolio').innerfade({
+						speed: 1000,
+						timeout: 5000,
+						type: 'sequence',
+						containerheight: '222px'
+					});
+		});
+    </script>
 {% endblock %}
