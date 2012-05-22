@@ -205,7 +205,7 @@ def pgcs_apor_query(request):
 ######################## MCCA INICIO ###############################################
 ####################################################################################
 
-
+@login_required()
 def mccaadd(request):
     mensaje = ""
     if request.method == 'POST':
@@ -284,8 +284,9 @@ def mccaadd(request):
     formmcca_canal = MccaForm_Canal()
     formmcca_accion = MccaForm_Accion()
     formmcca_observacion = MccaForm_Observacion()
-    return render_to_response('comunicacion/mcca.html', {'form': formmcca, 'form_estado': formmcca_estado, 'form_privado': formmcca_privado, 'form_indicador': formmcca_indicador, 'form_mensaje': formmcca_mensaje, 'form_canal': formmcca_canal, 'form_accion': formmcca_accion, 'form_observacion': formmcca_observacion, 'tabla':tabla, 'tabla1':tabla1, 'tabla2':tabla2, 'tabla3':tabla3, 'tabla4':tabla4, 'tabla5':tabla5, 'tabla6':tabla6, 'mensaje':mensaje, 'accion': 'add'}, context_instance=RequestContext(request),)
+    return render_to_response('comunicacion/mcca.html', {'form': formmcca,'usuario':request.session['nombres'],'fecha':request.session['login_date'],'dep':request.session['dependencia'], 'form_estado': formmcca_estado, 'form_privado': formmcca_privado, 'form_indicador': formmcca_indicador, 'form_mensaje': formmcca_mensaje, 'form_canal': formmcca_canal, 'form_accion': formmcca_accion, 'form_observacion': formmcca_observacion, 'tabla':tabla, 'tabla1':tabla1, 'tabla2':tabla2, 'tabla3':tabla3, 'tabla4':tabla4, 'tabla5':tabla5, 'tabla6':tabla6, 'mensaje':mensaje, 'accion': 'add'}, context_instance=RequestContext(request),)
 
+@login_required()
 def mccaedit(request, nummcca):
     mensaje = ""
     if request.method == 'POST':
@@ -479,9 +480,10 @@ def mccaedit(request, nummcca):
     formmcca_canal = MccaForm_Canal()
     formmcca_accion = MccaForm_Accion()
     formmcca_observacion = MccaForm_Observacion()
-    return render_to_response('comunicacion/mcca.html', {'form': formmcca, 'form_estado': formmcca_estado, 'form_privado': formmcca_privado, 'form_indicador': formmcca_indicador, 'form_mensaje': formmcca_mensaje, 'form_canal': formmcca_canal, 'form_accion': formmcca_accion, 'form_observacion': formmcca_observacion, 'tabla':tabla, 'tabla1':tabla1, 'tabla2':tabla2, 'tabla3':tabla3, 'tabla4':tabla4, 'tabla5':tabla5, 'tabla6':tabla6, 'mensaje':mensaje, 'codigo':nummcca, 'accion': ''}, context_instance=RequestContext(request),)
+    return render_to_response('comunicacion/mcca.html', {'form': formmcca,'usuario':request.session['nombres'],'fecha':request.session['login_date'],'dep':request.session['dependencia'], 'form_estado': formmcca_estado, 'form_privado': formmcca_privado, 'form_indicador': formmcca_indicador, 'form_mensaje': formmcca_mensaje, 'form_canal': formmcca_canal, 'form_accion': formmcca_accion, 'form_observacion': formmcca_observacion, 'tabla':tabla, 'tabla1':tabla1, 'tabla2':tabla2, 'tabla3':tabla3, 'tabla4':tabla4, 'tabla5':tabla5, 'tabla6':tabla6, 'mensaje':mensaje, 'codigo':nummcca, 'accion': ''}, context_instance=RequestContext(request),)
 
 
+@login_required()
 def mcca_query(request):
     col = "-fechaini"
     query = None
@@ -521,9 +523,9 @@ def mcca_query(request):
     tabla = MccaTable(query.order_by(col))
     config.configure(tabla)
     tabla.paginate(page=request.GET.get('page', 1), per_page=6)
-    return render_to_response('comunicacion/mcca_consulta.html', {'form':formulario, 'tabla':tabla}, context_instance=RequestContext(request),)
+    return render_to_response('comunicacion/mcca_consulta.html', {'form':formulario,'usuario':request.session['nombres'],'fecha':request.session['login_date'],'dep':request.session['dependencia'], 'tabla':tabla}, context_instance=RequestContext(request),)
 
-
+@login_required()
 def mccaprint(request):
     col = "-fechaini"
     query = None
@@ -571,7 +573,7 @@ def mccaprint(request):
 ######################## MCC INICIO ###############################################
 ####################################################################################
 
-
+@login_required()
 def mccadd(request):
     mensaje = ""
     if request.method == 'POST':
@@ -621,11 +623,11 @@ def mccadd(request):
     formmcc_actor = MccForm_Actor()
     formmcc_observacion = MccForm_Observacion()
 
-    return render_to_response('comunicacion/mcc.html', {'form': formmcc, 'form_actor': formmcc_actor, 'form_lider': formmcc_lider, 'form_observacion':formmcc_observacion, 'tabla1':tabla1, 'tabla2':tabla2, 'tabla3':tabla3, 'mensaje':mensaje, 'accion':'add'}, context_instance=RequestContext(request),)
+    return render_to_response('comunicacion/mcc.html', {'form': formmcc,'usuario':request.session['nombres'],'fecha':request.session['login_date'],'dep':request.session['dependencia'], 'form_actor': formmcc_actor, 'form_lider': formmcc_lider, 'form_observacion':formmcc_observacion, 'tabla1':tabla1, 'tabla2':tabla2, 'tabla3':tabla3, 'mensaje':mensaje, 'accion':'add'}, context_instance=RequestContext(request),)
 
 
 
-
+@login_required()
 def mccedit(request, nummcc):
     mensaje = ""
     if request.method == 'POST':
@@ -728,9 +730,9 @@ def mccedit(request, nummcc):
     formmcc_actor = MccForm_Actor()
     formmcc_observacion = MccForm_Observacion()
 
-    return render_to_response('comunicacion/mcc.html', {'form': formmcc, 'form_actor': formmcc_actor, 'form_lider': formmcc_lider, 'form_observacion':formmcc_observacion, 'tabla1':tabla1, 'tabla2':tabla2, 'tabla3':tabla3, 'mensaje':mensaje, 'codigo':nummcc, 'accion': ''}, context_instance=RequestContext(request),)
+    return render_to_response('comunicacion/mcc.html', {'form': formmcc,'usuario':request.session['nombres'],'fecha':request.session['login_date'],'dep':request.session['dependencia'], 'form_actor': formmcc_actor, 'form_lider': formmcc_lider, 'form_observacion':formmcc_observacion, 'tabla1':tabla1, 'tabla2':tabla2, 'tabla3':tabla3, 'mensaje':mensaje, 'codigo':nummcc, 'accion': ''}, context_instance=RequestContext(request),)
 
-
+@login_required()
 def mcc_query(request):
     col = "-fechaini"
     query = list()
@@ -781,9 +783,9 @@ def mcc_query(request):
     tabla = MccTable(query.order_by(col))
     config.configure(tabla)
     tabla.paginate(page=request.GET.get('page', 1), per_page=6)
-    return render_to_response('comunicacion/mcc_consulta.html', {'form':form, 'tabla':tabla}, context_instance=RequestContext(request),)
+    return render_to_response('comunicacion/mcc_consulta.html', {'form':form,'usuario':request.session['nombres'],'fecha':request.session['login_date'],'dep':request.session['dependencia'], 'tabla':tabla}, context_instance=RequestContext(request),)
 
-	
+@login_required()	
 def mccprint(request):
     col = "-fechaini"
     query = list()
