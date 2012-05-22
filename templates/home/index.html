@@ -21,7 +21,7 @@
                         </tr>
                         <tr>
                         	<td align="left" width="50%"><a href="javascript: document.login.submit();"><img  src="{{ STATIC_URL  }}images/botonsesion.png"></a></td>
-                            <td align="center" width="50%"><a href="#"><img src="{{ STATIC_URL  }}images/botoncuenta.png"></a></td>
+                            <td align="center" width="50%"><a href="#" onclick="limpiar_fields()"><img src="{{ STATIC_URL  }}images/botoncuenta.png"></a></td>
                         </tr>
                     </table>
                 </div>
@@ -43,5 +43,9 @@ $('#id_clave').keydown(function(event) {
     document.login.submit();
   }
 });
+function limpiar_fields(){
+	$("#id_usuario").val("");
+	$("#id_clave").val("");
+	}
 </script>
   {% endblock %}
