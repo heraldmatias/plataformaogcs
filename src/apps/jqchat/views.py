@@ -26,7 +26,7 @@ def window(request, id):
 
     ThisRoom = get_object_or_404(Room, id=id)
 
-    return render_to_response('jqchat/chat_test.html', {'room': ThisRoom,'usuario':request.session['nombres'],'fecha':request.session['login_date'],'dep':request.session['dependencia'],'foto':request.session['foto']}, context_instance=RequestContext(request))
+    return render_to_response('jqchat/chat_test.html', {'room': ThisRoom,}, context_instance=RequestContext(request))
 
 #------------------------------------------------------------------------------
 @login_required
