@@ -68,6 +68,10 @@ class Usuario(models.Model):
     fec_mod = models.DateTimeField(verbose_name='Fecha modifico', auto_now=True, null=True, blank=True)
     foto = models.FileField(upload_to='users/',verbose_name='Foto', null=True, blank=True)
 
+    def __init__(self, *args, **kw):
+        super(Usuario, self).__init__(*args, **kw)
+        self._dep = None
+
     class Meta:
         db_table = u'usuario'
         verbose_name = u'Usuario'
@@ -76,3 +80,17 @@ class Usuario(models.Model):
 
     def __unicode__(self):
         return "%s, %s", (self.nombres, self.apellidos)
+    
+    def get_dependencia(self):
+        from dependencia.models import Gobernacion, Ministerio, Odp
+        if self._dep:
+            return self._dep
+        else:
+            if self.organismo.codigo == 1:
+                self._dep= Ministerio.objects.get(nummin=self.dependencia)
+            elif self.organismo.codigo == 2:
+                self._dep= Odp.objects.get(numodp=self.dependencia)
+            elif self.organismo.codigo == 3:
+                self._dep= Gobernacion.objects.get(numgob=self.dependencia)
+            return self._dep  
+        

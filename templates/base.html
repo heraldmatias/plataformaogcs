@@ -55,9 +55,12 @@
        {% endwith %}
        {% endcache %}
        {% endif %}</div>
-    <div class="clear"></div>    
-    <div id="menu">
-        {% if not login %} 	      
+    <div class="clear"></div>   
+    {% if login %}   
+    <div id="menu"> </div>
+    {% else %}
+{% cache 600 menu %}  
+<div id="menu">  
         <ul id="nave">
             <li class="dropdown principal"><a class="dropdown-toggle menublanco" data-toggle="dropdown" href="">Mantenimiento<b class="caret"></b></a>
                 <ul class="dropdown-menu">                  
@@ -107,9 +110,10 @@
         </ul>
         <div id="cerrar_sesion">
         <a class="menublanco" href="{% url ogcs-logout %}"> Cerrar sesión&nbsp;<img width="20" height="19" src="{{ STATIC_URL }}images/sesion.png" align="absmiddle"></a>
-        </div>
-       {% endif %} 
-    </div>
+        </div></div>
+{% endcache %}
+{% endif %} 
+    
 {% if not login %} <div id="contenido"> {% endif %}
   {% block content %}
   {% endblock %}
