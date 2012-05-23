@@ -49,7 +49,7 @@ table tr td{padding-left:10px;}
              </tr>
              <tr>
                <td width="230" valign="top" class="fecha">FECHA: {{ request.user.last_login|date:"D d M Y" }}<br>HORA: {{ request.user.last_login|date:"H:i:s" }}</td>
-               <td width="178" class="azul">{{ USUARIO.nombres }}</td>
+               <td width="178" class="azul">{{ request.user.get_full_name }}</td>
              </tr>
            </table>
         </div>
@@ -60,9 +60,9 @@ table tr td{padding-left:10px;}
     {% if login %}   
     <div id="menu"> </div>
     {% else %}
-{% cache 600 menu %}  
 <div id="menu">  
         <ul id="nave">
+           {% if request.user.is_superuser %}
             <li class="dropdown principal"><a class="dropdown-toggle menublanco" data-toggle="dropdown" href="">Mantenimiento<b class="caret"></b></a>
                 <ul class="dropdown-menu">                  
                   <li class="opcion"><a href="{% url ogcs-mantenimiento-region-add %}" data-toggle="modal">Regi&oacute;n</a></li>                
@@ -73,6 +73,7 @@ table tr td{padding-left:10px;}
 		  <li class="opcion"><a href="{% url ogcs-mantenimiento-usuario-add 1 %}" data-toggle="modal">Usuario</a></li>
                   <li class="opcion"><a href="{% url ogcs-mantenimiento-usuario-add 2 %}" data-toggle="modal">Administrador</a></li>
                 </ul></li>
+            {% endif %}
             <li class="dropdown principal"><a class="dropdown-toggle menublanco" data-toggle="dropdown" href="">OAC<b class="caret"></b></a>
                 <ul class="dropdown-menu">                  
                   <li><a href="{% url ogcs-mantenimiento-oac-add %}" data-toggle="modal">Nuevo OAC</a></li>                
@@ -112,7 +113,6 @@ table tr td{padding-left:10px;}
         <div id="cerrar_sesion">
         <a class="menublanco" href="{% url ogcs-logout %}"> Cerrar sesión&nbsp;<img width="20" height="19" src="{{ STATIC_URL }}images/sesion.png" align="absmiddle"></a>
         </div></div>
-{% endcache %}
 {% endif %} 
     
 {% if not login %} <div id="contenido"> {% endif %}
