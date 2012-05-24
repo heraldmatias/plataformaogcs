@@ -31,7 +31,7 @@ table tr td{padding-left:10px;}
   <div id="contenedor" class="corners_5">
     <div id="cabecera">
     	<div id="cabecera_izq">
-    		<img height="71" width="342" src="{{ STATIC_URL  }}images/logo.png">
+    		<a href="{% url ogcs-index %}"><img height="71" width="342" src="{{ STATIC_URL  }}images/logo.png"></a>
     	</div>
         {% if login %}
         <div id="cabecera_der">
