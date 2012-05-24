@@ -14,11 +14,17 @@ from django.conf import settings
 
 def index(request):
     form = LoginForm()
+    if 'next' in request.GET:
+        return render_to_response('home/index.html', {'form': form,'login':'login','permission':False}, context_instance=RequestContext(request),)
     return render_to_response('home/index.html', {'form': form,'login':'login'}, context_instance=RequestContext(request),)
 
 @login_required()
 def view_calendar(request):
     return render_to_response('home/calendario.html', context_instance=RequestContext(request),)
+
+@login_required()
+def permission_denied(request):
+    return render_to_response('home/permiso_denegado.html', context_instance=RequestContext(request),)
 
 def singin(request):
     if request.method == 'POST':
