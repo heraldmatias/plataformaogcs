@@ -24,6 +24,20 @@ function processResponse(payload) {
 	if(prCallback != null) prCallback(payload);
 }
 
+function background_post(){
+if($("#msg").val() == "") return false;
+var men = $("#msg").val();
+var token =($("input[name='csrfmiddlewaretoken']").val());
+clearInterval(IntervalID);
+$.post(url,{time: timestamp,action: "postmsg",message: men,csrfmiddlewaretoken:token},
+	function(payload) {                        
+		$("#msg").val(""); $("#msg").focus();
+		processResponse(payload);
+	},'json'
+).complete(function() { IntervalID = setInterval(callServer, CallInterval); });                	       	
+//return false;
+}
+
 function InitChatWindow(ChatMessagesUrl, ProcessResponseCallback){
 	$("#loading").remove();
 	url = ChatMessagesUrl;

@@ -7,6 +7,11 @@
                 //ExceptionHandler();
 		InitChatWindow("{% url jqchat_ajax room.id %}", null);
 	});
+	$("#msg").keypress(function(event) {
+	  if ( event.which == 13 ) {
+            background_post();
+	  }   
+	});
 </script>
 <script type="text/javascript">document.getElementById("msg").focus();</script>
 <style type="text/css">
@@ -24,7 +29,7 @@
 {% endblock %}
 {% block content %}
 <div class="tab-content" id="contenido_izq">
-<form id="chatform">
+<form id="chatform" name="chatform">
 <div id="frmregion" class="modal" style="position: relative; top: auto; left: auto; margin: 0 auto auto 20px; z-index: 1;width:720px;height:auto">
     <div class="modal-header">
       <a class="close" data-dismiss="modal" href="javascript: cerrarformulario('contenido');" >&times;</a>
@@ -35,7 +40,7 @@
 	
                 {% csrf_token %}
 		<div class="row-fluid"><label for="msg">Mensaje:</label>                
-		<input type="text" id="msg" />
+		<textarea rows="1" cols="50" id="msg" style="width:285px;" ></textarea> 
 		<input type="submit" class="btn btn-primary" value="Enviar Mensaje" /><br /></div>
 
     </div>
