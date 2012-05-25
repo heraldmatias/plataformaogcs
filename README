@@ -8,4 +8,12 @@ Instalación
 - Recuerda que usamos grappelli
 	http://readthedocs.org/docs/django-grappelli/en/latest/quickstart.html#installation
 
+ANTES DE SYNCDB
 ------------------------
+SEGURIDAD
+1.- Modificar eggs/Django-1.3.1-py2.6.egg/django/contrib/auth/models.py el campo
+name debe ser de 100 caracteres y __unicode__ no debe retornar el ContentType
+
+2.- Modificar el eggs/Django-1.3.1-py2.6.egg/django/contrib/auth/management/__init__.py
+ Para mostra 4 permisos por defecto y en español
+
