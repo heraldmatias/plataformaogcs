@@ -75,13 +75,7 @@ class Usuario(models.Model):
     class Meta:
         db_table = u'usuario'
         verbose_name = u'Usuario'
-        verbose_name_plural = u'Usuarios'
-        permissions = (
-            ("agregar_usuario", "Puede añadir usuario"),
-            ("modificar_usuario", "Puede modificar usario"),
-            ("eliminar_usuario", "Puede eliminar un usuario"),
-            ("consultar_usuario", "Puede consultar usuario"),
-        )
+        verbose_name_plural = u'Usuarios'        
 
     def __unicode__(self):
         return "%s, %s", (self.nombres, self.apellidos)

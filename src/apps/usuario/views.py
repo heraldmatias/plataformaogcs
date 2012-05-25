@@ -16,7 +16,7 @@ from django.core.urlresolvers import reverse
 serie = 3
 
 @login_required()
-@permission_required('usuario.add_usuario')
+@permission_required('usuario.agregar_usuario')
 def useradd(request,nivel):
     existe = -1
     if request.method == 'POST':
@@ -71,7 +71,7 @@ def useradd(request,nivel):
     return render_to_response('usuario/usuario.html', {'frmusuario': frmusuario,'opcion':'add','existe':existe,'nivel':nivel,'dependencia': request.POST['dependencia'] if 'dependencia' in request.POST else 0,}, context_instance=RequestContext(request),)
 
 @login_required()
-@permission_required('usuario.change_usuario')
+@permission_required('usuario.modificar_usuario')
 def useredit(request,nivel, codigo):
     if request.method == 'POST':
         profile = Usuario.objects.get(user = request.user)
@@ -94,7 +94,7 @@ def useredit(request,nivel, codigo):
     return render_to_response('usuario/usuario.html', {'frmusuario': frmusuario,'opcion':'edit','codigo':codigo,'dependencia':dependencia,'nivel':nivel,}, context_instance=RequestContext(request),)
 
 @login_required()
-@permission_required('usuario.query_usuario')
+@permission_required('usuario.consultar_usuario')
 def userquery(request, nivel):
     col = "-nombres"
     if "2-sort" in request.GET:
@@ -135,7 +135,7 @@ def userquery(request, nivel):
     return render_to_response('usuario/usuario_consulta.html', {'consultausuarioform':consultausuarioform,'tabla':tblusuarios,'dependencia':dependencia,'nivel':nivel,'mensaje':(request.GET['m'] if 'm' in request.GET else '')}, context_instance=RequestContext(request),)
 
 @login_required()
-@permission_required('usuario.query_usuario')
+@permission_required('usuario.consultar_usuario')
 def userprint(request, nivel):
     filtro=list()
     usuarios = None
