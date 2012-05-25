@@ -1,0 +1,26 @@
+{% extends 'pybb/base.html' %}
+{% load i18n pybb_tags %}
+
+{% block content %}
+<div class="tab-content" id="contenido_izq">
+	<div id="nuevo" class="tab-pane fade in active" >
+    	<div id="frmprovincia" class="modal" style="position: relative; top: auto; left: auto; margin: 0 auto auto 20px; z-index: 1;width:720px;height:auto">
+        <div class="modal-header">
+      		<h3>{% trans "¿Está seguro de querer elminar este mensaje?" %}</h3>
+      
+    	</div>
+    
+    <div class="post-preview">
+        {{ post.body_html|safe }}
+    </div>
+    <form method="post" action=".">
+        {% csrf_token %}
+        <p>
+            <a class='btn' href="{{ post.get_absolute_url }}">← {% trans "No, regresar" %}</a>
+            <input type="submit" class='btn danger' value="{% trans 'S&iacute;, Estoy seguro' %}" />
+        </p>
+    </form>
+		</div>
+    </div>
+</div>
+{% endblock content %}
