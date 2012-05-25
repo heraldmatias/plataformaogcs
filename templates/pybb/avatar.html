@@ -1,11 +1,7 @@
 {% load thumbnail %}
 
-<div class="avatar">
+<div class="avatar" style="padding:0 0 0 7px">
     <a href="{{ post.user.get_profile.get_absolute_url }}">
-    {% thumbnail post.user.get_profile.foto "80x80" as foto %}
-        <img src="{{ foto.url }}" alt="{{ post.user }} avatar" />
-    {% empty %}
-        <img src="{{ STATIC_URL }}images/varon.png" alt="default avatar" />
-    {% endthumbnail %}
+    <img src="{% if USUARIO.foto %}{{ USUARIO.foto.url }} {% else %} {{ STATIC_URL }}images/varon.png {% endif %}" width="50" height="50" style="border:2px #999 solid;padding:1px" />
     </a>
 </div>
