@@ -15,6 +15,7 @@ urlpatterns = patterns('',
     (r'^usuario/', include('usuario.urls')),
     (r'^comunicacion/', include('comunicacion.urls')),
     (r'^extras/', include('extras.urls')),
+	(r'^foro/', include('pybb.urls', namespace='pybb')),
 )
 
 from django.views.static import serve
