@@ -9,10 +9,14 @@
   {% endblock %}
   {% block content %}
   
-{% if mensaje %}
-<h4><div class="alert alert-success"><a class="close" data-dismiss="alert">×</a><strong>Mensaje:</strong>
-<p>{{ mensaje }}</p></div></h4>
-{% endif %}
+{% if tipo == 0 %}
+    <h3><div class="alert alert-error"><a class="close" data-dismiss="alert">×</a><strong>Mensaje:</strong>
+    <p>Usuario creado correctamente,pero no se ha podido enviar el email con los datos del registro.</p></div></h3>
+  {% endif %}
+  {% if tipo == 1 %}
+    <h3><div class="alert alert-success"><a class="close" data-dismiss="alert">×</a><strong>Mensaje:</strong>
+    <p>Usuario creado correctamente, se ha enviado un email con los datos del registro.</p> </div></h3>
+  {% endif %}
 <ul class="nav nav-tabs">
  {% if opcion == "add" %}
     <li class="active"><a href="{% url ogcs-mantenimiento-usuario-add nivel %}">Nuevo</a></li>{% else %}

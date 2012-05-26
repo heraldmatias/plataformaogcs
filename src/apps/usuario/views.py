@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from django.shortcuts import render_to_response, redirect
 from forms import UsuarioForm, UsuarioTable, ConsultaUsuarioForm,EditUsuarioForm 
-from django.template import RequestContext
+from django.template import RequestContext, Context, loader
 from usuario.models import Usuario, Estado, Organismo, Nivel
 from dependencia.models import Ministerio, Odp, Gobernacion
 from django.contrib.auth.decorators import login_required, permission_required
@@ -12,13 +12,16 @@ from django_tables2.config import RequestConfig
 from datetime import datetime
 from scripts.scripts import imprimirToExcel
 from django.core.urlresolvers import reverse
-
+from django.conf import settings
+from django.contrib.sites.models import get_current_site
 serie = 3
 
 @login_required()
 @permission_required('usuario.add_usuario')
 def useradd(request,nivel):
     existe = -1
+    mensaje= ""
+    tipo = -1
     if request.method == 'POST':
         num = Usuario.objects.values("numero").order_by("-numero",)[:1]
         num = 1 if len(num)==0 else int(num[0]["numero"])+1
@@ -56,19 +59,32 @@ def useradd(request,nivel):
                 usuario.contrasena = user.password
                 usuario.save() 
                 asunto="Bienvenido a la plataforma de Comunicacion Social"
-                mensaje =u"""Desde este momento usted puede usar la Plataforma Intersectorial de Redes Sociales OGCS - PCM. Le adjuntamos su USUARIO Y CONTRASEÑA con el cual podrá acceder a la Plataforma.
-		USUARIO: %s
-		CONTRASEÑA: %s
-            """ % (user.email, request.POST['contrasena'])
+                from django.core.mail import EmailMessage                
+                t = loader.get_template('home/mail.html')
+                current_site = get_current_site(request)
+                site_name = current_site.name
+                domain = current_site.domain
+                c = {
+                    'email': user.email,
+                    'clave': request.POST['contrasena'],
+                    'domain':domain,
+                    'static':settings.STATIC_URL,
+                    'protocol': request.is_secure() and 'https' or 'http',
+                }                                
+                mensaje=t.render(Context(c))
 	        try:
-	        #send_mail(asunto, mensaje, 'heraldmatias.oz@gmail.com', mails)
-                    user.email_user(subject=asunto, message=mensaje)
+		    msg = EmailMessage(asunto, mensaje, settings.DEFAULT_FROM_EMAIL, [user.email])
+		    msg.content_subtype = "html" 
+		    msg.send()
                 except:
-                    return redirect(reverse('ogcs-index')+'?m=userr')
-                return redirect(reverse('ogcs-index')+'?m=usadd')
+                    mensaje= "Usuario creado correctamente,pero no se ha podido enviar el email con los datos del registro."
+                    tipo=0
+                mensaje= "Usuario creado correctamente, se ha enviado un email con los datos del registro."
+                tipo=1
+                frmusuario = UsuarioForm()
     else:        
         frmusuario = UsuarioForm()
-    return render_to_response('usuario/usuario.html', {'frmusuario': frmusuario,'opcion':'add','existe':existe,'nivel':nivel,'dependencia': request.POST['dependencia'] if 'dependencia' in request.POST else 0,}, context_instance=RequestContext(request),)
+    return render_to_response('usuario/usuario.html', {'frmusuario': frmusuario,'opcion':'add','existe':existe,'nivel':nivel,'dependencia': request.POST['dependencia'] if 'dependencia' in request.POST else 0,'mensaje':mensaje,'tipo':tipo}, context_instance=RequestContext(request),)
 
 @login_required()
 @permission_required('usuario.change_usuario')
