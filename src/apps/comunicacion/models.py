@@ -20,8 +20,8 @@ class Oac(models.Model):
 
     class Meta:
         db_table = u'oac'
-        verbose_name = u'Organigrama de Area de Comunicaciones'
-        verbose_name_plural = u'Organigramas del Area de Comunicaciones'
+        verbose_name = u'OAC'
+        verbose_name_plural = u'OACs'
 
     def __unicode__(self):
         return self.urloac
@@ -51,8 +51,8 @@ class Pgcs(models.Model):
     
     class Meta:
         db_table = u'pgcs'
-        verbose_name = u'Plan General de Comunicacion del sector'
-        verbose_name_plural = u'Planes Generales de Comunicacion del sector'
+        verbose_name = u'PGCS'
+        verbose_name_plural = u'PGCSs'
 
     def __unicode__(self):
         return self.nombre
@@ -66,8 +66,8 @@ class MccaTipoComunicacion(models.Model):
     
     class Meta:
         db_table = u'mccatipocomunicacion'
-        verbose_name = u'Matriz de Campana de Comunicaciones ano'
-        verbose_name_plural = u'Matrices de Campana de Comunicaciones Anuales'
+        verbose_name = u'MCCA Tipo'
+        verbose_name_plural = u'MCCA Tipo'
 
     def __unicode__(self):
         return self.nombre
@@ -91,8 +91,8 @@ class Mcca(models.Model):
 
     class Meta:
         db_table = u'mcca'
-        verbose_name = u'mcca tipo'
-        verbose_name_plural = u'mcca tipos'
+        verbose_name = u'MCCA'
+        verbose_name_plural = u'MCCAs'
 
     def __unicode__(self):
         return self.nombremmca
@@ -272,8 +272,8 @@ class Mcc(models.Model):
 
     class Meta:
         db_table = u'mcc'
-        verbose_name = u'Matriz de Campana de Crisis'
-        verbose_name_plural = u'Matrices de Campana de Crisis'
+        verbose_name = u'MCC'
+        verbose_name_plural = u'MCCs'
 
     def __unicode__(self):
         return self.nombremmca

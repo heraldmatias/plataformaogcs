@@ -28,8 +28,8 @@ class MaterialGrafico(models.Model):
 
     class Meta:
         db_table = u'materialgrafico'
-        verbose_name = u'Material Grafico'
-        verbose_name_plural = u'Materiales Graficos'
+        verbose_name = u'MG'
+        verbose_name_plural = u'MGs'
 
     def __unicode__(self):
         return self.nummg
@@ -63,8 +63,8 @@ class DocumentoInteresGeneral(models.Model):
 
     class Meta:
         db_table = u'documentointeresgeneral'
-        verbose_name = u'Documento Interes General'
-        verbose_name_plural = u'Documentos Interes General'
+        verbose_name = u'DIG'
+        verbose_name_plural = u'DIGs'
 
     def __unicode__(self):
         return self.numdig
@@ -83,8 +83,8 @@ class ActaReunionIntersectorial(models.Model):
 
     class Meta:
         db_table = u'actareunionintersectorial'
-        verbose_name = u'Acta Reunion Intersectorial'
-        verbose_name_plural = u'Actas de Reunion Intersectorial'
+        verbose_name = u'ARI'
+        verbose_name_plural = u'ARIs'
 
     def __unicode__(self):
         return self.nombreari

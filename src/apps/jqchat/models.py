@@ -49,6 +49,8 @@ class Room(models.Model):
 
     class Meta:
         ordering = ['created']
+        verbose_name = u'Sala de Chat'
+        verbose_name_plural = u'Salas de Chat'
 
     def __init__(self, *args, **kw):
         super(Room, self).__init__(*args, **kw)
@@ -157,6 +159,8 @@ class Message(models.Model):
 
     class Meta:
         ordering = ['unix_timestamp']
+        verbose_name = u'Mensaje de Chat'
+        verbose_name_plural = u'Mensajes de Chat'
 
     objects = messageManager()
 
