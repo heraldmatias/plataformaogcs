@@ -59,19 +59,19 @@ class PybbTimeNode(template.Node):
         if delta.days == 0:
             if delta.seconds < 60:
                 if context['LANGUAGE_CODE'].startswith('ru') and pytils_enabled:
-                    msg = _('seconds ago,seconds ago,seconds ago')
+                    msg = _('segundos atras,segundos atras,segundos atras')
                     msg = pytils.numeral.choose_plural(delta.seconds, msg)
                 else:
-                    msg = _('seconds ago')
+                    msg = _('segundos atras')
                 return u'%d %s' % (delta.seconds, msg)
 
             elif delta.seconds < 3600:
                 minutes = int(delta.seconds / 60)
                 if context['LANGUAGE_CODE'].startswith('ru') and pytils_enabled:
-                    msg = _('minutes ago,minutes ago,minutes ago')
+                    msg = _('minutos atras,minutos atras,minutos atras')
                     msg = pytils.numeral.choose_plural(minutes, msg)
                 else:
-                    msg = _('minutes ago')
+                    msg = _('minutos atras')
                 return u'%d %s' % (minutes, msg)
         if context['user'].is_authenticated():
             if time.daylight:
@@ -81,9 +81,9 @@ class PybbTimeNode(template.Node):
             #tz = tz1 + context['user'].get_profile().time_zone * 60 * 60
             context_time = context_time #+ timedelta(seconds=tz)
         if today < context_time < tomorrow:
-            return _('today, %s') % context_time.strftime('%H:%M')
+            return _('hoy, %s') % context_time.strftime('%H:%M')
         elif yesterday < context_time < today:
-            return _('yesterday, %s') % context_time.strftime('%H:%M')
+            return _('ayer, %s') % context_time.strftime('%H:%M')
         else:
             return dateformat.format(context_time, 'd M, Y H:i')
 

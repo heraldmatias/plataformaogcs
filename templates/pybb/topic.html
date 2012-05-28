@@ -75,7 +75,7 @@
 
     {% if user.is_staff %}
         <div class='subscriber-list'>
-            {% trans "Subscribers" %}:
+            {% trans "Suscritos" %}:
             {% for subscriber in topic.subscribers.all %}
                 <a href='{{ subscriber.get_absolute_url }}'>{{ subscriber.username }}</a>,
             {% endfor %}
