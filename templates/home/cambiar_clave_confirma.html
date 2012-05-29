@@ -18,9 +18,9 @@
                        <strong>Error!</strong> 
                        {% if form.new_password1.errors %}Introduzca su nueva contraseña {% else %}{% if form.new_password2.errors  %} Las contraseñas no coinciden, corriga por favor. {% endif %}{% endif %}</div></div></div>{% endif %}
                        <div class="row-fluid">
-                       {{ form.new_password1.label_tag }}:{{ form.new_password1 }} </div><p></p>
+                       <div class="span4">{{ form.new_password1.label_tag }}:</div>{{ form.new_password1 }} </div><p></p>
                        <div class="row-fluid">
-                       {{ form.new_password2.label_tag }}{{ form.new_password2 }} </div><p></p>
+                       <div class="span4">{{ form.new_password2.label_tag }}</div>{{ form.new_password2 }} </div><p></p>
                   </div>
                     <div class="modal-footer">
 			     <input class="btn-primary" name="grabar" value="Aceptar" type="submit">
