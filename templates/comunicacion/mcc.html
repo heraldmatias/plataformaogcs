@@ -147,6 +147,16 @@
 <script src="{{ STATIC_URL  }}js/mcc.js" type="text/javascript"></script>
 <script>
 
+{% if request.user.is_superuser %}
+ $("#id_observacion").removeAttr("readonly");
+ 
+{% else %}
+ $("#id_observacion").attr('readonly', 'readonly');	
+
+{% endif %}
+
+comboelegir('id_nummcctipo');comboelegir('id_nummccestado');comboelegir('id_region');comboelegir('id_numtipovarios_ac');comboelegir('id_numtipovarios');
+
 
 $('#dp4').datepicker().on('changeDate', function(ev){
 					var fechaini = $("#id_fechaini").val().split('/');

@@ -183,6 +183,15 @@
 
 <script src="{{ STATIC_URL  }}js/mcca.js" type="text/javascript"></script>
 <script>
+comboelegir('id_organismo');comboelegir('id_tipommca');
+
+{% if request.user.is_superuser %}
+ $("#id_observacion").removeAttr("readonly");
+ 
+{% else %}
+ $("#id_observacion").attr('readonly', 'readonly');	
+
+{% endif %}
 
 
 $('#dp4').datepicker().on('changeDate', function(ev){
