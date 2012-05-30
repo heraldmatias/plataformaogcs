@@ -55,7 +55,11 @@
       {% for campo in frmusuario %}      
       {{ campo.errors }}
       <div class="row-fluid">
-      <div class="span4">{{ campo.label_tag }}:</div><div class="span2">{{ campo }} </div></div><p></p>
+      <div class="span4">{{ campo.label_tag }}:</div>{% if campo.label == 'Foto' %} {% if foto %} 
+      <div class="span6"><input type="checkbox" name="foto-clear" id="foto-clear_id" /><label for="foto-clear_id"><strong>Eliminar esta Foto</strong></label><br /><div style="font-size:12px">Actualmente: <a href="{{ foto.url }}" target="_blank">{{ foto }}</a></div> <br /><br />
+<strong style="font-size:13px">Cambiar de Foto</strong> <input type="file" name="foto" id="id_foto" /></div>
+     {% else %} <div class="span6"><input type="file" name="foto" id="id_foto" /></div> {% endif %}
+      {% else %}<div class="span2">{{ campo}}</div>{% endif %}</div><p></p>
       {% endfor %}        
       {% endif %}
     </div><input type="hidden" value="{{ dependencia }}" id="id_dep" name="id_dep">
@@ -83,6 +87,10 @@ if($.inArray(ext, ['jpg','png','gif','jpeg']) == -1) {
 }});
 $(document).ready(function() {
   dependencias();
+  $("#foto-clear_id").change(function() {
+  $("#id_foto").attr('disabled',this.checked);
+});
+  
 });
 validaletra('id_nombres');{% if opcion == "add" %}validaclave('id_contrasena','sclave','id_contrasena2','sclave2');{% endif %}
 validaletra('id_apellidos');comboelegir('id_organismo');comboelegir('id_sexo');

@@ -107,7 +107,7 @@ def useredit(request,nivel, codigo):
         usuario = get_object_or_404(Usuario, numero=int(codigo))
         dependencia = usuario.dependencia
         frmusuario = EditUsuarioForm(instance=usuario)
-    return render_to_response('usuario/usuario.html', {'frmusuario': frmusuario,'opcion':'edit','codigo':codigo,'dependencia':dependencia,'nivel':nivel,}, context_instance=RequestContext(request),)
+    return render_to_response('usuario/usuario.html', {'frmusuario': frmusuario,'opcion':'edit','codigo':codigo,'dependencia':dependencia,'nivel':nivel,'foto':usuario.foto}, context_instance=RequestContext(request),)
 
 @login_required()
 @permission_required('usuario.query_usuario')
