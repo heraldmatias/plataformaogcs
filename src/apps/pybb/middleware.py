@@ -12,18 +12,16 @@ class PybbMiddleware(object):
                 # under south control. (Like pybb.Profile).
                 profile = request.user.get_profile()
             except ObjectDoesNotExist:
-                # Ok, we should create new profile for this user
-                # and grant permissions for add posts
-                user_saved(request.user, created=True)
-                profile = request.user.get_profile()
-
+				user_saved(request.user, created=True)
+				profile = request.user.get_profile()
+				
             language = translation.get_language_from_request(request)
+            request.session['django_language']
+            translation.activate(language)
+            request.LANGUAGE_CODE = translation.get_language()
+           
 
-            if not profile.language:
-                profile.language = language
-                profile.save()
 
-            if profile.language and profile.language != language:
-                request.session['django_language'] = profile.language
-                translation.activate(profile.language)
-                request.LANGUAGE_CODE = translation.get_language()
+
+
+		   

@@ -9,6 +9,15 @@
 	    /*vertical-align: top;*/
             float: left;
 	}
+	#id_nombremmca{width:535px}
+	
+	#id_fechaini_mcca,#id_fechafin_mcca,#id_fechafin_acc,#id_fechaini_acc{width:100px}
+	#id_privado{width:389px}
+	#id_acciones{width:392px}
+	#id_indicador{width:547px}
+	#id_mensaje{width:553px}
+	#id_observacion{width:532px}
+	
   </style>
   {% endblock %}
   {% block title %} Plataforma Intersectorial de Comunicaci&oacute;n OGCS {% endblock %}
@@ -19,7 +28,10 @@
 <h4><div class="alert alert-success"><a class="close" data-dismiss="alert">×</a><strong>Mensaje:</strong>
 <p>{{ mensaje }}</p></div></h4>
 {% endif %}
-
+<ul class="nav nav-tabs">
+<li class="active"><a href="{% url ogcs-mantenimiento-mcca-add %}">Nuevo</a></li>
+<li><a href="{% url ogcs-mantenimiento-mcca-query %}" >Consultar</a></li>
+</ul>
 <div class="tab-content" id="contenido_izq">
 <div id="nuevo" class="tab-pane fade in active" style="width:500px">
 <form class="form-inline" id="frmcca" name="frmcca" method="post" action="{% if accion %}{% url ogcs-mantenimiento-mcca-add %}{% else %}{% url ogcs-mantenimiento-mcca-edit codigo %}{% endif %}" onsubmit="return guardar_mcca();" ><!--data-toggle="modal"-->
@@ -108,7 +120,7 @@
       	</div>
     	<div class="row-fluid"><br />
         	<div class="alert alert-error" id="alert5"><strong></strong><!--<a class="close" data-dismiss="alert">×</a>--></div>
-    		<label>Tipo: {{ form_canal.tipommca }}</label>&nbsp;&nbsp;<label>Canal de comunicación: {{ form_canal.canal }}</label>&nbsp;&nbsp;<input class="btn-primary" name="agregar" value="Agregar" type="button" onclick="canales()">
+    		<label>Tipo: {{ form_canal.tipommca }}</label>&nbsp;&nbsp;<label>Canal de comunicación: {{ form_canal.canal }}</label>&nbsp;&nbsp;&nbsp;&nbsp;<input class="btn-primary" name="agregar" value="Agregar" type="button" onclick="canales()">
     	</div>
       
         <br>

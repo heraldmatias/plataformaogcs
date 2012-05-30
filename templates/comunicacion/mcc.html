@@ -1,5 +1,25 @@
   {% extends 'base.html' %}
   {% load static %}
+  {% block csspage %}
+  <style type="text/css">
+	label.error {
+	    color: red;top:-20px;position:relative;height:30px;
+	    /*float: none;*/
+	    /*padding-left: 0.5em;*/
+	    /*vertical-align: top;*/
+            float: left;
+	}
+	#id_nombremmc{width:535px}
+	
+	#id_fechaini,#id_fechafin{width:100px}
+	#id_lugar{width:635px}
+	#id_descripcionmcc{width:100%}
+	#id_indicador{width:547px}
+	#id_mensaje{width:553px}
+	#id_observacion{width:532px}
+	
+  </style>
+  {% endblock %}
   {% block title %} Plataforma Intersectorial de Comunicaci&oacute;n OGCS {% endblock %}
   {% block content %}
   {% load render_table from django_tables2 %}
@@ -8,6 +28,10 @@
 <h4><div class="alert alert-success"><a class="close" data-dismiss="alert">×</a><strong>Mensaje:</strong>
 <p>{{ mensaje }}</p></div></h4>
 {% endif %}
+<ul class="nav nav-tabs">
+<li class="active"><a href="{% url ogcs-mantenimiento-mcc-add %}">Nuevo</a></li>
+<li><a href="{% url ogcs-mantenimiento-mcc-query %}" >Consultar</a></li>
+</ul>
 <div class="tab-content" id="contenido_izq">
 <div id="nuevo" class="tab-pane fade in active" style="width:500px">
 <form enctype="multipart/form-data" class="form-inline" id="frmcc" name="frmcc" method="post" action="{% if accion %}{% url ogcs-mantenimiento-mcc-add %}{% else %}{% url ogcs-mantenimiento-mcc-edit codigo %}{% endif %}" onsubmit="return guardar_mcc();" ><!--data-toggle="modal"-->
@@ -98,7 +122,7 @@
       	</div>
     	<div class="row-fluid">
         	<div class="alert alert-error" id="alert3"><strong></strong><!--<a class="close" data-dismiss="alert">×</a>--></div>
-    		{{ form_observacion }}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input class="btn-primary" name="agregar" value="Agregar" type="button" onclick="observaciones()" />
+    		<label>Observación:{{ form_observacion.observacion }}</label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input class="btn-primary" name="agregar" value="Agregar" type="button" onclick="observaciones()" />
     	</div>
       
         <br>

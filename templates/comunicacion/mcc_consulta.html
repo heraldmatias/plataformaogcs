@@ -4,7 +4,10 @@
   {% block content %}
   
   {% load render_table from django_tables2 %}
-
+<ul class="nav nav-tabs">
+<li><a href="{% url ogcs-mantenimiento-mcca-add %}">Nuevo</a></li>
+<li class="active"><a href="{% url ogcs-mantenimiento-mcca-query %}" >Consultar</a></li>
+</ul>
 <div class="tab-content" id="contenido_izq" style="height:auto" >
 
 <form class="form-inline span7" name="frmmcc_consulta" id="frmmcc_consulta" method="get" action="{% url ogcs-mantenimiento-mcc-query %}"><!--data-toggle="modal"-->

@@ -263,8 +263,8 @@ class MccForm(forms.ModelForm):
             'provincia': forms.Select(),
             'fechaini': forms.TextInput(attrs={'size':'15'}),
             'fechafin': forms.TextInput(attrs={'size':'15'}),
-            'descripcionmcc': forms.Textarea(attrs={'class':'span20'}),
-            'propuestamcc': forms.Textarea(attrs={'class':'span20'}),
+            'descripcionmcc': forms.Textarea(attrs={'class':'span20','cols':'104'}),
+            'propuestamcc': forms.Textarea(attrs={'class':'span20','cols':'104'}),
         }
         exclude = ('idusuario_creac', 'idusuario_mod', )
 
