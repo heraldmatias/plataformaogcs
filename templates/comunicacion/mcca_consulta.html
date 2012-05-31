@@ -27,10 +27,10 @@
           <div class="row-fluid">
           <div class="span2"><label>Fecha inicial:</label></div> <div class="span3"><label class="input-append date" style="display:inline" id="dp4" data-date-format="dd/mm/yyyy" > {{ form.fechaini }}<span class="add-on"><i class="icon-th"></i></span></label> </div>          
           <div class="span2"><label>Fecha final:</label></div><div class="span3"><label id="dp5" style="display:inline" class="input-append date" data-date-format="dd/mm/yyyy" > {{ form.fechafin }}<span class="add-on"><i class="icon-th"></i></span></label> </div> <input  class="btn-primary" name="grabar2" value="Consultar" type="submit" />&nbsp;&nbsp; <a class="btn btn-primary" href="javascript: imprimir();">Imprimir</a><br /><br />
-      </div>
+      </div><br />
  
       <fieldset>
-	<legend><h4>Lista de MCCA</h4></legend>
+	<legend><h4>Lista de MCCA</h4></legend><br />
       {% render_table tabla %}    
       </fieldset>      
     </div>
