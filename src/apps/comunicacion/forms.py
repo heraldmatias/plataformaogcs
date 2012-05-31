@@ -346,6 +346,9 @@ class ConsultaMccForm(forms.ModelForm):
             'dependencia':forms.Select(),
             'region': forms.Select(attrs={'onChange':'provincias(0);', }),
             'provincia':forms.Select(),
+            'nombremmc': forms.TextInput(attrs={'style':'width:550px', }),
+            'fechaini': forms.TextInput(attrs={'style':'width:100px;', }),
+            'fechafin': forms.TextInput(attrs={'style':'width:100px;', }),
         }
 
 class MccTable(tables.Table):
