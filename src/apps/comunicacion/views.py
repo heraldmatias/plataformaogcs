@@ -61,7 +61,8 @@ def oacquery(request):
             if request.GET['dependencia']:
                 filtro.append(u"oac.dependencia =%s"%request.GET['dependencia'])
                 dependencia=request.GET['dependencia']
-    filtro.append(u"idusuario_creac=usuario.numero")
+    #filtro.append(u"idusuario_creac=usuario.numero")
+    filtro.append(u"idusuario_creac="+str(request.user.get_profile().numero))
     query = Oac.objects.extra(tables=['usuario',],where=filtro,select={'usuario':'usuario.usuario','dependencia':"case oac.organismo_id when 1 then (select ministerio from ministerio where nummin=oac.dependencia) when 2 then (select odp from odp where numodp=oac.dependencia) when 3 then (select gobernacion from gobernacion where numgob=oac.dependencia) end"})
     tabla = OacTable(query.order_by(col))
     config.configure(tabla)

@@ -218,6 +218,9 @@ class ConsultaMccaForm(forms.ModelForm):
         widgets = {
             'organismo': forms.Select(attrs={'onChange':'dependencias(0);', }),
             'dependencia':forms.Select(),
+            'nombremmca': forms.TextInput(attrs={'style':'width:550px', }),
+            'fechaini': forms.TextInput(attrs={'style':'width:100px;', }),
+            'fechafin': forms.TextInput(attrs={'style':'width:100px;', }),
         }
         
 
