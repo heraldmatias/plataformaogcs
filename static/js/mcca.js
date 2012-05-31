@@ -72,10 +72,10 @@ function sectores_estado(){
             ok=false;
             return false;
         }
-    });
+    });//<a href='javascript: removedetalle(0,"+n+")'><div id='delete'></div></a>
     if(ok==true){
         n+=1;
-        fila="<tr class='"+n+"'><td>"+n+"</td><td><input type='hidden' name='corg' value='"+organismo.val()+"'>"+norganismo+"</td><td><input type='hidden' name='cdep' value='"+dependencia.val()+"'>"+ndependencia+"</td><td> <a class='close' href='javascript: removedetalle(0,"+n+")'>&times;</a></td></tr>"
+        fila="<tr class='"+n+"'><td>"+n+"</td><td><input type='hidden' name='corg' value='"+organismo.val()+"'>"+norganismo+"</td><td><input type='hidden' name='cdep' value='"+dependencia.val()+"'>"+ndependencia+"</td><td><a href='javascript: removedetalle(0,"+n+")'><div id='delete'></div></a></td></tr>"
         tabla.append(fila);
 		$('#alert1').hide();
     }else{
@@ -103,7 +103,7 @@ function sectores_privado(){
     });
     if(ok==true){
         n+=1;
-        fila="<tr class='"+n+"'><td>"+n+"</td><td><input type='hidden' name='cpri' value='"+privado.val()+"'>"+privado.val()+"</td><td> <a class='close' href='javascript: removedetalle(1,"+n+")'>&times;</a></td></tr>"
+        fila="<tr class='"+n+"'><td>"+n+"</td><td><input type='hidden' name='cpri' value='"+privado.val()+"'>"+privado.val()+"</td><td> <a href='javascript: removedetalle(1,"+n+")'><div id='delete'></div></a></td></tr>"
         tabla.append(fila);
 		$('#alert2').hide();
     }else{
@@ -136,7 +136,7 @@ function indicadores(){
     });
     if(ok==true){
         n+=1;
-        fila="<tr class='"+n+"'><td>"+n+"</td><td><input type='hidden' name='cind' value='"+privado.val()+"'>"+privado.val()+"</td><td> <a class='close' href='javascript: removedetalle(2,"+n+")'>&times;</a></td></tr>"
+        fila="<tr class='"+n+"'><td>"+n+"</td><td><input type='hidden' name='cind' value='"+privado.val()+"'>"+privado.val()+"</td><td> <a href='javascript: removedetalle(2,"+n+")'><div id='delete'></div></a></td></tr>"
         tabla.append(fila);
 		$('#alert3').hide();
     }else{
@@ -169,7 +169,7 @@ function mensajes(){
     });
     if(ok==true){
         n+=1;
-        fila="<tr class='"+n+"'><td>"+n+"</td><td><input type='hidden' name='cmen' value='"+privado.val()+"'>"+privado.val()+"</td><td> <a class='close' href='javascript: removedetalle(3,"+n+")'>&times;</a></td></tr>"
+        fila="<tr class='"+n+"'><td>"+n+"</td><td><input type='hidden' name='cmen' value='"+privado.val()+"'>"+privado.val()+"</td><td> <a href='javascript: removedetalle(3,"+n+")'><div id='delete'></div></a></td></tr>"
         tabla.append(fila);
 		$('#alert4').hide();
     }else{
@@ -211,7 +211,7 @@ function canales(){
     });
     if(ok==true){
         n+=1;
-        fila="<tr class='"+n+"'><td>"+n+"</td><td><input type='hidden' name='ctipo' value='"+tipo.val()+"'>"+ttipo+"</td><td><input type='hidden' name='ccan' value='"+canal.val()+"'>"+canal.val()+"</td><td> <a class='close' href='javascript: removedetalle(4,"+n+")'>&times;</a></td></tr>"
+        fila="<tr class='"+n+"'><td>"+n+"</td><td><input type='hidden' name='ctipo' value='"+tipo.val()+"'>"+ttipo+"</td><td><input type='hidden' name='ccan' value='"+canal.val()+"'>"+canal.val()+"</td><td> <a href='javascript: removedetalle(4,"+n+")'><div id='delete'></div></a></td></tr>"
         tabla.append(fila);
 		$('#alert5').hide();
     }else{
@@ -262,7 +262,7 @@ function accion(){
     });
     if(ok==true){
         n+=1;
-        fila="<tr class='"+n+"'><td>"+n+"</td><td><input type='hidden' name='cacc' value='"+accion.val()+"'>"+accion.val()+"</td><td><input type='hidden' name='caccfini' value='"+fini.val()+"'>"+fini.val()+"</td><td><input type='hidden' name='caccffin' value='"+ffin.val()+"'>"+ffin.val()+"</td><td> <a class='close' href='javascript: removedetalle(5,"+n+")'>&times;</a></td></tr>"
+        fila="<tr class='"+n+"'><td>"+n+"</td><td><input type='hidden' name='cacc' value='"+accion.val()+"'>"+accion.val()+"</td><td><input type='hidden' name='caccfini' value='"+fini.val()+"'>"+fini.val()+"</td><td><input type='hidden' name='caccffin' value='"+ffin.val()+"'>"+ffin.val()+"</td><td> <a href='javascript: removedetalle(5,"+n+")'><div id='delete'></div></a></td></tr>"
         tabla.append(fila);
 		$('#alert6').hide();
     }else{
@@ -297,7 +297,7 @@ function observaciones(){
     });
     if(ok==true){
         n+=1;
-        fila="<tr class='"+n+"'><td>"+n+"</td><td><input type='hidden' name='cobs' value='"+privado.val()+"'>"+privado.val()+"</td><td> <a class='close' href='javascript: removedetalle(6,"+n+")'>&times;</a></td></tr>"
+        fila="<tr class='"+n+"'><td>"+n+"</td><td><input type='hidden' name='cobs' value='"+privado.val()+"'>"+privado.val()+"</td><td> <a href='javascript: removedetalle(6,"+n+")'><div id='delete'></div></a></td></tr>"
         tabla.append(fila);
 		$('#alert7').hide();
     }else{

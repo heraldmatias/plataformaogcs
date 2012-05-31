@@ -177,6 +177,13 @@ body{
 	font-size: 12px;
 }
 
+#delete{
+	margin-left: auto;left:50%;
+	margin-right: auto;
+	background: url(../images/equis.gif) repeat-x;
+	height:16px;
+	width:16px;
+}
 
 .clear{
 clear:both	
