@@ -76,13 +76,15 @@ table tr td{padding-left:10px;}
             {% endif %}<!--data-content="Los OAC se utilizan para..." rel="popover" data-original-title="Organigrama del Área de Comunicaciones"  rel="tooltip" data-original-title="first tooltip"  <div class="popover-content"><p></p></div>--> 
             <li class="dropdown principal"><a class="dropdown-toggle menublanco" data-toggle="dropdown" data-content="Los OAC se utilizan para..." rel="popover" data-original-title="Organigrama del Área de Comunicaciones" href="">OAC<b class="caret"></b></a>
                 <ul class="dropdown-menu">                  
-                  <li><a href="{% url ogcs-mantenimiento-oac-add %}" data-toggle="modal">Nuevo Organigrama del Área de Comunicaciones</a></li>                
+                  <li><a href="{% url ogcs-mantenimiento-oac-add %}" data-toggle="modal">Nuevo Organigrama del Área de Comunicaciones</a></li>     
 		  <li><a href="{% url ogcs-mantenimiento-oac-query %}" data-toggle="modal">Consultar Organigrama del Área de Comunicaciones</a></li>		  
 		</ul></li>
             <li class="dropdown principal"><a class="dropdown-toggle menublanco" data-toggle="dropdown" data-content="Los OAC se utilizan para..." rel="popover" data-original-title="Plan General de Comunicacion del Sector" href="">PGCS<b class="caret"></b></a>
-                <ul class="dropdown-menu">                  
-                  <li><a href="{% url ogcs-mantenimiento-pgcs-add %}" data-toggle="modal">Plan General de Comunicacion del Sector - OGCS</a></li>                
-		  <li><a href="{% url ogcs-mantenimiento-pgcs-aporte-add %}" data-toggle="modal">Plan General de Comunicacion del Sector - APORTE</a></li>		  
+                <ul class="dropdown-menu">
+     <li><a href="{% url ogcs-mantenimiento-pgcs-add %}" data-toggle="modal">Nuevo Plan General de Comunicacion del Sector - OGCS</a><li>                
+     <li><a href="{% url ogcs-mantenimiento-pgcs-query %}" data-toggle="modal">Consulta Plan General de Comunicacion del Sector - OGCS</a><li>
+     <li><a href="{% url ogcs-mantenimiento-pgcs-aporte-add %}" data-toggle="modal">Nuevo Plan General de Comunicacion del Sector - APORTE</a></li>		  
+     <li><a href="{% url ogcs-mantenimiento-pgcs-aporte-query %}" data-toggle="modal">Consulta Plan General de Comunicacion del Sector - APORTE</a></li>		  
 		</ul></li>
             <li class="dropdown principal"><a class="dropdown-toggle menublanco" data-toggle="dropdown" data-content="Los OAC se utilizan para..." rel="popover" data-original-title="Matriz de Campaña de Comunicaciones Anuales" href="">MCCA<b class="caret"></b></a>
                 <ul class="dropdown-menu">                  
@@ -96,18 +98,18 @@ table tr td{padding-left:10px;}
 		</ul></li>
             <li class="dropdown principal"><a class="dropdown-toggle menublanco" data-toggle="dropdown"  rel="popover" data-original-title="Material Gráfico" href="">MG<b class="caret"></b></a>
                 <ul class="dropdown-menu">                  
-                  <li><a href="{% url ogcs-mantenimiento-mg-add %}" data-toggle="modal">Nuevo MG</a></li>                
-		  <li><a href="{% url ogcs-mantenimiento-mg-query %}" data-toggle="modal">Consultar MG</a></li>		  
+                  <li><a href="{% url ogcs-mantenimiento-mg-add %}" data-toggle="modal">Nuevo Material Gráfico</a></li>                
+		  <li><a href="{% url ogcs-mantenimiento-mg-query %}" data-toggle="modal">Consultar Material Gráfico</a></li>		  
 		</ul></li>
             <li class="dropdown principal"><a class="dropdown-toggle menublanco" data-toggle="dropdown" rel="popover" data-original-title="Documentos de Interes General" href="">DIG<b class="caret"></b></a>
                 <ul class="dropdown-menu">                  
-                  <li><a href="{% url ogcs-mantenimiento-dig-add %}" data-toggle="modal">Nuevo DIG</a></li>                
-		  <li><a href="{% url ogcs-mantenimiento-dig-query %}" data-toggle="modal">Consultar DIG</a></li>		  
+                  <li><a href="{% url ogcs-mantenimiento-dig-add %}" data-toggle="modal">Nuevo Documento de Interes General</a></li>                
+		  <li><a href="{% url ogcs-mantenimiento-dig-query %}" data-toggle="modal">Consultar Documento de Interes General</a></li>		  
 		</ul></li>
             <li class="dropdown principal"><a class="dropdown-toggle menublanco" data-toggle="dropdown" rel="popover" data-original-title="Acta de Reunión Intersectorial" href="">ARI<b class="caret"></b></a>
                 <ul class="dropdown-menu">                  
-                  <li><a href="{% url ogcs-mantenimiento-ari-add %}" data-toggle="modal">Nuevo ARI</a></li>                
-		  <li><a href="{% url ogcs-mantenimiento-ari-query %}" data-toggle="modal">Consultar ARI</a></li>		  
+                  <li><a href="{% url ogcs-mantenimiento-ari-add %}" data-toggle="modal">Nuevo Acta de Reunión Intersectorial</a></li>                
+		  <li><a href="{% url ogcs-mantenimiento-ari-query %}" data-toggle="modal">Consultar Acta de Reunión Intersectorial</a></li>		  
 		</ul></li>
         </ul>
         <div id="cerrar_sesion">
