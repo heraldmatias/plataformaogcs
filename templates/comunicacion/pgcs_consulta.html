@@ -4,8 +4,14 @@
   {% block content %}
   
   {% load render_table from django_tables2 %}
-<ul class="nav nav-tabs">
-    <li><a href="{% if aporte %}{% url ogcs-mantenimiento-pgcs-aporte-add %}{% else %}{% url ogcs-mantenimiento-pgcs-add %}{% endif %}">Nuevo</a></li>
+<ul class="nav nav-tabs">{% if aporte %}
+{% if request.user.is_superuser %}
+    <li><a href="{% url ogcs-mantenimiento-pgcs-aporte-add %}">Nuevo</a></li>
+{% endif %}
+{% else %}
+{% if not request.user.is_superuser %}
+<li><a href="{% url ogcs-mantenimiento-pgcs-add %}">Nuevo</a></li>
+{% endif %}{% endif %}
     <li class="active"><a href="{% if aporte %}{% url ogcs-mantenimiento-pgcs-aporte-query %}{% else %}{% url ogcs-mantenimiento-pgcs-query %}{% endif %}" >Consultar</a></li>
 </ul>
 <div class="tab-content" id="contenido_izq">
@@ -21,12 +27,17 @@
       {% endif %}
     </div>
     <div class="modal-body">
-
+      {% if user.is_superuser %}
       <div class="row-fluid">
       <div class="span2">{{ formulario.organismo.label_tag }}:</div><div class="span2">{{ formulario.organismo }}</div></div><p></p>
       <div class="row-fluid">
       <div class="span2">{{ formulario.dependencia.label_tag }}:</div><div class="span5">{{ formulario.dependencia }}</div>
  <div class="span2"><input  class="btn-primary" name="grabar" value="Consultar" type="submit"></div><div class="span2"><a class="btn btn-primary" href="javascript: imprimir();">Imprimir</a> </div></div>
+      {% else %}
+      <div class="row-fluid">      
+      <center><a class="btn btn-primary" href="javascript: imprimir();">Imprimir</a> </center>
+      </div>
+      {% endif %} 
       <br><input type="hidden" value="{{ dependencia }}" id="id_dep" name="id_dep">
       <fieldset>
 	<legend><h4>Lista de PGCS</h4></legend>

@@ -24,11 +24,16 @@
       {% endif %}
     </div>
     <div class="modal-body">
-      {% csrf_token %}
+      {% csrf_token %}      
+      {% if aporte %}
+      <div class="row-fluid"><div class="span2">{{ formulario.organismo.label_tag }}:</div><div class="span4">{{ formulario.organismo }}</div>
+      <div class="span2">{{ formulario.dependencia.label_tag }}:</div><div class="span3">{{ formulario.dependencia }}</div></div><br />
+      <div class="row-fluid"><div class="span2">{{ formulario.archivo.label_tag }}</div><div class="span3">{{ formulario.archivo }}</div></div>
+      {% else %}  
       <div class="row-fluid">
       {{ formulario.as_p }}
-
-    </div>
+      </div>
+      {% endif %}
     </div>
     <div class="modal-footer">
      <input class="btn-primary" name="grabar" value="Guardar" type="submit">
@@ -41,9 +46,15 @@
   {% block scriptjs %}  
   {% if aporte %}  
 <script>
+comboelegir('id_organismo');
+dependencias(1);
 $('#frmoac').submit(function() {
 var ext = $('#id_archivo').val().split('.').pop().toLowerCase();
-if($.inArray(ext, ['pdf','doc','docx']) == -1) {
+if($('#id_organismo').val()==''){
+    alert('Debe elegir el Organismo');$('#id_organismo').focus();return false;
+}else if($('#id_dependencia').val()==''){
+    alert('Debe elegir la Dependencia');$('#id_dependencia').focus();return false;
+}else if($.inArray(ext, ['pdf','doc','docx']) == -1) {
     alert('Solo se acepta archivos en formato PDF y WORD!');return false;
 }else{
 return confirmar('¿Desea grabar el registro?');}

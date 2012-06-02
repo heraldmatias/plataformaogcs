@@ -75,15 +75,19 @@ table tr td{padding-left:10px;}
                 </ul></li>
             {% endif %}<!--data-content="Los OAC se utilizan para..." rel="popover" data-original-title="Organigrama del Área de Comunicaciones"  rel="tooltip" data-original-title="first tooltip"  <div class="popover-content"><p></p></div>--> 
             <li class="dropdown principal"><a class="dropdown-toggle menublanco" data-toggle="dropdown" data-content="Los OAC se utilizan para..." rel="popover" data-original-title="Organigrama del Área de Comunicaciones" href="">OAC<b class="caret"></b></a>
-                <ul class="dropdown-menu">                  
-                  <li><a href="{% url ogcs-mantenimiento-oac-add %}" data-toggle="modal">Nuevo Organigrama del Área de Comunicaciones</a></li>     
+                <ul class="dropdown-menu">
+                  {% if not request.user.is_superuser %}                    
+                  <li><a href="{% url ogcs-mantenimiento-oac-add %}" data-toggle="modal">Nuevo Organigrama del Área de Comunicaciones</a></li> 
+                  {% endif %}     
 		  <li><a href="{% url ogcs-mantenimiento-oac-query %}" data-toggle="modal">Consultar Organigrama del Área de Comunicaciones</a></li>		  
 		</ul></li>
             <li class="dropdown principal"><a class="dropdown-toggle menublanco" data-toggle="dropdown" data-content="Los OAC se utilizan para..." rel="popover" data-original-title="Plan General de Comunicacion del Sector" href="">PGCS<b class="caret"></b></a>
                 <ul class="dropdown-menu">
-     <li><a href="{% url ogcs-mantenimiento-pgcs-add %}" data-toggle="modal">Nuevo Plan General de Comunicacion del Sector - OGCS</a><li>                
+     {% if not request.user.is_superuser %}
+     <li><a href="{% url ogcs-mantenimiento-pgcs-add %}" data-toggle="modal">Nuevo Plan General de Comunicacion del Sector - OGCS</a><li>{% endif %}                
      <li><a href="{% url ogcs-mantenimiento-pgcs-query %}" data-toggle="modal">Consulta Plan General de Comunicacion del Sector - OGCS</a><li>
-     <li><a href="{% url ogcs-mantenimiento-pgcs-aporte-add %}" data-toggle="modal">Nuevo Plan General de Comunicacion del Sector - APORTE</a></li>		  
+     {% if request.user.is_superuser %}
+     <li><a href="{% url ogcs-mantenimiento-pgcs-aporte-add %}" data-toggle="modal">Nuevo Plan General de Comunicacion del Sector - APORTE</a></li>		  {% endif %}
      <li><a href="{% url ogcs-mantenimiento-pgcs-aporte-query %}" data-toggle="modal">Consulta Plan General de Comunicacion del Sector - APORTE</a></li>		  
 		</ul></li>
             <li class="dropdown principal"><a class="dropdown-toggle menublanco" data-toggle="dropdown" data-content="Los OAC se utilizan para..." rel="popover" data-original-title="Matriz de Campaña de Comunicaciones Anuales" href="">MCCA<b class="caret"></b></a>

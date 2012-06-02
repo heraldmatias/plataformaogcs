@@ -54,15 +54,19 @@ def oacquery(request):
         col = request.GET['2-sort']
     config = RequestConfig(request)
     formulario = ConsultaOacForm(request.GET)
-    if 'organismo' in request.GET:
-        if request.GET['organismo']:
-            filtro.append(u"oac.organismo_id =%s"%request.GET['organismo'])
+    if request.user.is_superuser:
+        if 'organismo' in request.GET:
+            if request.GET['organismo']:
+                filtro.append(u"oac.organismo_id =%s"%request.GET['organismo'])
         if 'dependencia' in request.GET:
             if request.GET['dependencia']:
                 filtro.append(u"oac.dependencia =%s"%request.GET['dependencia'])
                 dependencia=request.GET['dependencia']
-    #filtro.append(u"idusuario_creac=usuario.numero")
-    filtro.append(u"idusuario_creac="+str(request.user.get_profile().numero))
+    else:
+        filtro.append(u"oac.organismo_id =%s"%request.user.get_profile().organismo.codigo)
+        filtro.append(u"oac.dependencia =%s"%request.user.get_profile().dependencia) 
+        filtro.append(u"idusuario_creac="+str(request.user.get_profile().numero))
+    filtro.append(u"idusuario_creac=usuario.numero")
     query = Oac.objects.extra(tables=['usuario',],where=filtro,select={'usuario':'usuario.usuario','dependencia':"case oac.organismo_id when 1 then (select ministerio from ministerio where nummin=oac.dependencia) when 2 then (select odp from odp where numodp=oac.dependencia) when 3 then (select gobernacion from gobernacion where numgob=oac.dependencia) end"})
     tabla = OacTable(query.order_by(col))
     config.configure(tabla)
@@ -72,13 +76,19 @@ def oacquery(request):
 @login_required()
 def oacprint(request):
     filtro = list()
-    if 'organismo' in request.GET:
-        if request.GET['organismo']:
-            filtro.append(u"oac.organismo_id =%s"%request.GET['organismo'])
+    if request.user.is_superuser:
+        if 'organismo' in request.GET:
+            if request.GET['organismo']:
+                filtro.append(u"oac.organismo_id =%s"%request.GET['organismo'])
         if 'dependencia' in request.GET:
             if request.GET['dependencia']:
                 filtro.append(u"oac.dependencia =%s"%request.GET['dependencia'])
-    filtro.append(u"idusuario_creac=usuario.numero")
+                dependencia=request.GET['dependencia']
+    else:
+        filtro.append(u"oac.organismo_id =%s"%request.user.get_profile().organismo.codigo)
+        filtro.append(u"oac.dependencia =%s"%request.user.get_profile().dependencia)
+        filtro.append(u"idusuario_creac="+str(request.user.get_profile().numero))
+    filtro.append(u"idusuario_creac=usuario.numero")    
     query = Oac.objects.extra(tables=['usuario',],where=filtro,select={'usuario':'usuario.usuario','dependencia':"case oac.organismo_id when 1 then (select ministerio from ministerio where nummin=oac.dependencia) when 2 then (select odp from odp where numodp=oac.dependencia) when 3 then (select gobernacion from gobernacion where numgob=oac.dependencia) end"})
     filename= "oac_%s.csv" % datetime.today().strftime("%Y%m%d")
     return imprimirToExcel('comunicacion/reporteoac.html', {'data': query,'fecha':datetime.today().date(),'hora':datetime.today().time(),'usuario':request.session['nombres']},filename)
@@ -120,13 +130,18 @@ def pgcsquery(request):
         col = request.GET['2-sort']
     config = RequestConfig(request)
     formulario = ConsultaPgcsForm(request.GET)
-    if 'organismo' in request.GET:
-        if request.GET['organismo']:
-            filtro.append(u"pgcs.organismo_id =%s"%request.GET['organismo'])
+    if request.user.is_superuser:
+        if 'organismo' in request.GET:
+            if request.GET['organismo']:
+                filtro.append(u"pgcs.organismo_id =%s"%request.GET['organismo'])
         if 'dependencia' in request.GET:
             if request.GET['dependencia']:
                 filtro.append(u"pgcs.dependencia =%s"%request.GET['dependencia'])
                 dependencia=request.GET['dependencia']
+    else:
+        filtro.append(u"pgcs.organismo_id =%s"%request.user.get_profile().organismo.codigo)
+        filtro.append(u"pgcs.dependencia =%s"%request.user.get_profile().dependencia)
+        filtro.append(u"idusuario_creac="+str(request.user.get_profile().numero))
     filtro.append(u"idusuario_creac=usuario.numero")
     filtro.append(u"tipopgcs_id=1")
     query = Pgcs.objects.extra(tables=['usuario',],where=filtro,select={'usuario':'usuario.usuario','dependencia':"case pgcs.organismo_id when 1 then (select ministerio from ministerio where nummin=pgcs.dependencia) when 2 then (select odp from odp where numodp=pgcs.dependencia) when 3 then (select gobernacion from gobernacion where numgob=pgcs.dependencia) end"})
@@ -138,12 +153,19 @@ def pgcsquery(request):
 @login_required()
 def pgcsprint(request,tipo):
     filtro = list()
-    if 'organismo' in request.GET:
-        if request.GET['organismo']:
-            filtro.append(u"oac.organismo_id =%s"%request.GET['organismo'])
+    if request.user.is_superuser:
+        if 'organismo' in request.GET:
+            if request.GET['organismo']:
+                filtro.append(u"pgcs.organismo_id =%s"%request.GET['organismo'])
         if 'dependencia' in request.GET:
             if request.GET['dependencia']:
-                filtro.append(u"oac.dependencia =%s"%request.GET['dependencia'])
+                filtro.append(u"pgcs.dependencia =%s"%request.GET['dependencia'])
+                dependencia=request.GET['dependencia']
+    else:
+        filtro.append(u"pgcs.organismo_id =%s"%request.user.get_profile().organismo.codigo)
+        filtro.append(u"pgcs.dependencia =%s"%request.user.get_profile().dependencia)
+        if tipo == 1: 
+            filtro.append(u"idusuario_creac="+str(request.user.get_profile().numero))
     filtro.append(u"idusuario_creac=usuario.numero")    
     filtro.append(u"tipopgcs_id="+str(tipo))
     query = Pgcs.objects.extra(tables=['usuario',],where=filtro,select={'usuario':'usuario.usuario','dependencia':"case pgcs.organismo_id when 1 then (select ministerio from ministerio where nummin=pgcs.dependencia) when 2 then (select odp from odp where numodp=pgcs.dependencia) when 3 then (select gobernacion from gobernacion where numgob=pgcs.dependencia) end"})
@@ -156,7 +178,8 @@ def pgcs_apor_add(request):
     if request.method == 'POST':               
         if 'archivo' in request.FILES:
             profile = request.user.get_profile() 
-            ini=request.session['dependencia']
+            from dependencia.views import get_dependencia
+            ini= get_dependencia(int(request.POST['organismo']),int(request.POST['dependencia']))
             archivo=request.FILES['archivo'].name
             filename= "PGCSAPORTE%s%s%s" % (ini.iniciales,datetime.today().strftime("%d%m%Y"),archivo[archivo.rfind('.'):])
             try:
@@ -164,18 +187,18 @@ def pgcs_apor_add(request):
             except:
                 num = Pgcs.objects.values("numpgcs").order_by("-numpgcs",)[:1]
                 num = 1 if len(num)==0 else int(num[0]["numpgcs"])+1
-                obj = Pgcs(numpgcs=num,organismo=profile.organismo,dependencia=profile.dependencia,idusuario_creac=profile.numero,tipopgcs=TipoOgcs.objects.get(codigo=2))
+                obj = Pgcs(numpgcs=num,idusuario_creac=profile.numero,tipopgcs=TipoOgcs.objects.get(codigo=2))
             FileSystemStorage().delete('pgcs/'+filename)
             request.FILES['archivo'].name = filename
-        formulario = PgcsForm(request.POST,request.FILES,instance=obj ) # A form bound to the POST data
+        formulario = PgcsAporteForm(request.POST,request.FILES,instance=obj ) # A form bound to the POST data
         if formulario.is_valid():
             formulario.save()
             obj.urlpgcs= obj.archivo.url
             obj.save()
-            formulario = PgcsForm() # Crear un parametro en home para mostrar los mensajes de exito.
+            formulario = PgcsAporteForm() # Crear un parametro en home para mostrar los mensajes de exito.
             mensaje="Registro grabado satisfactoriamente."
     else:        
-        formulario = PgcsForm()
+        formulario = PgcsAporteForm()
     return render_to_response('comunicacion/pgcs.html', {'formulario': formulario,'mensaje':mensaje,'aporte':'aporte',}, context_instance=RequestContext(request),)
 
 @login_required()
@@ -188,15 +211,21 @@ def pgcs_apor_query(request):
         col = request.GET['2-sort']
     config = RequestConfig(request)
     formulario = ConsultaPgcsForm(request.GET)
-    if 'organismo' in request.GET:
-        if request.GET['organismo']:
-            filtro.append(u"pgcs.organismo_id =%s"%request.GET['organismo'])
+    if request.user.is_superuser:
+        if 'organismo' in request.GET:
+            if request.GET['organismo']:
+                filtro.append(u"pgcs.organismo_id =%s"%request.GET['organismo'])
         if 'dependencia' in request.GET:
             if request.GET['dependencia']:
                 filtro.append(u"pgcs.dependencia =%s"%request.GET['dependencia'])
                 dependencia=request.GET['dependencia']
+    else:
+        filtro.append(u"pgcs.organismo_id =%s"%request.user.get_profile().organismo.codigo)
+        filtro.append(u"pgcs.dependencia =%s"%request.user.get_profile().dependencia)
+        #filtro.append(u"idusuario_creac="+str(request.user.get_profile().numero))
     filtro.append(u"idusuario_creac=usuario.numero")
     filtro.append(u"tipopgcs_id=2")
+    print filtro
     query = Pgcs.objects.extra(tables=['usuario',],where=filtro,select={'usuario':'usuario.usuario','dependencia':"case pgcs.organismo_id when 1 then (select ministerio from ministerio where nummin=pgcs.dependencia) when 2 then (select odp from odp where numodp=pgcs.dependencia) when 3 then (select gobernacion from gobernacion where numgob=pgcs.dependencia) end"})
     tabla = PgcsTable(query.order_by(col))
     config.configure(tabla)
@@ -493,13 +522,18 @@ def mcca_query(request):
         col = request.GET['2-sort']
     config = RequestConfig(request)
     formulario = ConsultaMccaForm(request.GET)
-    if 'organismo' in request.GET:
-        if request.GET['organismo']:
-            filtro.append(u"mcca.organismo_id =%s" % request.GET['organismo'])
-        if 'dependencia' in request.GET:
-            if request.GET['dependencia']:
-                filtro.append(u"mcca.dependencia =%s" % request.GET['dependencia'])
-                dependencia = request.GET['dependencia']
+    if request.user.is_superuser:
+        if 'organismo' in request.GET:
+            if request.GET['organismo']:
+                filtro.append(u"mcca.organismo_id =%s" % request.GET['organismo'])
+            if 'dependencia' in request.GET:
+                if request.GET['dependencia']:
+                    filtro.append(u"mcca.dependencia =%s" % request.GET['dependencia'])
+                    dependencia = request.GET['dependencia']
+    else:
+        filtro.append(u"mcca.organismo_id =%s" % request.user.get_profile().organismo.codigo)  
+        filtro.append(u"mcca.dependencia =%s" % request.user.get_profile().dependencia)  
+        filtro.append(u"mcca.idusuario_creac=%s" % str(request.user.get_profile().numero))
     if 'nombremmca' in request.GET:
         if request.GET['nombremmca']:
             filtro.append(u"nombremmca = '%s'" % request.GET['nombremmca'])
@@ -515,7 +549,6 @@ def mcca_query(request):
             filtro.append(u"fechafin ='%s'" % fecfin)
 
     filtro.append(u"mcca.idusuario_creac=usuario.numero")
-    #filtro.append(u"tipopgcs_id=2")
     query = Mcca.objects.extra(tables=['usuario',], where=filtro, select={'usuario':'usuario.usuario', 'idusuario_mod':'usuario.usuario', 'dependencia':"case mcca.organismo_id when 1 then (select ministerio from ministerio where nummin=mcca.dependencia) when 2 then (select odp from odp where numodp=mcca.dependencia) when 3 then (select gobernacion from gobernacion where numgob=mcca.dependencia) end"})
     #query = Mcca.objects.extra(where=filtro)
 	#tabla = query.order_by(col)
@@ -535,13 +568,18 @@ def mccaprint(request):
         col = request.GET['2-sort']
     config = RequestConfig(request)
     formulario = ConsultaMccaForm(request.GET)
-    if 'organismo' in request.GET:
-        if request.GET['organismo']:
-            filtro.append(u"mcca.organismo_id =%s" % request.GET['organismo'])
-        if 'dependencia' in request.GET:
-            if request.GET['dependencia']:
-                filtro.append(u"mcca.dependencia =%s" % request.GET['dependencia'])
-                dependencia = request.GET['dependencia']
+    if request.user.is_superuser:
+        if 'organismo' in request.GET:
+            if request.GET['organismo']:
+                filtro.append(u"mcca.organismo_id =%s" % request.GET['organismo'])
+            if 'dependencia' in request.GET:
+                if request.GET['dependencia']:
+                    filtro.append(u"mcca.dependencia =%s" % request.GET['dependencia'])
+                    dependencia = request.GET['dependencia']
+    else:
+        filtro.append(u"mcca.organismo_id =%s" % request.user.get_profile().organismo.codigo)  
+        filtro.append(u"mcca.dependencia =%s" % request.user.get_profile().dependencia)  
+        filtro.append(u"mcca.idusuario_creac=%s" % str(request.user.get_profile().numero))
     if 'nombremmca' in request.GET:
         if request.GET['nombremmca']:
             filtro.append(u"nombremmca = '%s'" % request.GET['nombremmca'])
@@ -556,8 +594,7 @@ def mccaprint(request):
             fecfin = datetime.strptime(fecfin, "%d/%m/%Y").strftime("%Y-%m-%d")
             filtro.append(u"fechafin ='%s'" % fecfin)
 
-    filtro.append(u"mcca.idusuario_creac=usuario.numero")
-    #filtro.append(u"tipopgcs_id=2")
+    filtro.append(u"mcca.idusuario_creac=usuario.numero")    
     query = Mcca.objects.extra(tables=['usuario',], where=filtro, select={'usuario':'usuario.usuario', 'idusuario_mod':'usuario.usuario', 'dependencia':"case mcca.organismo_id when 1 then (select ministerio from ministerio where nummin=mcca.dependencia) when 2 then (select odp from odp where numodp=mcca.dependencia) when 3 then (select gobernacion from gobernacion where numgob=mcca.dependencia) end"})
     #query = Mcca.objects.extra(where=filtro)
 	#tabla = query.order_by(col)

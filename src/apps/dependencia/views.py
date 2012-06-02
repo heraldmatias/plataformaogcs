@@ -15,6 +15,21 @@ from django.db.models import Q
 from datetime import datetime
 from scripts.scripts import imprimirToExcel
 from django.core.urlresolvers import reverse
+from usuario.models import Organismo
+
+def get_dependencia(organismo,dependencia):
+    orgid = isinstance(organismo,Organismo) and organismo.codigo or organismo
+    ini = None
+    try:
+        if orgid == 1:
+            ini = Ministerio.objects.get(nummin=dependencia)
+        elif orgid == 2:
+            ini = Odp.objects.get(numodp=dependencia)
+        elif orgid == 3:
+            ini = Gobernacion.objects.get(numgob=dependencia)
+    except:
+        pass
+    return ini
 
 @login_required()
 def ministerioadd(request):

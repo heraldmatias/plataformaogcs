@@ -3,8 +3,8 @@
   {% block title %} Plataforma Intersectorial de Comunicaci&oacute;n OGCS {% endblock %}
   {% block content %}  
   {% load render_table from django_tables2 %}
-<ul class="nav nav-tabs">
-    <li><a href="{% url ogcs-mantenimiento-oac-add %}">Nuevo</a></li>
+<ul class="nav nav-tabs">{% if not request.user.is_superuser %}
+    <li><a href="{% url ogcs-mantenimiento-oac-add %}">Nuevo</a></li>{% endif %}
     <li class="active"><a href="{% url ogcs-mantenimiento-oac-query %}" >Consultar</a></li>
 </ul>
 <div class="tab-content" id="contenido_izq">
@@ -16,12 +16,17 @@
       <h3>Consulta de OAC</h3>
     </div>
     <div class="modal-body">
-
-      <div class="row-fluid">
+     {% if user.is_superuser %}
+      <div class="row-fluid">      
       <div class="span2">{{ formulario.organismo.label_tag }}:</div><div class="span2">{{ formulario.organismo }}</div></div><p></p>
       <div class="row-fluid">
       <div class="span2">{{ formulario.dependencia.label_tag }}:</div><div class="span5">{{ formulario.dependencia }}</div>
  <div class="span2"><input  class="btn-primary" name="grabar" value="Consultar" type="submit"></div><div class="span2"><a class="btn btn-primary" href="javascript: imprimir();">Imprimir</a> </div></div>
+     {% else %}
+     <div class="row-fluid">      
+     <center><a class="btn btn-primary" href="javascript: imprimir();">Imprimir</a> </center>
+     </div>
+     {% endif %}
       <br><input type="hidden" value="{{ dependencia }}" id="id_dep" name="id_dep">
       <fieldset>
 	<legend><h4>Lista de OAC</h4></legend>

@@ -40,6 +40,15 @@ class PgcsForm(forms.ModelForm):
         model = Pgcs
         fields = ('archivo',)
 
+class PgcsAporteForm(forms.ModelForm):
+    class Meta:
+        model = Pgcs
+        fields = ('organismo','dependencia','archivo',)
+        widgets = {
+            'organismo': forms.Select(attrs={'onChange':'dependencias(1);',}),
+            'dependencia':forms.Select(),
+        } 
+
 class ConsultaPgcsForm(forms.ModelForm):
     class Meta:
         model = Pgcs
