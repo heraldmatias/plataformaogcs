@@ -1,0 +1,25 @@
+ {% extends 'base.html' %}
+  {% load static %}
+  {% block title %} Plataforma Intersectorial de Comunicaci&oacute;n OGCS {% endblock %}
+  {% block content %}
+    	<div id="contenido_izq">
+             <form class="form-inline fondo" name="login" method="post" action="{% url ogcs-reset-pass %}">                   
+                 <div id="frmprovincia" class="modal" style="position: relative; top: auto; left: auto; margin: 0 auto auto 20px; z-index: 1;width:720px;height:auto">
+		    <div class="modal-header">             
+			<a class="close" data-dismiss="modal" >&times;</a>
+			<h3>Asignar Permisos a Usuarios</h3>         
+                   </div>
+		   <div class="modal-body">
+                      {% for permiso in permisos %}
+                      <li>{{ permiso }}</li>
+                      {% endfor %} 
+                  </div>
+                    <div class="modal-footer">
+                  <a class="btn btn-primary" href="{% url ogcs-index %}"><i class="icon-user icon-white"></i>Aceptar</a>		     
+		    </div>
+                </div>
+             </form>
+       </div>  
+{% endblock %}
+ {% block scriptjs %}    
+  {% endblock %}

@@ -5,11 +5,11 @@
   
   {% load render_table from django_tables2 %}
 <ul class="nav nav-tabs">{% if aporte %}
-{% if request.user.is_superuser %}
+{% if user.get_profile.nivel.codigo == 2 %}
     <li><a href="{% url ogcs-mantenimiento-pgcs-aporte-add %}">Nuevo</a></li>
 {% endif %}
 {% else %}
-{% if not request.user.is_superuser %}
+{% if user.get_profile.nivel.codigo == 1 %}
 <li><a href="{% url ogcs-mantenimiento-pgcs-add %}">Nuevo</a></li>
 {% endif %}{% endif %}
     <li class="active"><a href="{% if aporte %}{% url ogcs-mantenimiento-pgcs-aporte-query %}{% else %}{% url ogcs-mantenimiento-pgcs-query %}{% endif %}" >Consultar</a></li>
@@ -27,7 +27,7 @@
       {% endif %}
     </div>
     <div class="modal-body">
-      {% if user.is_superuser %}
+      {% if user.get_profile.nivel.codigo == 2 %}
       <div class="row-fluid">
       <div class="span2">{{ formulario.organismo.label_tag }}:</div><div class="span2">{{ formulario.organismo }}</div></div><p></p>
       <div class="row-fluid">

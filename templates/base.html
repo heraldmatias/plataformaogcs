@@ -48,8 +48,8 @@ table tr td{padding-left:10px;}
                <td width="178" class="gris2">Bienvenido</td>
              </tr>
              <tr>
-               <td width="50" valign="top" class="fecha">FECHA: {{ request.user.last_login|date:"d-m-y" }}<br>HORA: {{ request.user.last_login|date:"H:i:s" }}</td>
-               <td width="178" class="azul">{{ request.user.get_full_name }}</td>
+               <td width="50" valign="top" class="fecha">FECHA: {{ request.user.last_login|date:"d-m-y" }}<br>HORA: {{ user.last_login|date:"H:i:s" }}</td>
+               <td width="178" class="azul">{{ user.get_full_name }}</td>
              </tr>
            </table>
         </div>
@@ -62,7 +62,7 @@ table tr td{padding-left:10px;}
     {% else %}
 <div id="menu">  
         <ul id="nave">
-           {% if request.user.is_superuser %}
+           {% if user.get_profile.nivel.codigo == 2 %}
             <li class="dropdown principal"><a class="dropdown-toggle menublanco" data-toggle="dropdown" href="">Mantenimiento<b class="caret"></b></a>
                 <ul class="dropdown-menu">                  
                   <li class="opcion"><a href="{% url ogcs-mantenimiento-region-add %}" data-toggle="modal">Regi&oacute;n</a></li>                
@@ -76,17 +76,17 @@ table tr td{padding-left:10px;}
             {% endif %}<!--data-content="Los OAC se utilizan para..." rel="popover" data-original-title="Organigrama del Área de Comunicaciones"  rel="tooltip" data-original-title="first tooltip"  <div class="popover-content"><p></p></div>--> 
             <li class="dropdown principal"><a class="dropdown-toggle menublanco" data-toggle="dropdown" data-content="Los OAC se utilizan para..." rel="popover" data-original-title="Organigrama del Área de Comunicaciones" href="">OAC<b class="caret"></b></a>
                 <ul class="dropdown-menu">
-                  {% if not request.user.is_superuser %}                    
+                  {% if user.get_profile.nivel.codigo == 1 %}                    
                   <li><a href="{% url ogcs-mantenimiento-oac-add %}" data-toggle="modal">Nuevo Organigrama del Área de Comunicaciones</a></li> 
                   {% endif %}     
 		  <li><a href="{% url ogcs-mantenimiento-oac-query %}" data-toggle="modal">Consultar Organigrama del Área de Comunicaciones</a></li>		  
 		</ul></li>
             <li class="dropdown principal"><a class="dropdown-toggle menublanco" data-toggle="dropdown" data-content="Los OAC se utilizan para..." rel="popover" data-original-title="Plan General de Comunicacion del Sector" href="">PGCS<b class="caret"></b></a>
                 <ul class="dropdown-menu">
-     {% if not request.user.is_superuser %}
+     {% if user.get_profile.nivel.codigo == 1 %}
      <li><a href="{% url ogcs-mantenimiento-pgcs-add %}" data-toggle="modal">Nuevo Plan General de Comunicacion del Sector - OGCS</a><li>{% endif %}                
      <li><a href="{% url ogcs-mantenimiento-pgcs-query %}" data-toggle="modal">Consulta Plan General de Comunicacion del Sector - OGCS</a><li>
-     {% if request.user.is_superuser %}
+     {% if user.get_profile.nivel.codigo == 2 %}
      <li><a href="{% url ogcs-mantenimiento-pgcs-aporte-add %}" data-toggle="modal">Nuevo Plan General de Comunicacion del Sector - APORTE</a></li>		  {% endif %}
      <li><a href="{% url ogcs-mantenimiento-pgcs-aporte-query %}" data-toggle="modal">Consulta Plan General de Comunicacion del Sector - APORTE</a></li>		  
 		</ul></li>

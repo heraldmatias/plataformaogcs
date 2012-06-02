@@ -76,6 +76,13 @@ class Usuario(models.Model):
         db_table = u'usuario'
         verbose_name = u'Usuario'
         verbose_name_plural = u'Usuarios'        
+        permissions = (
+            ('query_usuario','Puede Consultar Usuario'),
+            ('add_admin','Puede Agregar Administrador'),
+            ('change_admin','Puede Modificar Administrador'),
+            ('delete_admin','Puede Eliminar Administrador'),
+            ('query_admin','Puede Consultar Administrador'),
+        )
 
     def __unicode__(self):
         return "%s, %s", (self.nombres, self.apellidos)

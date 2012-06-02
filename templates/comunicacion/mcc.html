@@ -72,7 +72,7 @@
     		  <label>Tipo: {{ form_actor.numtipovarios }}</label> <br /><br />
               <label>Actor: {{ form_actor.actor }}</label>
           &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp
-          <label>Institucion:  {{ form_actor.institucion }}</label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{% if not request.user.is_superuser %}<input class="btn-primary" name="agregar" value="Agregar" type="button" onclick="actores()">{% endif %}
+          <label>Institucion:  {{ form_actor.institucion }}</label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{% if user.get_profile.nivel.codigo == 1 %}<input class="btn-primary" name="agregar" value="Agregar" type="button" onclick="actores()">{% endif %}
 
     	</div>
       
@@ -94,7 +94,7 @@
               <label>Lider: {{ form_lider.lider }}</label>
           &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp
           <label>Institucion:  {{ form_lider.institucion }}</label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-   {% if not request.user.is_superuser %}<input class="btn-primary" name="agregar" value="Agregar" type="button" onclick="lideres()">{% endif %}
+   {% if user.get_profile.nivel.codigo == 1 %}<input class="btn-primary" name="agregar" value="Agregar" type="button" onclick="lideres()">{% endif %}
     	</div>
       
         <br>
@@ -122,7 +122,7 @@
       	</div>
     	<div class="row-fluid">
         	<div class="alert alert-error" id="alert3"><strong></strong><!--<a class="close" data-dismiss="alert">×</a>--></div>
-    		<label>Observación:{{ form_observacion.observacion }}</label>&nbsp;&nbsp;&nbsp;&nbsp;{% if request.user.is_superuser %}<input class="btn-primary" name="agregar" value="Agregar" type="button" onclick="observaciones()" />{% endif %}
+    		<label>Observación:{{ form_observacion.observacion }}</label>&nbsp;&nbsp;&nbsp;&nbsp;{% if user.get_profile.nivel.codigo == 2 %}<input class="btn-primary" name="agregar" value="Agregar" type="button" onclick="observaciones()" />{% endif %}
     	</div>
       
         <br>
@@ -147,7 +147,7 @@
 <script src="{{ STATIC_URL  }}js/mcc.js" type="text/javascript"></script>
 <script>
 
-{% if request.user.is_superuser %}
+{% if user.get_profile.nivel.codigo == 2 %}
  $("#id_observacion").removeAttr("readonly");
  $("#id_nombremmc").attr('readonly', 'readonly'); //Nombre de la Campaña.
  $("#id_fechaini").attr('readonly', 'readonly'); //   Fecha Inicial.

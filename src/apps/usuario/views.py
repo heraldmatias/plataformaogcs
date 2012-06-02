@@ -5,7 +5,7 @@ from django.template import RequestContext, Context, loader
 from usuario.models import Usuario, Estado, Organismo, Nivel
 from dependencia.models import Ministerio, Odp, Gobernacion
 from django.contrib.auth.decorators import login_required, permission_required
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User, Permission
 from django.shortcuts import get_object_or_404
 import django_tables2 as tables
 from django_tables2.config import RequestConfig
@@ -15,6 +15,24 @@ from django.core.urlresolvers import reverse
 from django.conf import settings
 from django.contrib.sites.models import get_current_site
 serie = 3
+
+@login_required()
+@permission_required('auth.change_user')
+def asignar_permisos(request):
+    ctypes = (2,3,10,11,12,13,14,15,16,17,18,19,21,23,34,38,39,40,41,42,43,44,45,46,47,48,49,50) 
+    permisos = Permission.objects.filter(content_type__id__in = ctypes)
+    return render_to_response('usuario/permisos.html',{'permisos':permisos,},context_instance=RequestContext(request))
+
+def get_admin_permissions():
+    perms = []
+    """
+      Obtiene todos los permisos explicitos para un Administrador
+    """
+    #Modulo Mantenimiento
+    ctypes = (10,11,15,16,17,18)
+    permisos = Permission.objects.filter(content_type__id__in = ctypes)
+    perms = [permiso for permiso in permisos]    
+    return perms
 
 @login_required()
 @permission_required('usuario.add_usuario')
@@ -47,18 +65,19 @@ def useradd(request,nivel):
                 user = User.objects.create_user(username=usernamee,email=request.POST['email'],password=request.POST['contrasena'],)
                 if request.POST['nivel'] == "2":
                     user.is_staff = True
-                    user.is_superuser = True
+                    #user.is_superuser = True
                 if request.POST['estado'] == "2":
                     user.is_active = False
                 user.first_name = request.POST['nombres']
                 user.last_name = request.POST['apellidos']
+                user.user_permissions = get_admin_permissions()
                 user.save()
                 usuario = Usuario(user=user,numero=num,usuario=usernamee,nivel=Nivel.objects.get(codigo=request.POST['nivel']))
                 frmusuario = UsuarioForm(request.POST,request.FILES, instance=usuario)
-                frmusuario.save()
+                #frmusuario.save()
                 usuario.contrasena = user.password
-                usuario.save() 
-                asunto="Bienvenido a la plataforma de Comunicacion Social"
+                #usuario.save() 
+                asunto="Bienvenido a la plataforma de Comunicación Social"
                 from django.core.mail import EmailMessage                
                 t = loader.get_template('home/mail.html')
                 current_site = get_current_site(request)
@@ -75,7 +94,7 @@ def useradd(request,nivel):
 	        try:
 		    msg = EmailMessage(asunto, mensaje, settings.DEFAULT_FROM_EMAIL, [user.email])
 		    msg.content_subtype = "html" 
-		    msg.send()
+		    #msg.send()
                 except:
                     mensaje= "Usuario creado correctamente,pero no se ha podido enviar el email con los datos del registro."
                     tipo=0

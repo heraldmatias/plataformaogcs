@@ -18,7 +18,7 @@
 
     </div>
     <div class="modal-body" style="max-height:2000px;">
-      {% if user.is_superuser %}
+      {% if user.get_profile.nivel.codigo == 2 %}
       <div class="row-fluid">
       	<div class="span2" >{{ form.organismo.label_tag }}:</div><div class="span4">{{ form.organismo }}</div>
       	<div class="span2" >{{ form.dependencia.label_tag }}:</div><div class="span4">{{ form.dependencia }}</div></div><br />{% endif %}      

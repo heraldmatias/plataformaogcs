@@ -54,7 +54,7 @@ def oacquery(request):
         col = request.GET['2-sort']
     config = RequestConfig(request)
     formulario = ConsultaOacForm(request.GET)
-    if request.user.is_superuser:
+    if request.user.get_profile().nivel.codigo == 2:
         if 'organismo' in request.GET:
             if request.GET['organismo']:
                 filtro.append(u"oac.organismo_id =%s"%request.GET['organismo'])
@@ -76,7 +76,7 @@ def oacquery(request):
 @login_required()
 def oacprint(request):
     filtro = list()
-    if request.user.is_superuser:
+    if request.user.get_profile().nivel.codigo == 2:
         if 'organismo' in request.GET:
             if request.GET['organismo']:
                 filtro.append(u"oac.organismo_id =%s"%request.GET['organismo'])
@@ -130,7 +130,7 @@ def pgcsquery(request):
         col = request.GET['2-sort']
     config = RequestConfig(request)
     formulario = ConsultaPgcsForm(request.GET)
-    if request.user.is_superuser:
+    if request.user.get_profile().nivel.codigo == 2:
         if 'organismo' in request.GET:
             if request.GET['organismo']:
                 filtro.append(u"pgcs.organismo_id =%s"%request.GET['organismo'])
@@ -153,7 +153,7 @@ def pgcsquery(request):
 @login_required()
 def pgcsprint(request,tipo):
     filtro = list()
-    if request.user.is_superuser:
+    if request.user.get_profile().nivel.codigo == 2:
         if 'organismo' in request.GET:
             if request.GET['organismo']:
                 filtro.append(u"pgcs.organismo_id =%s"%request.GET['organismo'])
@@ -211,7 +211,7 @@ def pgcs_apor_query(request):
         col = request.GET['2-sort']
     config = RequestConfig(request)
     formulario = ConsultaPgcsForm(request.GET)
-    if request.user.is_superuser:
+    if request.user.get_profile().nivel.codigo == 2:
         if 'organismo' in request.GET:
             if request.GET['organismo']:
                 filtro.append(u"pgcs.organismo_id =%s"%request.GET['organismo'])
@@ -522,7 +522,7 @@ def mcca_query(request):
         col = request.GET['2-sort']
     config = RequestConfig(request)
     formulario = ConsultaMccaForm(request.GET)
-    if request.user.is_superuser:
+    if request.user.get_profile().nivel.codigo == 2:
         if 'organismo' in request.GET:
             if request.GET['organismo']:
                 filtro.append(u"mcca.organismo_id =%s" % request.GET['organismo'])
@@ -568,7 +568,7 @@ def mccaprint(request):
         col = request.GET['2-sort']
     config = RequestConfig(request)
     formulario = ConsultaMccaForm(request.GET)
-    if request.user.is_superuser:
+    if request.user.get_profile().nivel.codigo == 2:
         if 'organismo' in request.GET:
             if request.GET['organismo']:
                 filtro.append(u"mcca.organismo_id =%s" % request.GET['organismo'])
