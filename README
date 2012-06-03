@@ -10,10 +10,50 @@ Instalación
 
 ANTES DE SYNCDB
 ------------------------
+SITIO
+
+1.- Modificar el nombre del sitio con el nombre del DOMINIO donde se aloja la web.
+
 SEGURIDAD
+
 1.- Modificar eggs/Django-1.3.1-py2.6.egg/django/contrib/auth/models.py el campo
 name debe ser de 100 caracteres y __unicode__ no debe retornar el ContentType
 
 2.- Modificar el eggs/Django-1.3.1-py2.6.egg/django/contrib/auth/management/__init__.py
  Para mostra 4 permisos por defecto y en español
+
+3.- Cambiar el Formulario por defecto de reestablecimiento de contraseña para que envie HTML.
+        vim contrib/auth/forms.py
+class PasswordResetForm(forms.Form):
+def save(self, domain_override=None, email_template_name='registration/password_reset_email.html',
+             use_https=False, token_generator=default_token_generator, from_email=None, request=None):
+        """
+        Generates a one-use only link for resetting password and sends to the user
+        """
+        from django.core.mail import EmailMessage
+        from django.conf import settings
+        for user in self.users_cache:
+            if not domain_override:
+                current_site = get_current_site(request)
+                site_name = current_site.name
+                domain = current_site.domain
+            else:
+                site_name = domain = domain_override
+            t = loader.get_template(email_template_name)
+            c = {
+                'email': user.email,
+                'usuario': user,
+                'domain': domain,
+                'static':settings.STATIC_URL,
+                'site_name': site_name,
+                'uid': int_to_base36(user.id),
+                'user': user,
+                'token': token_generator.make_token(user),
+                'protocol': use_https and 'https' or 'http',
+            }
+            msg = EmailMessage(u"Reestablecimiento de contrasena en la Plataforma Intersectorial de Comunicacion",t.render(Context(c)),from_email, [user.email])
+            msg.content_subtype = "html"
+            msg.send()
+
+
 
