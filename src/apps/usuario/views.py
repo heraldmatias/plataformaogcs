@@ -20,7 +20,7 @@ serie = 3
 @login_required()
 @permission_required('auth.change_user')
 def asignar_permisos(request):
-    ctypes = (2,3,10,11,12,13,14,15,16,17,18,19,21,23,34,38,39,40,41,42,43,44,45,46,47,48,49,50) 
+    ctypes = (10,11,12,13,14,15,16,17,18,19,21,23,34,38,39,40,41,42,43,44,45,46,47,48,49,50) 
     permisos = Permission.objects.filter(content_type__id__in = ctypes)
     return render_to_response('usuario/permisos.html',{'permisos':permisos,},context_instance=RequestContext(request))
 
