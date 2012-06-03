@@ -19,6 +19,9 @@ class Ministerio(models.Model):
         db_table = u'ministerio'
         verbose_name = u'Ministerio'
         verbose_name_plural = u'Ministerios'
+        permissions = (
+            ('query_ministerio','Puede Consultar Ministerio'),
+        )
         
     def __unicode__(self):
         return self.ministerio
@@ -39,6 +42,9 @@ class Odp(models.Model):
         db_table = u'odp'
         verbose_name = u'Odp'
         verbose_name_plural = u'Opds'
+        permissions = (
+            ('query_opd','Puede Consultar OPD'),
+        )
         
     def __unicode__(self):
         return self.odp
@@ -60,6 +66,9 @@ class Gobernacion(models.Model):
         db_table = u'gobernacion'
         verbose_name = u'Gobernación'
         verbose_name_plural = u'Gobernaciones'
+        permissions = (
+            ('query_gobernacion','Puede Consultar Gobernación'),
+        )
         
     def __unicode__(self):
         return self.gobernacion

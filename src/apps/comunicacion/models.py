@@ -22,6 +22,9 @@ class Oac(models.Model):
         db_table = u'oac'
         verbose_name = u'OAC'
         verbose_name_plural = u'OACs'
+        permissions = (
+            ('query_oac','Puede Consultar OAC'),
+        )
 
     def __unicode__(self):
         return self.urloac
@@ -53,6 +56,13 @@ class Pgcs(models.Model):
         db_table = u'pgcs'
         verbose_name = u'PGCS'
         verbose_name_plural = u'PGCSs'
+        permissions = (
+            ('query_pgcs','Puede Consultar PGCS-OGCS'),
+            ('add_pgcs_aporte','Puede Agregar PGCS-APORTE'),
+            ('change_pgcs_aporte','Puede Modificar PGCS-APORTE'),
+            ('delete_pgcs_aporte','Puede Eliminar PGCS-APORTE'),
+            ('query_pgcs_aporte','Puede Consultar PGCS-APORTE'),
+        )
 
     def __unicode__(self):
         return self.nombre
@@ -93,6 +103,9 @@ class Mcca(models.Model):
         db_table = u'mcca'
         verbose_name = u'MCCA'
         verbose_name_plural = u'MCCAs'
+        permissions = (
+            ('query_mcca','Puede Consultar MCCA'),
+        )
 
     def __unicode__(self):
         return self.nombremmca
@@ -274,6 +287,9 @@ class Mcc(models.Model):
         db_table = u'mcc'
         verbose_name = u'MCC'
         verbose_name_plural = u'MCCs'
+        permissions = (
+            ('query_mcc','Puede Consultar MCC'),
+        )
 
     def __unicode__(self):
         return self.nombremmca

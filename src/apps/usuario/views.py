@@ -14,6 +14,7 @@ from scripts.scripts import imprimirToExcel
 from django.core.urlresolvers import reverse
 from django.conf import settings
 from django.contrib.sites.models import get_current_site
+from django.db.models import Q
 serie = 3
 
 @login_required()
@@ -31,7 +32,89 @@ def get_admin_permissions():
     #Modulo Mantenimiento
     ctypes = (10,11,15,16,17,18)
     permisos = Permission.objects.filter(content_type__id__in = ctypes)
-    perms = [permiso for permiso in permisos]    
+    for permiso in permisos: 
+        perms.append(permiso)        
+    #Modulo OAC
+    perms.append(Permission.objects.get(codename = 'query_oac',content_type__id=19))
+    #Modulo PGCS
+    permisos = Permission.objects.filter(Q(name__contains='OGCS') | Q(name__contains='APORTE'))
+    for permiso in permisos: 
+        perms.append(permiso) 
+    #Modulo MCCA 
+    permisos = Permission.objects.filter(Q(codename = 'query_mcca') | Q(codename = 'change_mcca') & Q(content_type__id=23))
+    for permiso in permisos: 
+        perms.append(permiso) 
+    #Modulo MCC
+    permisos = Permission.objects.filter(Q(codename = 'query_mcc') | Q(codename = 'change_mcc') & Q(content_type__id=34))
+    for permiso in permisos: 
+        perms.append(permiso) 
+    #Material Gráfico
+    permisos = Permission.objects.filter(content_type__id=38)
+    for permiso in permisos: 
+        perms.append(permiso) 
+    #DIG
+    permisos = Permission.objects.filter(content_type__id=39)
+    for permiso in permisos: 
+        perms.append(permiso) 
+    #ARI
+    permisos = Permission.objects.filter(content_type__id=40)
+    for permiso in permisos: 
+        perms.append(permiso) 
+    #CHAT
+    permisos = Permission.objects.filter(content_type__id__in=(41,42))
+    for permiso in permisos: 
+        perms.append(permiso) 
+    #PYBB
+    ctypes = (44,45,46,47,48,49,50,51)
+    permisos = Permission.objects.filter(content_type__id__in = ctypes)
+    for permiso in permisos: 
+        perms.append(permiso)
+    return perms
+
+def get_user_permissions():
+    perms = []
+    """
+      Obtiene todos los permisos explicitos para un Usuario
+    """
+    #Modulo Mantenimiento    
+    #Modulo OAC
+    permisos = Permission.objects.filter(content_type__id=19).exclude(name__contains = 'delete')
+    for permiso in permisos: 
+        perms.append(permiso) 
+    #Modulo PGCS
+    permisos = Permission.objects.filter(name__contains='PGCS').exclude(name__contains='APORTE')
+    for permiso in permisos: 
+        perms.append(permiso)
+    perms.append(Permission.objects.get(codename='query_pgcs_aporte',content_type__id=21))
+    #Modulo MCCA
+    permisos = Permission.objects.filter(content_type__id=23)
+    for permiso in permisos: 
+        perms.append(permiso) 
+    #Modulo MCC
+    permisos = Permission.objects.filter(content_type__id=34)
+    for permiso in permisos: 
+        perms.append(permiso) 
+    #Material Gráfico
+    permisos = Permission.objects.filter(content_type__id=38)
+    for permiso in permisos: 
+        perms.append(permiso) 
+    #DIG
+    permisos = Permission.objects.filter(content_type__id=39)
+    for permiso in permisos: 
+        perms.append(permiso) 
+    #ARI
+    permisos = Permission.objects.filter(content_type__id=40)
+    for permiso in permisos: 
+        perms.append(permiso) 
+    #CHAT
+    permisos = Permission.objects.filter(content_type__id__in=(41,42))
+    for permiso in permisos: 
+        perms.append(permiso) 
+    #PYBB
+    ctypes = (46,47,48,49)
+    permisos = Permission.objects.filter(content_type__id__in = ctypes)
+    for permiso in permisos: 
+        perms.append(permiso) 
     return perms
 
 @login_required()
@@ -70,13 +153,13 @@ def useradd(request,nivel):
                     user.is_active = False
                 user.first_name = request.POST['nombres']
                 user.last_name = request.POST['apellidos']
-                user.user_permissions = get_admin_permissions()
+                user.user_permissions = get_admin_permissions() if nivel == "2" else get_user_permissions()
                 user.save()
                 usuario = Usuario(user=user,numero=num,usuario=usernamee,nivel=Nivel.objects.get(codigo=request.POST['nivel']))
                 frmusuario = UsuarioForm(request.POST,request.FILES, instance=usuario)
-                #frmusuario.save()
+                frmusuario.save()
                 usuario.contrasena = user.password
-                #usuario.save() 
+                usuario.save() 
                 asunto="Bienvenido a la plataforma de Comunicación Social"
                 from django.core.mail import EmailMessage                
                 t = loader.get_template('home/mail.html')
@@ -89,12 +172,11 @@ def useradd(request,nivel):
                     'domain':domain,
                     'static':settings.STATIC_URL,
                     'protocol': request.is_secure() and 'https' or 'http',
-                }                                
-                mensaje=t.render(Context(c))
+                }                                                
 	        try:
-		    msg = EmailMessage(asunto, mensaje, settings.DEFAULT_FROM_EMAIL, [user.email])
+		    msg = EmailMessage(asunto, t.render(Context(c)), settings.DEFAULT_FROM_EMAIL, [user.email])
 		    msg.content_subtype = "html" 
-		    #msg.send()
+		    msg.send()
                 except:
                     mensaje= "Usuario creado correctamente,pero no se ha podido enviar el email con los datos del registro."
                     tipo=0

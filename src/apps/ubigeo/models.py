@@ -17,7 +17,10 @@ class Region(models.Model):
         db_table = u'region'
         verbose_name = u'Región'
         verbose_name_plural = u'Regiones'
-    
+        permissions = (
+            ('query_region','Puede Consultar Region'),
+        )
+
     def __unicode__(self):
         return self.region     
 
@@ -37,6 +40,9 @@ class Provincia(models.Model):
         verbose_name = u'Provincia'
         verbose_name_plural = u'Provincias'
         unique_together = ('region','provincia',)
+        permissions = (
+            ('query_provincia','Puede Consultar Provincia'),
+        )
   
     def __unicode__(self):
         return self.provincia

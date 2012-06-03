@@ -30,6 +30,9 @@ class MaterialGrafico(models.Model):
         db_table = u'materialgrafico'
         verbose_name = u'MG'
         verbose_name_plural = u'MGs'
+        permissions = (
+            ('query_materialgrafico','Puede Consultar MG'),
+        )
 
     def __unicode__(self):
         return self.nummg
@@ -65,6 +68,9 @@ class DocumentoInteresGeneral(models.Model):
         db_table = u'documentointeresgeneral'
         verbose_name = u'DIG'
         verbose_name_plural = u'DIGs'
+        permissions = (
+            ('query_documentointeresgeneral','Puede Consultar DIG'),
+        )
 
     def __unicode__(self):
         return self.numdig
@@ -85,6 +91,9 @@ class ActaReunionIntersectorial(models.Model):
         db_table = u'actareunionintersectorial'
         verbose_name = u'ARI'
         verbose_name_plural = u'ARIs'
+        permissions = (
+            ('query_actareunionintersectorial','Puede Consultar ARI'),
+        )
 
     def __unicode__(self):
         return self.nombreari
