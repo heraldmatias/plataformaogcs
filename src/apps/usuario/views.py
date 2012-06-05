@@ -12,9 +12,11 @@ from django_tables2.config import RequestConfig
 from datetime import datetime
 from scripts.scripts import imprimirToExcel
 from django.core.urlresolvers import reverse
+from django.core import serializers
 from django.conf import settings
 from django.contrib.sites.models import get_current_site
 from django.db.models import Q
+from django.http import HttpResponse
 serie = 3
 
 @login_required()
@@ -284,3 +286,14 @@ def userprint(request, nivel):
     usuarios = usuarios.extra(select={'dependencia':"case organismo_id when 1 then (select ministerio from ministerio where nummin=dependencia) when 2 then (select odp from odp where numodp=dependencia) when 3 then (select gobernacion from gobernacion where numgob=dependencia) end"})
     filename= ("usuario" if nivel == "1" else "administrador")+"_%s.xls" % datetime.today().strftime("%Y%m%d")
     return imprimirToExcel('usuario/reporteusu.html', {'data': usuarios,'fecha':datetime.today().date(),'hora':datetime.today().time(),'usuario':request.session['nombres']},filename)
+
+@login_required()
+def jsonusuario(request):
+    filtro = list()
+    query = {}
+    if request.GET['organismo']:
+        filtro.append(u'organismo_id=%s' % request.GET['organismo'])
+    if request.GET['dependencia']:
+        filtro.append(u'dependencia=%s' % request.GET['dependencia'])
+    query = Usuario.objects.extra(where=filtro).order_by('usuario')
+    return HttpResponse(serializers.serialize("json", query, ensure_ascii=False),mimetype='application/json')

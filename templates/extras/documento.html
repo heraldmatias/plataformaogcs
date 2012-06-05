@@ -1,0 +1,40 @@
+  {% extends 'base.html' %}
+  {% load static %}
+  {% block title %} Plataforma Intersectorial de Comunicaci&oacute;n OGCS {% endblock %}
+  {% block content %}
+  
+{% if mensaje %}
+<h4><div class="alert alert-success"><a class="close" data-dismiss="alert">×</a><strong>Mensaje:</strong>
+<p>{{ mensaje }}</p></div></h4>
+{% endif %}
+<ul class="nav nav-tabs">
+<li class="active"><a href="{% url ogcs-mantenimiento-doc-add %}">Nuevo</a></li>
+<li><a href="{% url ogcs-mantenimiento-doc-query %}" >Consultar</a></li>
+</ul>
+<div class="tab-content" id="contenido_izq">
+<div id="nuevo" class="tab-pane fade in active">
+<form enctype="multipart/form-data" class="form-inline" id="frmdoc" name="frmdoc" method="post" action="{% url ogcs-mantenimiento-doc-add %}" >
+<div id="frmprovincia" class="modal" style="position: relative; top: auto; left: auto; margin: 0 auto auto 20px; z-index: 1;width:720px;height:auto"><!--class="modal hide fade">-->
+    <div class="modal-header">
+      <a class="close" data-dismiss="modal" >&times;</a>     
+      <h3>Documentos Varios</h3>     
+    </div>
+    <div class="modal-body">
+      {% csrf_token %}            
+      <div class="row-fluid"><div class="span2">{{ formulario.archivo.label_tag }}</div><div class="span3">{{ formulario.archivo }}</div></div>
+    </div>
+    <div class="modal-footer">
+     <input class="btn-primary" name="grabar" value="Guardar" type="submit">
+     <input class="btn" name="grabar" value="Cerrar" type="button" onclick="cerrarformulario('contenido');">
+    </div>
+</div>
+</form>
+</div></div>
+  {% endblock %}
+  {% block scriptjs %}  
+<script>
+$('#frmoac').submit(function() {
+return confirmar('¿Desea grabar el registro?');
+});
+</script>
+{% endblock %}

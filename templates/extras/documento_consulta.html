@@ -1,0 +1,68 @@
+  {% extends 'base.html' %}
+  {% load static %}
+  {% block title %} Plataforma Intersectorial de Comunicaci&oacute;n OGCS {% endblock %}
+  {% block content %}  
+  {% load render_table from django_tables2 %}
+<ul class="nav nav-tabs">
+    <li><a href="{% url ogcs-mantenimiento-doc-add %}">Nuevo</a></li>
+    <li class="active"><a href="{% url ogcs-mantenimiento-doc-query %}" >Consultar</a></li>
+</ul>
+<div class="tab-content" id="contenido_izq">
+<div id="consulta" class="tab-pane fade in active">
+<form class="form-inline" name="frmdoc_consulta" id='frmdoc_consulta' method="get" action="{% url ogcs-mantenimiento-doc-query %}">
+<div id="frmregion" class="modal" style="position: relative; top: auto; left: auto; margin: 0 auto auto 20px; z-index: 1;width:720px;height:auto"><!--class="modal hide fade">-->
+    <div class="modal-header">
+      <a class="close" data-dismiss="modal" href="javascript: cerrarformulario('contenido');">&times;</a>
+      <h3>Consulta de Documentos Varios</h3>
+    </div>
+    <div class="modal-body">
+
+      <div class="row-fluid">
+      <div class="span2">{{ formulario.organismo.label_tag }}:</div><div class="span4">{{ formulario.organismo }}</div> <div class="span2">{{ formulario.dependencia.label_tag }}:</div><div class="span4">{{ formulario.dependencia }}</div></div><p></p>
+      <div class="row-fluid">
+       <div class="span2">{{ formulario.categoria.label_tag }}:</div><div class="span4">{{ formulario.categoria }}</div> <div class="span2">{{ formulario.tipo.label_tag }}:</div><div class="span3">{{ formulario.tipo }}</div>
+     </div><p></p>
+      <div class="row-fluid">
+      <div class="span2">{{ formulario.idusuario_creac.label_tag }}:</div><div class="span4">{{ formulario.idusuario_creac }}</div>
+ <div class="span2"><input  class="btn-primary" name="grabar" value="Consultar" type="submit"></div><div class="span2"><a class="btn btn-primary" href="javascript: imprimir();">Imprimir</a> </div></div>
+      <br><input type="hidden" value="{{ dependencia }}" id="id_dep" name="id_dep">
+      <fieldset>
+	<legend><h4>Lista de Documentos</h4></legend>
+      {% render_table tabla %}    
+      </fieldset>
+    </div>
+    <div class="modal-footer">
+     <input class="btn" name="grabar" value="Cerrar" type="button" onclick="cerrarformulario('contenido');">
+    </div>
+</div>
+</form>
+</div></div>
+  {% endblock %}
+
+  {% block scriptjs %}    
+<script>
+function get_usuarios(){       
+	var select = $("#id_idusuario_creac");
+        var idpro = select.val();
+        var filtro = $("#frmdoc_consulta").serialize();
+select.append("<option selected='selected' value=''>---TODOS---</option>");
+$.getJSON('{% url ogcs-usuario-jsonusuario %}?'+filtro, function(data){
+	$.each(data, function(key,value){
+                if(value.fields.numero==idpro){
+		select.append("<option value='"+value.fields.numero+"' selected='selected'>"+value.fields.usuario+"</option>");
+ 		}else{
+		select.append("<option value='"+value.fields.numero+"'>"+value.fields.usuario+"</option>");
+		}
+	});
+});
+}
+$(document).ready(function() {
+  dependencias(0); combotodos('id_organismo');combotodos('id_categoria');get_usuarios();
+});
+function imprimir(){
+var org=$('#id_organismo').val();var dep=$('#id_dependencia').val();
+var url="{% url ogcs-mantenimiento-mg-print  %}?organismo="+org+'&dependencia='+dep;
+location.href=url;
+}
+</script>
+  {% endblock %}

@@ -2,6 +2,15 @@
 from django.db import models
 from usuario.models import Organismo
 
+CATEGORIAS = (
+    ('0','OTROS'),
+    ('1','IMAGENES'),
+    ('2','VIDEOS'),
+    ('3','AUDIOS'),
+    ('4','DOCUMENTOS DE OFICINA'),
+    ('5','COMPRIMIDOS'),
+)
+
 class MaterialGrafico(models.Model):
     codigo = models.AutoField(verbose_name='Codigo Autoincrementado',primary_key=True)
     nummg = models.IntegerField(verbose_name='Numero de la MG', unique=True)
@@ -98,3 +107,24 @@ class ActaReunionIntersectorial(models.Model):
     def __unicode__(self):
         return self.nombreari
 
+class Documento(models.Model):
+    codigo = models.AutoField(verbose_name='Codigo', primary_key=True)
+    organismo = models.ForeignKey(Organismo, verbose_name='Organismo')
+    dependencia = models.IntegerField(verbose_name='Dependencia',)
+    archivo = models.FileField(verbose_name ='Adjuntar Archivo', upload_to='documentos')
+    url_archivo = models.URLField(verbose_name='URL del Archivo',null=True, blank=True)
+    tipo = models.CharField(verbose_name = 'Tipo',max_length=5)
+    categoria = models.IntegerField(verbose_name = 'Categoria',choices=CATEGORIAS)
+    idusuario_creac = models.IntegerField(verbose_name='Usuario',)
+    fec_creac = models.DateTimeField(verbose_name='Fecha de creación del registro',auto_now_add=True)
+
+    class Meta:
+        db_table = u'documentos'
+        verbose_name = u'Documento'
+        verbose_name_plural = u'Documentos'
+        permissions = (
+            ('query_documento','Puede Consultar Documento'),
+        )
+
+    def __unicode__(self):
+        return self.archivo

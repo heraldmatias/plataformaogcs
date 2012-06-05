@@ -82,6 +82,8 @@ class Usuario(models.Model):
             ('change_admin','Puede Modificar Administrador'),
             ('delete_admin','Puede Eliminar Administrador'),
             ('query_admin','Puede Consultar Administrador'),
+            ('asignar_permisos','Puede Asignar Permisos a Usuario'),
+            #('asignar_permisos','Puede Asignar Permisos a Administrador'),
         )
 
     def __unicode__(self):

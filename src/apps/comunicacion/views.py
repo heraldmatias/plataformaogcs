@@ -470,14 +470,14 @@ def mccaedit(request, nummcca):
     mcca.fechaini = mcca.fechaini.strftime("%d/%m/%Y")
     mcca.fechafin = mcca.fechafin.strftime("%d/%m/%Y")
     formmcca = MccaForm(instance=mcca)
-   
+    nomdependecia = ''
     query1 = MccaEstado.objects.filter(nummcca=mcca).order_by("item",)
     for row in query1:
-        if row.dependencia == 1:
+        if row.organismo.codigo == 1:
             nomdependecia = Ministerio.objects.get(codigo=row.dependencia).ministerio
-        if row.dependencia == 2:
-            nomdependecia = Opd.objects.get(codigo=row.dependencia).odp
-        if row.dependencia == 3:
+        if row.organismo.codigo == 2:
+            nomdependecia = Odp.objects.get(codigo=row.dependencia).odp
+        if row.organismo.codigo == 3:
             nomdependecia = Gobernacion.objects.get(codigo=row.dependencia).gobernacion
         row.nomdependecia = nomdependecia
     tabla = MccaForm_EstadoTable(query1)

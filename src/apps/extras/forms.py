@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 import django_tables2 as tables
 from django_tables2.utils import A
-from models import MaterialGrafico, DocumentoInteresGeneral, ActaReunionIntersectorial
+from models import MaterialGrafico, DocumentoInteresGeneral, ActaReunionIntersectorial, Documento, CATEGORIAS
+from usuario.models import Organismo, Usuario
 from django import forms
 
 class MGForm(forms.ModelForm):
@@ -87,8 +88,43 @@ class AriTable(tables.Table):
     dependencia = tables.Column(orderable=True)
     nombreari = tables.Column(verbose_name='Reunión',orderable=True)
     fec_creac = tables.Column(verbose_name='Fecha de Creación')
-    usuario = tables.Column(verbose_name='Usuario')
+    usuario = tables.Column(verbose_name='Usuario',)
     Descargar = tables.TemplateColumn('<a href={{ record.urlari }}>Descargar</a>')
+
+    def render_item(self):
+        value = getattr(self, '_counter', 1)
+        self._counter = value + 1
+        return '%d' % value
+
+    class Meta:
+        attrs = {"class": "table table-bordered table-condensed table-striped"}
+        orderable = False
+
+class DocumentoForm(forms.ModelForm):
+    class Meta:
+        model = Documento
+        fields = ('archivo',)        
+
+class ConsultaDocumentoForm(forms.ModelForm):    
+    class Meta:
+        model = Documento
+        fields = ('idusuario_creac','organismo','dependencia','categoria','tipo') 
+        widgets = {
+            'organismo': forms.Select(attrs={'onchange':'dependencias(0);'}),
+            'dependencia': forms.Select(),
+            'idusuario_creac': forms.Select(),
+            'tipo': forms.Select(),
+        }
+
+class DocumentoTable(tables.Table):
+    item = tables.Column()
+    organismo = tables.Column(orderable=True)
+    dependencia = tables.Column(orderable=True)    
+    tipo = tables.Column(orderable=True)
+    categoria = tables.Column(orderable=True)        
+    fec_creac = tables.Column(verbose_name='Fecha de Creación',orderable=True)
+    usuario = tables.Column(verbose_name='Usuario',orderable=True)
+    Descargar = tables.TemplateColumn('<a href={{ record.url_archivo }}>Descargar</a>')
 
     def render_item(self):
         value = getattr(self, '_counter', 1)

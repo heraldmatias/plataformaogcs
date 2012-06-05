@@ -3,7 +3,7 @@ from forms import *
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, render_to_response, redirect
 from django.template import RequestContext
-from models import MaterialGrafico, DocumentoInteresGeneral, ActaReunionIntersectorial
+from models import MaterialGrafico, DocumentoInteresGeneral, ActaReunionIntersectorial, Documento
 from django.contrib.auth.decorators import login_required
 from django.core import serializers
 from django.shortcuts import get_object_or_404
@@ -292,3 +292,78 @@ def ariprint(request):
     query = ActaReunionIntersectorial.objects.extra(tables=['usuario',],where=filtro,select={'usuario':'usuario.usuario','dependencia':"case actareunionintersectorial.organismo_id when 1 then (select ministerio from ministerio where nummin=actareunionintersectorial.dependencia) when 2 then (select odp from odp where numodp=actareunionintersectorial.dependencia) when 3 then (select gobernacion from gobernacion where numgob=actareunionintersectorial.dependencia) end"}).filter(nombreari__icontains=request.GET['nombreari'] if 'nombreari' in request.GET else '')
     filename= "ari_%s.csv" % datetime.today().strftime("%Y%m%d")
     return imprimirToExcel('extras/reporte_ari.html', {'data': query,'fecha':datetime.today().date(),'hora':datetime.today().time(),'usuario':request.session['nombres']},filename)
+
+
+def get_categoria(tipo):
+   """
+      Define la categoria del documento subido, VER campo estatico CATEGORIAS en models.py
+   """
+   categoria = 0
+   if tipo in ('JPG','GIF','ICO','PNG','TIF',):   
+       categoria = 1
+   elif tipo in ('AVI','MOV','MP4','WMV','FLV','F4V','3GP'):   
+       categoria = 2 
+   elif tipo in ('MP3','WAV','AMF','AMV'):
+       categoria = 3
+   elif tipo in ('DOC','DOCX','PDF','PPT','PPTX','XLS','XLSX','TXT','ODT'):
+       categoria = 4
+   elif tipo in ('ZIP','TAR','GZ','ZIP','RAR','7Z',):
+       categoria = 5
+   return categoria
+
+@login_required()
+def documentos_add(request):
+    mensaje = ''
+    if request.method == 'POST':
+        if 'archivo' in request.FILES:
+            profile = request.user.get_profile()
+            archivo = request.FILES['archivo']
+            extension = archivo.name[archivo.name.rfind('.')+1:].upper()
+            obj = Documento(organismo=profile.organismo, dependencia=profile.dependencia,tipo=extension,categoria=get_categoria(extension),idusuario_creac=profile.numero)
+            formulario = DocumentoForm(request.POST,request.FILES,instance=obj ) # A form bound to the POST data
+            if formulario.is_valid():
+                formulario.save()             
+                obj.url_archivo=obj.archivo.url 
+                obj.save()
+                mensaje="Registro grabado satisfactoriamente."
+        formulario = DocumentoForm()
+    else:        
+        formulario = DocumentoForm()
+    return render_to_response('extras/documento.html', {'formulario': formulario,'mensaje':mensaje,}, context_instance=RequestContext(request),)
+
+@login_required()
+def documentos_query(request):
+    col = "-organismo"
+    query = None
+    dependencia=''
+    usuario = ''
+    filtro = list()
+    if "2-sort" in request.GET:
+        col = request.GET['2-sort']
+    config = RequestConfig(request)
+    formulario = ConsultaDocumentoForm(request.GET)
+    if 'organismo' in request.GET:
+        if request.GET['organismo']:
+            filtro.append(u"documentos.organismo_id =%s"%request.GET['organismo'])
+        if 'dependencia' in request.GET:
+            if request.GET['dependencia']:
+                filtro.append(u"documentos.dependencia =%s"%request.GET['dependencia'])
+                dependencia=request.GET['dependencia']
+    if 'idusuario_creac' in request.GET:
+        if request.GET['idusuario_creac']:
+            filtro.append(u"idusuario_creac =%s"%request.GET['idusuario_creac'])
+            usuario=request.GET['idusuario_creac']
+    if 'categoria' in request.GET:
+        if request.GET['categoria']:
+            filtro.append(u"categoria =%s"%request.GET['categoria'])
+    if 'tipo' in request.GET:
+        if request.GET['organismo']:
+            filtro.append(u"tipo =%s"%request.GET['tipo'])
+    filtro.append(u"idusuario_creac=usuario.numero")
+    query = Documento.objects.extra(tables=['usuario',],where=filtro,select={'usuario':'usuario.usuario','dependencia':"case documentos.organismo_id when 1 then (select ministerio from ministerio where nummin=documentos.dependencia) when 2 then (select odp from odp where numodp=documentos.dependencia) when 3 then (select gobernacion from gobernacion where numgob=documentos.dependencia) end"})
+#.filter(nombreari__icontains=request.GET['nombreari'] if 'nombreari' in request.GET else '')
+    tabla = DocumentoTable(query.order_by(col))
+    config.configure(tabla)
+    tabla.paginate(page=request.GET.get('page', 1), per_page=6)
+    return render_to_response('extras/documento_consulta.html', {'formulario': formulario,'tabla':tabla,'dependencia':dependencia,'usuario':usuario}, context_instance=RequestContext(request),)
+
