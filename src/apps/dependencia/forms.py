@@ -48,7 +48,7 @@ class ConsultaOdpForm(forms.ModelForm):#CORREGIR
 class OdpTable(tables.Table):
     item = tables.Column()
     nummin = tables.Column(orderable=True)
-    odp = tables.LinkColumn('ogcs-mantenimiento-odp-edit', args=[A('numodp')],orderable=True,)
+    odp = tables.LinkColumn('ogcs-mantenimiento-odp-edit', args=[A('numodp')],orderable=True,verbose_name='OPD')
     iniciales = tables.Column()
     estado = tables.Column()    
 

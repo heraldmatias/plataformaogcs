@@ -44,7 +44,7 @@
 function imprimir(){
 var ministerio=$('#id_nummin').val();
 var odp=$('#id_odp').val();
-var url="/dependencia/odp/imprimir/?odp="+odp+"&nummin="+ministerio;
+var url="{% url ogcs-mantenimiento-odp-print %}?odp="+odp+"&nummin="+ministerio;
 location.href=url;
 }
 combotodos('id_nummin');validaletra('id_odp');

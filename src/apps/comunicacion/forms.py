@@ -103,7 +103,7 @@ class MccaForm_EstadoTable(tables.Table):
     item = tables.Column()
     organismo = tables.TemplateColumn('<input type="hidden" name="corg" value="{{ record.organismo_id }}">{{ record.organismo }}')
     dependencia = tables.TemplateColumn('<input type="hidden" name="cdep" value="{{ record.dependencia }}">{{ record.nomdependecia }}')
-    eliminar = tables.TemplateColumn("<a href='javascript: removedetalle(0,{{ record.item }})'><div id='delete'></div></a>")
+    eliminar = tables.TemplateColumn("{% if user.get_profile.nivel.codigo == 1 %}<a href='javascript: removedetalle(0,{{ record.item }})'><div id='delete'></div></a>{% endif %}")
     
     class Meta:
         attrs = {"class": "table table-bordered table-condensed table-striped", "id":"tabla_estado"}
@@ -122,7 +122,7 @@ class MccaForm_Privado(forms.ModelForm):
 class MccaForm_PrivadoTable(tables.Table):
     item = tables.Column()
     privado = tables.TemplateColumn('<input type="hidden" name="cpri" value="{{ record.privado }}">{{ record.privado }}')
-    eliminar = tables.TemplateColumn("<a href='javascript: removedetalle(1,{{ record.item }})'><div id='delete'></div></a>")
+    eliminar = tables.TemplateColumn("{% if user.get_profile.nivel.codigo == 1 %}<a href='javascript: removedetalle(1,{{ record.item }})'><div id='delete'></div></a>{% endif %}")
 
     class Meta:
         attrs = {"class": "table table-bordered table-condensed table-striped", "id":"tabla_privado"}
@@ -139,7 +139,7 @@ class MccaForm_Indicador(forms.ModelForm):
 class MccaForm_IndicadorTable(tables.Table):
     item = tables.Column()
     indicador = tables.TemplateColumn('<input type="hidden" name="cind" value="{{ record.indicador }}">{{ record.indicador }}')
-    eliminar = tables.TemplateColumn("<a href='javascript: removedetalle(2,{{ record.item }})'><div id='delete'></div></a>")
+    eliminar = tables.TemplateColumn("{% if user.get_profile.nivel.codigo == 1 %}<a href='javascript: removedetalle(2,{{ record.item }})'><div id='delete'></div></a>{% endif %}")
 
     class Meta:
         attrs = {"class": "table table-bordered table-condensed table-striped", "id":"tabla_indicador"}
@@ -156,7 +156,7 @@ class MccaForm_Mensaje(forms.ModelForm):
 class MccaForm_MensajeTable(tables.Table):
     item = tables.Column()
     mensaje = tables.TemplateColumn('<input type="hidden" name="cmen" value="{{ record.mensaje }}">{{ record.mensaje }}')
-    eliminar = tables.TemplateColumn("<a href='javascript: removedetalle(3,{{ record.item }})'><div id='delete'></div></a>")
+    eliminar = tables.TemplateColumn("{% if user.get_profile.nivel.codigo == 1 %}<a href='javascript: removedetalle(3,{{ record.item }})'><div id='delete'></div></a>{% endif %}")
 
     class Meta:
         attrs = {"class": "table table-bordered table-condensed table-striped", "id":"tabla_mensaje"}
@@ -175,7 +175,7 @@ class MccaForm_CanalTable(tables.Table):
     item = tables.Column()
     canal = tables.TemplateColumn('<input type="hidden" name="ccan" value="{{ record.canal }}">{{ record.canal }}')
     tipommca = tables.TemplateColumn('<input type="hidden" name="ctipo" value="{{ record.tipommca_id }}">{{ record.tipommca }}')
-    eliminar = tables.TemplateColumn("<a href='javascript: removedetalle(4,{{ record.item }})'><div id='delete'></div></a>")
+    eliminar = tables.TemplateColumn("{% if user.get_profile.nivel.codigo == 1 %}<a href='javascript: removedetalle(4,{{ record.item }})'><div id='delete'></div></a>{% endif %}")
 
     class Meta:
         attrs = {"class": "table table-bordered table-condensed table-striped", "id":"tabla_canal"}
@@ -197,7 +197,7 @@ class MccaForm_AccionTable(tables.Table):
     acciones = tables.TemplateColumn('<input type="hidden" name="cacc" value="{{ record.acciones }}">{{ record.acciones }}')
     fechainia = tables.TemplateColumn('<input type="hidden" name="caccfini" value="{{ record.fechainia }}">{{ record.fechainia }}')
     fechafina = tables.TemplateColumn('<input type="hidden" name="caccffin" value="{{ record.fechafina }}">{{ record.fechafina }}')
-    eliminar = tables.TemplateColumn("<a href='javascript: removedetalle(5,{{ record.item }})'><div id='delete'></div></a>")
+    eliminar = tables.TemplateColumn("{% if user.get_profile.nivel.codigo == 1 %}<a href='javascript: removedetalle(5,{{ record.item }})'><div id='delete'></div></a>{% endif %}")
 
     class Meta:
         attrs = {"class": "table table-bordered table-condensed table-striped", "id":"tabla_accion"}
@@ -213,7 +213,7 @@ class MccaForm_Observacion(forms.ModelForm):
 class MccaForm_ObservacionTable(tables.Table):
     item = tables.Column()
     observacion = tables.TemplateColumn('<input type="hidden" name="cobs" value="{{ record.observacion }}">{{ record.observacion }}')
-    eliminar = tables.TemplateColumn("<a href='javascript: removedetalle(6,{{ record.item }})'><div id='delete'></div></a>")
+    eliminar = tables.TemplateColumn("{% if user.get_profile.nivel.codigo == 1 %}<a href='javascript: removedetalle(6,{{ record.item }})'><div id='delete'></div></a>{% endif %}")
 
     class Meta:
         attrs = {"class": "table table-bordered table-condensed table-striped", "id":"tabla_observacion"}
@@ -294,7 +294,7 @@ class MccForm_ActorTable(tables.Table):
     numtipovarios = tables.TemplateColumn('<input type="hidden" name="numtvac" value="{{ record.numtipovarios_id }}">{{ record.numtipovarios }}')
     actor = tables.TemplateColumn('<input type="hidden" name="listactor" value="{{ record.actor }}">{{ record.actor }}')
     institucion = tables.TemplateColumn('<input type="hidden" name="instac" value="{{ record.institucion }}">{{ record.institucion }}')
-    eliminar = tables.TemplateColumn("<a href='javascript: removedetalle(0,{{ record.item }})'><div id='delete'></div></a>")
+    eliminar = tables.TemplateColumn("{% if user.get_profile.nivel.codigo == 1 %}<a href='javascript: removedetalle(0,{{ record.item }})'><div id='delete'></div></a>{% endif %}")
 
     class Meta:
         attrs = {"class": "table table-bordered table-condensed table-striped", "name":"tabla_actor", "id":"tabla_actor"}
@@ -317,7 +317,7 @@ class MccForm_LiderTable(tables.Table):
     numtipovarios = tables.TemplateColumn('<input type="hidden" name="numtvli" value="{{ record.numtipovarios_id }}">{{ record.numtipovarios }}')
     lider = tables.TemplateColumn('<input type="hidden" name="listlider" value="{{ record.lider }}">{{ record.lider }}')
     institucion = tables.TemplateColumn('<input type="hidden" name="instli" value="{{ record.institucion }}">{{ record.institucion }}')
-    eliminar = tables.TemplateColumn("<a href='javascript: removedetalle(1,{{ record.item }})'><div id='delete'></div></a>")
+    eliminar = tables.TemplateColumn("{% if user.get_profile.nivel.codigo == 1 %}<a href='javascript: removedetalle(1,{{ record.item }})'><div id='delete'></div></a>{% endif %}")
 
     class Meta:
         attrs = {"class": "table table-bordered table-condensed table-striped", "name":"tabla_lider", "id":"tabla_lider"}
@@ -334,7 +334,7 @@ class MccForm_Observacion(forms.ModelForm):
 class MccForm_ObservacionTable(tables.Table):
     item = tables.Column()
     observacion = tables.TemplateColumn('<input type="hidden" name="cobs" value="{{ record.observacion }}">{{ record.observacion }}')
-    eliminar = tables.TemplateColumn("<a href='javascript: removedetalle(2,{{ record.item }})'><div id='delete'></div></a>")
+    eliminar = tables.TemplateColumn("{% if user.get_profile.nivel.codigo == 1 %}<a href='javascript: removedetalle(2,{{ record.item }})'><div id='delete'></div></a>{% endif %}")
 
     class Meta:
         attrs = {"class": "table table-bordered table-condensed table-striped", "name":"tabla_observacion", "id":"tabla_observacion"}

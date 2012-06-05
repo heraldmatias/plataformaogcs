@@ -41,6 +41,7 @@ tablas[3]='#tabla_mensaje';
 tablas[4]='#tabla_canal';
 tablas[5]='#tabla_accion';
 tablas[6]='#tabla_observacion';
+/****************************************************************************************************************/
 function sectores_estado(){
     var organismo=$('#id_organismo');
     var norganismo=$("#id_organismo option:selected").text();
@@ -321,7 +322,6 @@ function removedetalle(t,fila){
         n+=1;
     });
 }
-
 
 
 function guardar_mcca(){
