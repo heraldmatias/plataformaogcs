@@ -10,9 +10,10 @@ from django.shortcuts import get_object_or_404
 import django_tables2 as tables
 from django_tables2.config import RequestConfig
 from datetime import datetime
-from scripts.scripts import imprimirToExcel
+from scripts.scripts import imprimirToExcel, imprimirToPDF#, render_to_pdf_response
 from django.http import HttpResponse
 from django.core.urlresolvers import reverse
+from django.template.loader import render_to_string
 
 @login_required()
 def regionadd(request):
@@ -50,10 +51,12 @@ def regionedit(request, codigo):
 
 @login_required()
 def regionprint(request):
-    if "region" in request.GET:
+    if "region" in request.GET:        
         qregiones = Region.objects.all().filter(region__icontains=request.GET['region']).order_by("region")
-        filename= "region_%s.xls" % datetime.today().strftime("%Y%m%d")
-        return imprimirToExcel('ubigeo/reporter.html', {'data': qregiones,'fecha':datetime.today().date(),'hora':datetime.today().time(),'usuario':request.session['nombres']},filename)
+        html = render_to_string('ubigeo/reporter.html',{'data': qregiones,'pagesize':'A4','usuario':request.user.get_profile()},context_instance=RequestContext(request))
+        filename= "region_%s.pdf" % datetime.today().strftime("%Y%m%d")
+        #return render_to_pdf_response('ubigeo/reporter.html',{'data': qregiones,'pagesize':'A4','usuario':request.user.get_profile()},filename)
+        return imprimirToPDF(html,filename)
 
 @login_required()
 def regionquery(request):

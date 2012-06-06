@@ -87,7 +87,7 @@ class Usuario(models.Model):
         )
 
     def __unicode__(self):
-        return "%s, %s", (self.nombres, self.apellidos)
+        return "%s, %s" % (self.nombres, self.apellidos)
     
     def get_dependencia(self):
         from dependencia.models import Gobernacion, Ministerio, Odp
