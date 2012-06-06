@@ -27,7 +27,7 @@
     <div class="modal-body">
       {% csrf_token %}
       <div class="row-fluid">
-      {% if opcion == "frmprovincia" %}
+      {% if opcion == "add" %}
       {{ add.non_field_errors }} 
       {{ frmprovincia.region.errors }}
       <div class="row-fluid">

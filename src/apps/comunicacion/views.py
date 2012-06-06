@@ -3,7 +3,7 @@ from forms import *
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, render_to_response, redirect
 from django.template import RequestContext
-#from usuario.models import Usuario, Estado
+from django.template.loader import render_to_string
 from dependencia.models import Ministerio, Odp, Gobernacion
 from models import *
 from django.contrib.auth.decorators import login_required
@@ -12,7 +12,7 @@ from django.shortcuts import get_object_or_404
 import django_tables2 as tables
 from django_tables2.config import RequestConfig
 from datetime import datetime
-from scripts.scripts import imprimirToExcel
+from scripts.scripts import imprimirToExcel,imprimirToPDF
 from django.http import HttpResponse
 #from django.core.files import File
 from django.core.files.storage import  FileSystemStorage
@@ -90,8 +90,9 @@ def oacprint(request):
         filtro.append(u"idusuario_creac="+str(request.user.get_profile().numero))
     filtro.append(u"idusuario_creac=usuario.numero")    
     query = Oac.objects.extra(tables=['usuario',],where=filtro,select={'usuario':'usuario.usuario','dependencia':"case oac.organismo_id when 1 then (select ministerio from ministerio where nummin=oac.dependencia) when 2 then (select odp from odp where numodp=oac.dependencia) when 3 then (select gobernacion from gobernacion where numgob=oac.dependencia) end"})
-    filename= "oac_%s.csv" % datetime.today().strftime("%Y%m%d")
-    return imprimirToExcel('comunicacion/reporteoac.html', {'data': query,'fecha':datetime.today().date(),'hora':datetime.today().time(),'usuario':request.session['nombres']},filename)
+    html = render_to_string('comunicacion/reporteoac.html',{'data': query,'pagesize':'A4','usuario':request.user.get_profile()},context_instance=RequestContext(request))
+    filename= "oac_%s.pdf" % datetime.today().strftime("%Y%m%d")        
+    return imprimirToPDF(html,filename)    
 
 @login_required()
 def pgcsadd(request):
@@ -169,8 +170,9 @@ def pgcsprint(request,tipo):
     filtro.append(u"idusuario_creac=usuario.numero")    
     filtro.append(u"tipopgcs_id="+str(tipo))
     query = Pgcs.objects.extra(tables=['usuario',],where=filtro,select={'usuario':'usuario.usuario','dependencia':"case pgcs.organismo_id when 1 then (select ministerio from ministerio where nummin=pgcs.dependencia) when 2 then (select odp from odp where numodp=pgcs.dependencia) when 3 then (select gobernacion from gobernacion where numgob=pgcs.dependencia) end"})
-    filename= ("pgcs_%s.csv" if tipo=="1" else "pgcsaporte_%s.csv") % datetime.today().strftime("%Y%m%d")
-    return imprimirToExcel('comunicacion/reportepgcs.html' if tipo=="1" else 'comunicacion/reporte_pgcs_aporte.html', {'data': query,'fecha':datetime.today().date(),'hora':datetime.today().time(),'usuario':request.session['nombres']},filename)
+    html = render_to_string('comunicacion/reportepgcs.html' if tipo=="1" else 'comunicacion/reporte_pgcs_aporte.html',{'data': query,'pagesize':'A4','usuario':request.user.get_profile()},context_instance=RequestContext(request))
+    filename= ("pgcs_%s.csv" if tipo=="1" else "pgcsaporte_%s.pdf") % datetime.today().strftime("%Y%m%d")
+    return imprimirToPDF(html,filename) 
 
 @login_required()
 def pgcs_apor_add(request):
@@ -346,12 +348,18 @@ def mccaedit(request, nummcca):
         fecini = datetime.strptime(fecini, "%d/%m/%Y").strftime("%Y-%m-%d")
         fecfin = datetime.strptime(fecfin, "%d/%m/%Y").strftime("%Y-%m-%d")
         obj = Mcca.objects.get(nummcca=int(nummcca))
-        obj.idusuario_mod=profile.numero
+        if request.user.get_profile().nivel.codigo ==1:
+            obj.idusuario_mod = request.user.get_profile().numero
+            obj.fec_mod = datetime.now()
+        else:  
+            obj.idadministrador_mod = request.user.get_profile().numero
+            obj.fec_modadm = datetime.now()
+        #obj.idusuario_mod=profile.numero
         formmcca = MccaForm(request.POST, instance=obj)
         if formmcca.is_valid():
             formmcca.save()
         obj.fechaini = fecini
-        obj.fechafin = fecfin
+        obj.fechafin = fecfin        
         obj.save()
         #sectores_Estado_save
         query = MccaEstado.objects.filter(nummcca=obj)
@@ -548,8 +556,8 @@ def mcca_query(request):
             fecfin = datetime.strptime(fecfin, "%d/%m/%Y").strftime("%Y-%m-%d")
             filtro.append(u"fechafin ='%s'" % fecfin)
 
-    filtro.append(u"mcca.idusuario_creac=usuario.numero")
-    query = Mcca.objects.extra(tables=['usuario',], where=filtro, select={'usuario':'usuario.usuario', 'idusuario_mod':'usuario.usuario', 'dependencia':"case mcca.organismo_id when 1 then (select ministerio from ministerio where nummin=mcca.dependencia) when 2 then (select odp from odp where numodp=mcca.dependencia) when 3 then (select gobernacion from gobernacion where numgob=mcca.dependencia) end"})
+    #filtro.append(u"mcca.idusuario_creac=usuario.numero")tables=['usuario',]
+    query = Mcca.objects.extra( where=filtro, select={'usuario':'(select usuario.usuario from usuario where usuario.numero = mcca.idusuario_creac)', 'idusuario_mod':'(select usuario.usuario from usuario where usuario.numero = mcca.idusuario_mod)', 'idadministrador_mod':'(select usuario.usuario from usuario where usuario.numero = mcca.idadministrador_mod)', 'dependencia':"case mcca.organismo_id when 1 then (select ministerio from ministerio where nummin=mcca.dependencia) when 2 then (select odp from odp where numodp=mcca.dependencia) when 3 then (select gobernacion from gobernacion where numgob=mcca.dependencia) end"})
     #query = Mcca.objects.extra(where=filtro)
 	#tabla = query.order_by(col)
     #return HttpResponse(serializers.serialize("json", tabla, ensure_ascii=False),mimetype='application/json')
@@ -594,15 +602,16 @@ def mccaprint(request):
             fecfin = datetime.strptime(fecfin, "%d/%m/%Y").strftime("%Y-%m-%d")
             filtro.append(u"fechafin ='%s'" % fecfin)
 
-    filtro.append(u"mcca.idusuario_creac=usuario.numero")    
-    query = Mcca.objects.extra(tables=['usuario',], where=filtro, select={'usuario':'usuario.usuario', 'idusuario_mod':'usuario.usuario', 'dependencia':"case mcca.organismo_id when 1 then (select ministerio from ministerio where nummin=mcca.dependencia) when 2 then (select odp from odp where numodp=mcca.dependencia) when 3 then (select gobernacion from gobernacion where numgob=mcca.dependencia) end"})
+    #filtro.append(u"mcca.idusuario_creac=usuario.numero")    
+    query = Mcca.objects.extra(where=filtro, select={'usuario':'(select usuario.usuario from usuario where usuario.numero = mcca.idusuario_creac)', 'idusuario_mod':'(select usuario.usuario from usuario where usuario.numero = mcca.idusuario_mod)','idadministrador_mod':'(select usuario.usuario from usuario where usuario.numero = mcca.idadministrador_mod)', 'dependencia':"case mcca.organismo_id when 1 then (select ministerio from ministerio where nummin=mcca.dependencia) when 2 then (select odp from odp where numodp=mcca.dependencia) when 3 then (select gobernacion from gobernacion where numgob=mcca.dependencia) end"})
     #query = Mcca.objects.extra(where=filtro)
 	#tabla = query.order_by(col)
     #return HttpResponse(serializers.serialize("json", tabla, ensure_ascii=False),mimetype='application/json')
     query = query.order_by(col)
 		
-    filename = ("mcca_%s.csv") % datetime.today().strftime("%Y%m%d")
-    return imprimirToExcel('comunicacion/reporte_mcca.html', {'data': query, 'fecha':datetime.today().date(), 'hora':datetime.today().time(), 'usuario':'nombre'}, filename)
+    html = render_to_string('comunicacion/reporte_mcca.html',{'data': query,'pagesize':'A4','usuario':request.user.get_profile()},context_instance=RequestContext(request))
+    filename= "mcca_%s.pdf" % datetime.today().strftime("%Y%m%d")        
+    return imprimirToPDF(html,filename)        
 
 ######################## MCCA FINAL ################################################
 ####################################################################################
@@ -625,7 +634,7 @@ def mccadd(request):
         instli = request.POST.getlist('instli')
         #observaciones
         cobs = request.POST.getlist('cobs')
-		
+	profile = request.user.get_profile()
         num = Mcc.objects.values("nummcc").order_by("-nummcc",)[:1]
         num = 1 if len(num) == 0 else int(num[0]["nummcc"]) + 1
         fecini = request.POST["fechaini"]
@@ -687,13 +696,18 @@ def mccedit(request, nummcc):
         fecfin = datetime.strptime(fecfin, "%d/%m/%Y").strftime("%Y-%m-%d")
 
         obj = Mcc.objects.get(nummcc=int(nummcc))
-        obj.idusuario_mod=profile.numero
-        
+        #obj.idusuario_mod=profile.numero
+        if request.user.get_profile().nivel.codigo ==1:
+            obj.idusuario_mod = request.user.get_profile().numero
+            obj.fec_mod = datetime.now()
+        else:  
+            obj.idadministrador_mod = request.user.get_profile().numero
+            obj.fec_modadm = datetime.now()
         formmcc = MccForm(request.POST, instance=obj)
         if formmcc.is_valid():
             formmcc.save()
         obj.fechaini = fecini
-        obj.fechafin = fecfin
+        obj.fechafin = fecfin        
         obj.save()
 
         #actores_save
@@ -811,9 +825,9 @@ def mcc_query(request):
             if request.GET['provincia']:
                 filtro.append(u"provincia_id =%s" % request.GET['provincia'])
 
-    filtro.append(u"idusuario_creac=usuario.numero")
+    #filtro.append(u"idusuario_creac=usuario.numero")
     #filtro.append(u"tipopgcs_id=2")
-    query = Mcc.objects.extra(tables=['usuario',], where=filtro, select={'usuario':'usuario.usuario', 'idusuario_mod':'usuario.usuario', 'dependencia':"case mcc.organismo_id when 1 then (select ministerio from ministerio where nummin=mcc.dependencia) when 2 then (select odp from odp where numodp=mcc.dependencia) when 3 then (select gobernacion from gobernacion where numgob=mcc.dependencia) end"})
+    query = Mcc.objects.extra(where=filtro, select={'usuario':'(select usuario.usuario from usuario where usuario.numero = mcc.idusuario_creac)', 'idusuario_mod':'(select usuario.usuario from usuario where usuario.numero = mcc.idusuario_mod)','idadministrador_mod':'(select usuario.usuario from usuario where usuario.numero = mcc.idadministrador_mod)','dependencia':"case mcc.organismo_id when 1 then (select ministerio from ministerio where nummin=mcc.dependencia) when 2 then (select odp from odp where numodp=mcc.dependencia) when 3 then (select gobernacion from gobernacion where numgob=mcc.dependencia) end"})
     #query = Mcc.objects.extra(where=filtro)
 	#tabla = query.order_by(col)
     #return HttpResponse(serializers.serialize("json", tabla, ensure_ascii=False),mimetype='application/json')
@@ -864,17 +878,17 @@ def mccprint(request):
             if request.GET['provincia']:
                 filtro.append(u"provincia_id =%s" % request.GET['provincia'])
 
-    filtro.append(u"idusuario_creac=usuario.numero")
+    #filtro.append(u"idusuario_creac=usuario.numero")
     #filtro.append(u"tipopgcs_id=2")
-    query = Mcc.objects.extra(tables=['usuario',], where=filtro, select={'usuario':'usuario.usuario', 'idusuario_mod':'usuario.usuario', 'dependencia':"case mcc.organismo_id when 1 then (select ministerio from ministerio where nummin=mcc.dependencia) when 2 then (select odp from odp where numodp=mcc.dependencia) when 3 then (select gobernacion from gobernacion where numgob=mcc.dependencia) end"})
+    query = Mcc.objects.extra(where=filtro, select={'usuario':'(select usuario.usuario from usuario where usuario.numero = mcc.idusuario_creac)', 'idusuario_mod':'(select usuario.usuario from usuario where usuario.numero = mcc.idusuario_mod)','idadministrador_mod':'(select usuario.usuario from usuario where usuario.numero = mcc.idadministrador_mod)', 'dependencia':"case mcc.organismo_id when 1 then (select ministerio from ministerio where nummin=mcc.dependencia) when 2 then (select odp from odp where numodp=mcc.dependencia) when 3 then (select gobernacion from gobernacion where numgob=mcc.dependencia) end"})
     #query = Mcc.objects.extra(where=filtro)
     #tabla = query.order_by(col)
     #return HttpResponse(serializers.serialize("json", tabla, ensure_ascii=False),mimetype='application/json')
 
     query = query.order_by(col)
-		
-    filename = ("mcc_%s.csv") % datetime.today().strftime("%Y%m%d")
-    return imprimirToExcel('comunicacion/reporte_mcc.html', {'data': query, 'fecha':datetime.today().date(), 'hora':datetime.today().time(), 'usuario':'nombre'}, filename)
+    html = render_to_string('comunicacion/reporte_mcc.html',{'data': query,'pagesize':'A4','usuario':request.user.get_profile()},context_instance=RequestContext(request))
+    filename= "mcc_%s.pdf" % datetime.today().strftime("%Y%m%d")        
+    return imprimirToPDF(html,filename)        	    
 
 ######################## MCC FINAL ################################################
 ####################################################################################

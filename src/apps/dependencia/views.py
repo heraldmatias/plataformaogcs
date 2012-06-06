@@ -13,9 +13,10 @@ from django_tables2.config import RequestConfig
 from ubigeo.models import Provincia
 from django.db.models import Q
 from datetime import datetime
-from scripts.scripts import imprimirToExcel
+from scripts.scripts import imprimirToExcel, imprimirToPDF
 from django.core.urlresolvers import reverse
 from usuario.models import Organismo
+from django.template.loader import render_to_string
 
 def get_dependencia(organismo,dependencia):
     orgid = isinstance(organismo,Organismo) and organismo.codigo or organismo
@@ -86,9 +87,10 @@ def ministerioprint(request):
         query = Ministerio.objects.filter(ministerio__icontains=request.GET['ministerio']).order_by(col)
     else:
         query = Ministerio.objects.all().order_by(col)
-    filename= "ministerio_%s.xls" % datetime.today().strftime("%Y%m%d")
-    return imprimirToExcel('dependencia/reportemin.html', {'data': query,'fecha':datetime.today().date(),'hora':datetime.today().time(),'usuario':request.session['nombres']},filename)
-
+    html = render_to_string('dependencia/reportemin.html',{'data': query,'pagesize':'A4','usuario':request.user.get_profile()},context_instance=RequestContext(request))
+    filename= "ministerio_%s.pdf" % datetime.today().strftime("%Y%m%d")        
+    return imprimirToPDF(html,filename)
+    
 @login_required()
 def odpadd(request):
     profile = Usuario.objects.get(user = request.user)
@@ -151,8 +153,9 @@ def odpprint(request):
         query = Odp.objects.filter(odp__icontains=request.GET['odp']).order_by(col)
     else:
         query = Odp.objects.all().order_by(col)
-    filename= "odp_%s.xls" % datetime.today().strftime("%Y%m%d")
-    return imprimirToExcel('dependencia/reporteodp.html', {'data': query,'fecha':datetime.today().date(),'hora':datetime.today().time(),'usuario':request.session['nombres']},filename)
+    html = render_to_string('dependencia/reporteodp.html',{'data': query,'pagesize':'A4','usuario':request.user.get_profile()},context_instance=RequestContext(request))
+    filename= "opd_%s.pdf" % datetime.today().strftime("%Y%m%d")        
+    return imprimirToPDF(html,filename)
 
 @login_required()
 def gobernacionadd(request):
@@ -222,8 +225,9 @@ def gobernacionprint(request):
         query = Gobernacion.objects.filter(provincia=request.GET['region']).order_by(col)
     else:
         query = Gobernacion.objects.all().order_by(col)
-    filename= "gobernacion_%s.csv" % datetime.today().strftime("%Y%m%d")
-    return imprimirToExcel('dependencia/reportegob.html', {'data': query,'fecha':datetime.today().date(),'hora':datetime.today().time(),'usuario':request.session['nombres']},filename)
+    html = render_to_string('dependencia/reportegob.html',{'data': query,'pagesize':'A4','usuario':request.user.get_profile()},context_instance=RequestContext(request))
+    filename= "gobernacion_%s.pdf" % datetime.today().strftime("%Y%m%d")        
+    return imprimirToPDF(html,filename)  
 
 @login_required()
 def jsondependencia(request):

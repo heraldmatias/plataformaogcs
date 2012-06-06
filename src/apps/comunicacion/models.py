@@ -95,9 +95,9 @@ class Mcca(models.Model):
     idusuario_creac = models.IntegerField(verbose_name='Usuario creador',)
     fec_creac = models.DateTimeField(verbose_name='Fecha de creación del registro',auto_now_add=True)
     idusuario_mod = models.IntegerField(verbose_name='Usuario modifico', null=True, blank=True)
-    fec_mod = models.DateTimeField(verbose_name='Fecha modifico', auto_now=True, null=True, blank=True)
+    fec_mod = models.DateTimeField(verbose_name='Fecha modifico', null=True, blank=True)
     idadministrador_mod	= models.IntegerField(verbose_name='Usuario modifico', null=True, blank=True)
-    fec_modadm = models.DateTimeField(verbose_name='Fecha modifico', auto_now=True, null=True, blank=True)
+    fec_modadm = models.DateTimeField(verbose_name='Fecha modifico', null=True, blank=True)
 
     class Meta:
         db_table = u'mcca'
@@ -279,9 +279,9 @@ class Mcc(models.Model):
     idusuario_creac = models.IntegerField(verbose_name='Usuario creador',)
     fec_creac = models.DateTimeField(verbose_name='Fecha de creación del registro',auto_now_add=True)
     idusuario_mod = models.IntegerField(verbose_name='Usuario modifico', null=True, blank=True)
-    fec_mod = models.DateTimeField(verbose_name='Fecha modifico', auto_now=True, null=True, blank=True)
+    fec_mod = models.DateTimeField(verbose_name='Fecha modifico', null=True, blank=True)
     idadministrador_mod	= models.IntegerField(verbose_name='Usuario modifico', null=True, blank=True)
-    fec_modadm = models.DateTimeField(verbose_name='Fecha modifico', auto_now=True, null=True, blank=True)
+    fec_modadm = models.DateTimeField(verbose_name='Fecha modifico', null=True, blank=True)
 
     class Meta:
         db_table = u'mcc'

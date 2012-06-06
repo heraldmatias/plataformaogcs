@@ -10,9 +10,10 @@ from django.shortcuts import get_object_or_404
 import django_tables2 as tables
 from django_tables2.config import RequestConfig
 from datetime import datetime
-from scripts.scripts import imprimirToExcel
+from scripts.scripts import imprimirToPDF
 from django.http import HttpResponse, Http404
 from django.core.files.storage import  FileSystemStorage
+from django.template.loader import render_to_string
 
 @login_required()
 def mgadd(request):
@@ -111,8 +112,9 @@ def mgprint(request):
         for a in range(1,9):
             dmg = {'organismo':mg['organismo'],'dependencia':mg['dependencia'],'fecha':mg['fec_creac'],'usuario':mg['usuario'],'tipo':mg['tipo'+str(a)]}
             data.append(dmg)
-    filename= "mg_%s.csv" % datetime.today().strftime("%Y%m%d")
-    return imprimirToExcel('extras/reportemg.html', {'data': data,'fecha':datetime.today().date(),'hora':datetime.today().time(),'usuario':request.session['nombres']},filename)
+    html = render_to_string('extras/reportemg.html',{'data': data,'pagesize':'A4','usuario':request.user.get_profile()},context_instance=RequestContext(request))
+    filename= "mg_%s.pdf" % datetime.today().strftime("%Y%m%d")        
+    return imprimirToPDF(html,filename)     
 
 @login_required()
 def digadd(request):
@@ -218,8 +220,9 @@ def digprint(request):
             for a in range(1,4):
                 dmg = {'organismo':mg['organismo'],'dependencia':mg['dependencia'],'fecha':mg['fec_creac'],'usuario':mg['usuario'],'tipoarchivo':mg['tipo'+ar+str(a)],'tipo':ar.upper()}
                 data.append(dmg)                  
-    filename= "dig_%s.csv" % datetime.today().strftime("%Y%m%d")
-    return imprimirToExcel('extras/reporte_dig.html', {'data': data,'fecha':datetime.today().date(),'hora':datetime.today().time(),'usuario':request.session['nombres']},filename)
+    html = render_to_string('extras/reporte_dig.html',{'data': data,'pagesize':'A4','usuario':request.user.get_profile()},context_instance=RequestContext(request))
+    filename= "dig_%s.pdf" % datetime.today().strftime("%Y%m%d")        
+    return imprimirToPDF(html,filename) 
     
 @login_required()
 def ariadd(request):
@@ -290,25 +293,26 @@ def ariprint(request):
                 filtro.append(u"actareunionintersectorial.dependencia =%s"%request.GET['dependencia'])
     filtro.append(u"idusuario_creac=usuario.numero")
     query = ActaReunionIntersectorial.objects.extra(tables=['usuario',],where=filtro,select={'usuario':'usuario.usuario','dependencia':"case actareunionintersectorial.organismo_id when 1 then (select ministerio from ministerio where nummin=actareunionintersectorial.dependencia) when 2 then (select odp from odp where numodp=actareunionintersectorial.dependencia) when 3 then (select gobernacion from gobernacion where numgob=actareunionintersectorial.dependencia) end"}).filter(nombreari__icontains=request.GET['nombreari'] if 'nombreari' in request.GET else '')
-    filename= "ari_%s.csv" % datetime.today().strftime("%Y%m%d")
-    return imprimirToExcel('extras/reporte_ari.html', {'data': query,'fecha':datetime.today().date(),'hora':datetime.today().time(),'usuario':request.session['nombres']},filename)
+    html = render_to_string('extras/reporte_ari.html',{'data': query,'pagesize':'A4','usuario':request.user.get_profile()},context_instance=RequestContext(request))
+    filename= "ari_%s.pdf" % datetime.today().strftime("%Y%m%d")        
+    return imprimirToPDF(html,filename)
 
 
 def get_categoria(tipo):
    """
       Define la categoria del documento subido, VER campo estatico CATEGORIAS en models.py
    """
-   categoria = 0
+   categoria = 'OTROS'
    if tipo in ('JPG','GIF','ICO','PNG','TIF',):   
-       categoria = 1
+       categoria = 'IMAGENES'
    elif tipo in ('AVI','MOV','MP4','WMV','FLV','F4V','3GP'):   
-       categoria = 2 
+       categoria = 'VIDEOS' 
    elif tipo in ('MP3','WAV','AMF','AMV'):
-       categoria = 3
+       categoria = 'AUDIOS'
    elif tipo in ('DOC','DOCX','PDF','PPT','PPTX','XLS','XLSX','TXT','ODT'):
-       categoria = 4
+       categoria = 'DOCUMENTOS'
    elif tipo in ('ZIP','TAR','GZ','ZIP','RAR','7Z',):
-       categoria = 5
+       categoria = 'COMPRIMIDOS'
    return categoria
 
 @login_required()
@@ -319,7 +323,7 @@ def documentos_add(request):
             profile = request.user.get_profile()
             archivo = request.FILES['archivo']
             extension = archivo.name[archivo.name.rfind('.')+1:].upper()
-            obj = Documento(organismo=profile.organismo, dependencia=profile.dependencia,tipo=extension,categoria=get_categoria(extension),idusuario_creac=profile.numero)
+            obj = Documento(organismo=profile.organismo, dependencia=profile.dependencia,tipo=extension,categoria=get_categoria(extension),idusuario_creac=profile)
             formulario = DocumentoForm(request.POST,request.FILES,instance=obj ) # A form bound to the POST data
             if formulario.is_valid():
                 formulario.save()             
@@ -351,19 +355,55 @@ def documentos_query(request):
                 dependencia=request.GET['dependencia']
     if 'idusuario_creac' in request.GET:
         if request.GET['idusuario_creac']:
-            filtro.append(u"idusuario_creac =%s"%request.GET['idusuario_creac'])
+            filtro.append(u"idusuario_creac_id =%s"%request.GET['idusuario_creac'])
             usuario=request.GET['idusuario_creac']
     if 'categoria' in request.GET:
         if request.GET['categoria']:
-            filtro.append(u"categoria =%s"%request.GET['categoria'])
+            filtro.append(u"categoria ='%s'"%request.GET['categoria'])
     if 'tipo' in request.GET:
-        if request.GET['organismo']:
-            filtro.append(u"tipo =%s"%request.GET['tipo'])
-    filtro.append(u"idusuario_creac=usuario.numero")
+        if request.GET['tipo']:
+            filtro.append(u"tipo ='%s'"%request.GET['tipo'])
+    filtro.append(u"idusuario_creac_id=usuario.numero")
+    print filtro
     query = Documento.objects.extra(tables=['usuario',],where=filtro,select={'usuario':'usuario.usuario','dependencia':"case documentos.organismo_id when 1 then (select ministerio from ministerio where nummin=documentos.dependencia) when 2 then (select odp from odp where numodp=documentos.dependencia) when 3 then (select gobernacion from gobernacion where numgob=documentos.dependencia) end"})
 #.filter(nombreari__icontains=request.GET['nombreari'] if 'nombreari' in request.GET else '')
     tabla = DocumentoTable(query.order_by(col))
     config.configure(tabla)
     tabla.paginate(page=request.GET.get('page', 1), per_page=6)
     return render_to_response('extras/documento_consulta.html', {'formulario': formulario,'tabla':tabla,'dependencia':dependencia,'usuario':usuario}, context_instance=RequestContext(request),)
+
+@login_required()
+def documentos_print(request):
+    col = "-organismo"
+    query = None
+    dependencia=''
+    usuario = ''
+    filtro = list()
+    if "2-sort" in request.GET:
+        col = request.GET['2-sort']
+    config = RequestConfig(request)
+    formulario = ConsultaDocumentoForm(request.GET)
+    if 'organismo' in request.GET:
+        if request.GET['organismo']:
+            filtro.append(u"documentos.organismo_id =%s"%request.GET['organismo'])
+        if 'dependencia' in request.GET:
+            if request.GET['dependencia']:
+                filtro.append(u"documentos.dependencia =%s"%request.GET['dependencia'])
+                dependencia=request.GET['dependencia']
+    if 'idusuario_creac' in request.GET:
+        if request.GET['idusuario_creac']:
+            filtro.append(u"idusuario_creac_id =%s"%request.GET['idusuario_creac'])
+            usuario=request.GET['idusuario_creac']
+    if 'categoria' in request.GET:
+        if request.GET['categoria']:
+            filtro.append(u"categoria ='%s'"%request.GET['categoria'])
+    if 'tipo' in request.GET:
+        if request.GET['organismo']:
+            filtro.append(u"tipo ='%s'"%request.GET['tipo'])
+    filtro.append(u"idusuario_creac_id=usuario.numero")
+    query = Documento.objects.extra(tables=['usuario',],where=filtro,select={'usuario':'usuario.usuario','dependencia':"case documentos.organismo_id when 1 then (select ministerio from ministerio where nummin=documentos.dependencia) when 2 then (select odp from odp where numodp=documentos.dependencia) when 3 then (select gobernacion from gobernacion where numgob=documentos.dependencia) end"})
+    html = render_to_string('extras/reporte_doc.html',{'data': query,'pagesize':'A4','usuario':request.user.get_profile()},context_instance=RequestContext(request))
+    filename= "doc_%s.pdf" % datetime.today().strftime("%Y%m%d")        
+    return imprimirToPDF(html,filename)
+
 

@@ -10,7 +10,7 @@ from django.shortcuts import get_object_or_404
 import django_tables2 as tables
 from django_tables2.config import RequestConfig
 from datetime import datetime
-from scripts.scripts import imprimirToExcel
+from scripts.scripts import imprimirToPDF
 from django.core.urlresolvers import reverse
 from django.core import serializers
 from django.conf import settings
@@ -284,8 +284,9 @@ def userprint(request, nivel):
     else:
         usuarios = usuarios.extra(where=filtro)
     usuarios = usuarios.extra(select={'dependencia':"case organismo_id when 1 then (select ministerio from ministerio where nummin=dependencia) when 2 then (select odp from odp where numodp=dependencia) when 3 then (select gobernacion from gobernacion where numgob=dependencia) end"})
-    filename= ("usuario" if nivel == "1" else "administrador")+"_%s.xls" % datetime.today().strftime("%Y%m%d")
-    return imprimirToExcel('usuario/reporteusu.html', {'data': usuarios,'fecha':datetime.today().date(),'hora':datetime.today().time(),'usuario':request.session['nombres']},filename)
+    html = loader.render_to_string(nivel == "1" and 'usuario/reporteusu.html' or 'usuario/reporteadmin.html',{'data': usuarios,'pagesize':'A4','usuario':request.user.get_profile()},context_instance=RequestContext(request))
+    filename= ("usuario" if nivel == "1" else "administrador")+"_%s.xls" % datetime.today().strftime("%Y%m%d")    
+    return imprimirToPDF(html,filename)    
 
 @login_required()
 def jsonusuario(request):

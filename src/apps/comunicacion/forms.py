@@ -169,7 +169,8 @@ class MccaForm_Canal(forms.ModelForm):
         model = MccaCanal
         fields = ('tipommca', 'canal', )
         widgets = {
-            'tipommca': forms.Select(),
+            'tipommca': forms.Select(attrs={'style':'width:420px;',}),
+            'canal': forms.TextInput(attrs={'style':'width:420px;',}),
         }
 class MccaForm_CanalTable(tables.Table):
     item = tables.Column()

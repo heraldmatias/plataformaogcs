@@ -25,7 +25,7 @@
         {% block table.tbody.row %}
         <tr>
             {% for column, cell in row.items %}
-                <td {{ column.attrs.td.as_html }}>{{ cell }}</td>
+                <td {{ column.attrs.td.as_html }}>{% if cell %}{{ cell }}{% else %} {% endif %}</td>
             {% endfor %}
         </tr>
         {% endblock table.tbody.row %}

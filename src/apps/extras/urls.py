@@ -13,5 +13,6 @@ urlpatterns = patterns('extras.views',
     url(r'^ari/print/$','ariprint', name='ogcs-mantenimiento-ari-print'),
     url(r'^documentos/add/$','documentos_add', name='ogcs-mantenimiento-doc-add'),
     url(r'^documentos/consulta/$','documentos_query', name='ogcs-mantenimiento-doc-query'),
+    url(r'^documentos/print/$','documentos_print', name='ogcs-mantenimiento-doc-print'),
     #url(r'^documentos/print/$','documentos_print', name='ogcs-mantenimiento-doc-print'),
 )

@@ -57,11 +57,11 @@ $.getJSON('{% url ogcs-usuario-jsonusuario %}?'+filtro, function(data){
 });
 }
 $(document).ready(function() {
-  dependencias(0); combotodos('id_organismo');combotodos('id_categoria');get_usuarios();
+  dependencias(0); combotodos('id_organismo');combotodos('id_categoria');combotodos('id_idusuario_creac');combotodos('id_tipo');
 });
 function imprimir(){
-var org=$('#id_organismo').val();var dep=$('#id_dependencia').val();
-var url="{% url ogcs-mantenimiento-mg-print  %}?organismo="+org+'&dependencia='+dep;
+var filtro = $("#frmdoc_consulta").serialize();
+var url="{% url ogcs-mantenimiento-doc-print %}?"+filtro;
 location.href=url;
 }
 </script>

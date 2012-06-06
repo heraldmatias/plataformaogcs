@@ -54,8 +54,7 @@ def regionprint(request):
     if "region" in request.GET:        
         qregiones = Region.objects.all().filter(region__icontains=request.GET['region']).order_by("region")
         html = render_to_string('ubigeo/reporter.html',{'data': qregiones,'pagesize':'A4','usuario':request.user.get_profile()},context_instance=RequestContext(request))
-        filename= "region_%s.pdf" % datetime.today().strftime("%Y%m%d")
-        #return render_to_pdf_response('ubigeo/reporter.html',{'data': qregiones,'pagesize':'A4','usuario':request.user.get_profile()},filename)
+        filename= "region_%s.pdf" % datetime.today().strftime("%Y%m%d")        
         return imprimirToPDF(html,filename)
 
 @login_required()
@@ -139,8 +138,9 @@ def provinciaprint(request):
         provincias = Provincia.objects.filter(provincia__icontains=request.GET['provincia'],).order_by(col)
     else:
         provincias = Provincia.objects.all().order_by(col)
-    filename= "provincia_%s.xls" % datetime.today().strftime("%Y%m%d")
-    return imprimirToExcel('ubigeo/reportep.html', {'data': provincias,'fecha':datetime.today().date(),'hora':datetime.today().time(),'usuario':request.session['nombres'],},filename)
+    html = render_to_string('ubigeo/reportep.html',{'data': provincias,'pagesize':'A4','usuario':request.user.get_profile()},context_instance=RequestContext(request))
+    filename= "provincia_%s.pdf" % datetime.today().strftime("%Y%m%d")        
+    return imprimirToPDF(html,filename)
 
 @login_required()
 def jsonprovincia(request):

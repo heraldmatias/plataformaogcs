@@ -29,7 +29,7 @@
 <p>{{ mensaje }}</p></div></h4>
 {% endif %}
 <ul class="nav nav-tabs">
-<li class="active"><a href="{% url ogcs-mantenimiento-mcc-add %}">Nuevo</a></li>
+<li class="active"><a href="{% url ogcs-mantenimiento-mcc-add %}">{% if accion %}Nuevo{% else %}Modificar{% endif %}</a></li>
 <li><a href="{% url ogcs-mantenimiento-mcc-query %}" >Consultar</a></li>
 </ul>
 <div class="tab-content" id="contenido_izq">
@@ -136,7 +136,7 @@
         </div>
     
     <div class="modal-footer">
-     <input class="btn-primary" name="grabar" value="Guardar" type="submit">
+     <input class="btn-primary" name="grabar" value="{% if accion %}Guardar{% else %}Modificar{% endif %}" type="submit">
      <input class="btn" name="grabar" value="Cerrar" type="button" onclick="cerrarformulario('contenido');">
     </div>
 </div>
