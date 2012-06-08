@@ -52,13 +52,23 @@
           <label>Tipo: {{ form.nummcctipo }}</label> 
           &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp
           <label>Estado:  {{ form.nummccestado }}</label><br /><br />
-          
-           <label>Region: {{ form.region }}</label> 
-          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp
-          <label>Provincia:  {{ form.provincia }}</label><br /><br />
-          <label>Lugar:  {{ form.lugar }}</label><br /><br />
-          <label>Breve descripci&oacute;n y estado actual:<br />  {{ form.descripcionmcc }}</label><br /><br />
-
+<label>Breve descripci&oacute;n y estado actual:<br />  {{ form.descripcionmcc }}</label><br /><br />
+     <!------------------------------------------------------------------------------------------------------------------>      
+       <!------------------------------------------------------- LUGARES  ---------------------------------------------->
+          <div class="modal-header">
+      		<h3>Lugares en Acción</h3>
+      	</div> <br />
+        <div class="alert alert-error" id="alert4"><strong></strong><!--<a class="close" data-dismiss="alert">×</a>--></div>
+    	<div class="row-fluid">
+           <div class="span2"><label>Region:</label></div><div class="span4"> {{ form_lugar.region }}</div> 
+           <div class="span2"><label>Provincia:</label></div><div class="span4">{{ form_lugar.provincia }}</div></div><p></p>
+        <div class="row-fluid">
+           <div class="span2"><label>Lugar:</label></div><div class="span9">{{ form_lugar.lugar }}</div>
+{% if user.get_profile.nivel.codigo == 1 %}<input class="btn-primary" name="agregar" value="Agregar" type="button" onclick="lugares();">{% endif %}
+        </div> <br /><br />
+                <fieldset>
+          	{% render_table tabla4 %}    
+          	</fieldset><br />
       </div>
       
      <!------------------------------------------------------------------------------------------------------------------>      

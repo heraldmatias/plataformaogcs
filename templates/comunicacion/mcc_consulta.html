@@ -5,8 +5,8 @@
   
   {% load render_table from django_tables2 %}
 <ul class="nav nav-tabs">
-<li><a href="{% url ogcs-mantenimiento-mcca-add %}">Nuevo</a></li>
-<li class="active"><a href="{% url ogcs-mantenimiento-mcca-query %}" >Consultar</a></li>
+<li><a href="{% url ogcs-mantenimiento-mcc-add %}">Nuevo</a></li>
+<li class="active"><a href="{% url ogcs-mantenimiento-mcc-query %}" >Consultar</a></li>
 </ul>
 <div class="tab-content" id="contenido_izq" style="height:auto" >
 
@@ -27,9 +27,6 @@
       <div class="row-fluid">      
           <div class="span2"><label>Tipo:</label></div><div class="span4">{{ form.nummcctipo }}</div>
           <div class="span2"><label>Estado:</label></div><div class="span4">{{ form.nummccestado }}</div></div><br />
-      <div class="row-fluid">      
-          <div class="span2"><label>Region:</label></div><div class="span4">{{ form.region }}</div> 
-          <div class="span2"><label>Provincia:</label></div><div class="span4">{{ form.provincia }}</div></div><br />
       <div class="row-fluid">      
           <div class="span2"><label>Fecha inicial:</label></div><div class="span3">
           <label class="input-append date" style="display:inline" id="dp4" data-date-format="dd/mm/yyyy" >{{ form.fechaini }}<span class="add-on"><i class="icon-th"></i></span></label></div> 

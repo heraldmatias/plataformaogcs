@@ -14,7 +14,7 @@ from django_tables2.config import RequestConfig
 from datetime import datetime
 from scripts.scripts import imprimirToExcel,imprimirToPDF
 from django.http import HttpResponse
-#from django.core.files import File
+from ubigeo.models import Region, Provincia
 from django.core.files.storage import  FileSystemStorage
 
 @login_required()
@@ -624,6 +624,10 @@ def mccaprint(request):
 def mccadd(request):
     mensaje = ""
     if request.method == 'POST':
+        #lugares
+        col_reg = request.POST.getlist('col_reg')
+        col_pro = request.POST.getlist('col_pro')
+        col_lug = request.POST.getlist('col_lug')
         #actores
         numtvac = request.POST.getlist('numtvac')
         actores = request.POST.getlist('listactor')
@@ -647,6 +651,9 @@ def mccadd(request):
         if formmcc.is_valid():
             formmcc.save()
         obj.save()
+        #lugares_save
+        for c in range(len(col_reg)):
+            MccLugar(nummcc=obj, item=c+1, region = Region.objects.get(codigo=col_reg[c]),provincia= Provincia.objects.get(codigo=col_pro[c]),lugar=col_lug[c],auditoria=1).save()
         #actores_save
         for c in range(len(numtvac)):
             MccActor(nummcc=obj, item=c + 1, numtipovarios=MccTipoVarios.objects.get(codigo=numtvac[c]), actor=actores[c], institucion=instac[c], auditoria=1).save()
@@ -664,13 +671,14 @@ def mccadd(request):
     tabla1 = MccForm_ActorTable(list())
     tabla2 = MccForm_LiderTable(list())
     tabla3 = MccForm_ObservacionTable(list())
-
+    tabla4 = MccForm_LugarTable([])
     formmcc = MccForm()
+    formmcc_lugar = MccForm_Lugar()
     formmcc_lider = MccForm_Lider()
     formmcc_actor = MccForm_Actor()
     formmcc_observacion = MccForm_Observacion()
 
-    return render_to_response('comunicacion/mcc.html', {'form': formmcc, 'form_actor': formmcc_actor, 'form_lider': formmcc_lider, 'form_observacion':formmcc_observacion, 'tabla1':tabla1, 'tabla2':tabla2, 'tabla3':tabla3, 'mensaje':mensaje, 'accion':'add'}, context_instance=RequestContext(request),)
+    return render_to_response('comunicacion/mcc.html', {'form': formmcc, 'form_actor': formmcc_actor,'form_lugar': formmcc_lugar, 'form_lider': formmcc_lider, 'form_observacion':formmcc_observacion, 'tabla1':tabla1, 'tabla2':tabla2, 'tabla3':tabla3,'tabla4':tabla4, 'mensaje':mensaje, 'accion':'add'}, context_instance=RequestContext(request),)
 
 
 
@@ -678,6 +686,10 @@ def mccadd(request):
 def mccedit(request, nummcc):
     mensaje = ""
     if request.method == 'POST':
+        #lugares
+        col_reg = request.POST.getlist('col_reg')
+        col_pro = request.POST.getlist('col_pro')
+        col_lug = request.POST.getlist('col_lug')
         #actores
         numtvac = request.POST.getlist('numtvac')
         actores = request.POST.getlist('listactor')
@@ -709,7 +721,22 @@ def mccedit(request, nummcc):
         obj.fechaini = fecini
         obj.fechafin = fecfin        
         obj.save()
-
+        #lugares_save
+        query = MccLugar.objects.filter(nummcc=obj)
+        for c in range(len(col_lug)):
+            try:
+                row = MccLugar.objects.get(nummcc=obj,item=c+1)
+                row.region=Region.objects.get(codigo=col_reg[c])
+                row.provincia=Provincia.objects.get(codigo=col_pro[c])
+                row.lugar=col_lug[c]
+                row.save()
+            except MccLugar.DoesNotExist:
+                MccLugar(nummcc=obj, item=c+1, region = Region.objects.get(codigo=col_reg[c]),provincia= Provincia.objects.get(codigo=col_pro[c],auditoria=1),lugar=col_lug[c]).save()
+        resto= len(col_lug)
+        while resto < len(query):
+            row = MccLugar.objects.get(nummcc=obj,item=resto+1)
+            row.delete()
+            resto = resto + 1
         #actores_save
         query = MccActor.objects.filter(nummcc=obj)
         for c in range(len(actores)):
@@ -767,6 +794,9 @@ def mccedit(request, nummcc):
     mcc.fechaini = mcc.fechaini.strftime("%d/%m/%Y")
     mcc.fechafin = mcc.fechafin.strftime("%d/%m/%Y")
     formmcc = MccForm(instance=mcc)
+
+    query4 = MccLugar.objects.filter(nummcc=mcc).order_by("item",)
+    tabla4 = MccForm_LugarTable(query4)
 	
     query1 = MccActor.objects.filter(nummcc=mcc).order_by("item",)
     tabla1 = MccForm_ActorTable(query1)
@@ -778,11 +808,12 @@ def mccedit(request, nummcc):
     query3 = MccObservacion.objects.filter(nummcc=mcc).order_by("item",)
     tabla3 = MccForm_ObservacionTable(query3)
 
+    formmcc_lugar = MccForm_Lugar()
     formmcc_lider = MccForm_Lider()
     formmcc_actor = MccForm_Actor()
     formmcc_observacion = MccForm_Observacion()
 
-    return render_to_response('comunicacion/mcc.html', {'form': formmcc, 'form_actor': formmcc_actor, 'form_lider': formmcc_lider, 'form_observacion':formmcc_observacion, 'tabla1':tabla1, 'tabla2':tabla2, 'tabla3':tabla3, 'mensaje':mensaje, 'codigo':nummcc, 'accion': ''}, context_instance=RequestContext(request),)
+    return render_to_response('comunicacion/mcc.html', {'form': formmcc, 'form_lugar': formmcc_lugar,'form_actor': formmcc_actor, 'form_lider': formmcc_lider, 'form_observacion':formmcc_observacion, 'tabla1':tabla1, 'tabla2':tabla2, 'tabla3':tabla3,'tabla4':tabla4, 'mensaje':mensaje, 'codigo':nummcc, 'accion': ''}, context_instance=RequestContext(request),)
 
 @login_required()
 def mcc_query(request):

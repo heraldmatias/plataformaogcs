@@ -271,10 +271,9 @@ class Mcc(models.Model):
     fechafin = models.DateTimeField(verbose_name='Fecha de final de la campana',)	
     nummcctipo = models.ForeignKey(MccTipo,verbose_name='Tipo mcc',)
     nummccestado = models.ForeignKey(MccEstado,verbose_name='Mcc Estado',)
-    region = models.ForeignKey(Region, verbose_name='Region')
-    provincia = models.ForeignKey(Provincia, verbose_name='Provincia')
-    descripcionmcc = models.TextField(verbose_name='Breve descripcion y estado actual del mcc',)
-    lugar = models.CharField(verbose_name='Lugar de la mcc',max_length=120)
+    #region = models.ForeignKey(Region, verbose_name='Region')
+    #provincia = models.ForeignKey(Provincia, verbose_name='Provincia')
+    descripcionmcc = models.TextField(verbose_name='Breve descripcion y estado actual del mcc',)    
     propuestamcc = models.TextField(verbose_name='Propuesta del mcc',)
     idusuario_creac = models.IntegerField(verbose_name='Usuario creador',)
     fec_creac = models.DateTimeField(verbose_name='Fecha de creación del registro',auto_now_add=True)
@@ -294,6 +293,21 @@ class Mcc(models.Model):
     def __unicode__(self):
         return self.nombremmca
 
+class MccLugar(models.Model):
+    nummcc = models.ForeignKey(Mcc,verbose_name='Numero de la mcc',to_field='nummcc')
+    item = models.IntegerField(verbose_name='Items',)
+    region = models.ForeignKey(Region, verbose_name='Region')
+    provincia = models.ForeignKey(Provincia, verbose_name='Provincia')
+    lugar = models.CharField(verbose_name='Lugar',max_length=120)
+    auditoria = models.IntegerField(verbose_name='Auditoria',choices=AUDITORIA)
+
+    class Meta:
+        db_table = u'mcc_lugar'
+        verbose_name = u'Mcc Lugar'
+        verbose_name_plural = u'Mcc Lugarares'
+
+    def __unicode__(self):
+        return self.descripcionmcc
 
 class MccActor(models.Model):
     nummcc = models.ForeignKey(Mcc,verbose_name='Numero de la mcc',to_field='nummcc')

@@ -266,14 +266,11 @@ class MccaTable(tables.Table):
 
 class MccForm(forms.ModelForm):
     class Meta:
-        model = Mcc
-        fields = ('nombremmc', 'nummcctipo', 'nummccestado', 'region', 'provincia', 'fechaini', 'fechafin', 'lugar', 'descripcionmcc', 'propuestamcc')
+        model = Mcc 
+        fields = ('nombremmc', 'nummcctipo', 'nummccestado',  'fechaini', 'fechafin','descripcionmcc', 'propuestamcc')
         widgets = {
             'nummcctipo': forms.Select(),
-            'nummccestado': forms.Select(),
-            'region': forms.Select(attrs={'onChange':'provincias(0);', }),
-            #'provincia': forms.Select(attrs={'disabled':'disabled'}),
-            'provincia': forms.Select(),
+            'nummccestado': forms.Select(),                        
             'fechaini': forms.TextInput(attrs={'size':'15'}),
             'fechafin': forms.TextInput(attrs={'size':'15'}),
             'descripcionmcc': forms.Textarea(attrs={'class':'span20','cols':'104'}),
@@ -281,6 +278,26 @@ class MccForm(forms.ModelForm):
         }
         exclude = ('idusuario_creac', 'idusuario_mod', )
 
+class MccForm_Lugar(forms.ModelForm):
+    class Meta:
+        model = MccLugar
+        fields = ('region', 'provincia','lugar')
+        widgets = {
+            'region': forms.Select(attrs={'onChange':'provincias(0);', }),
+            'provincia': forms.Select(),
+            'lugar': forms.TextInput(attrs={'style':'width:500px;'}),
+        }
+
+class MccForm_LugarTable(tables.Table):
+    item = tables.Column()
+    region = tables.TemplateColumn('<input type="hidden" name="col_reg" value="{{ record.region_id }}">{{ record.region }}')
+    provincia = tables.TemplateColumn('<input type="hidden" name="col_pro" value="{{ record.provincia_id }}">{{ record.provincia }}')
+    lugar = tables.TemplateColumn('<input type="hidden" name="col_lug" value="{{ record.lugar }}">{{ record.provincia }}')
+    eliminar = tables.TemplateColumn("{% if user.get_profile.nivel.codigo == 1 %}<a href='javascript: removedetalle(3,{{ record.item }})'><div id='delete'></div></a>{% endif %}")
+
+    class Meta:
+        attrs = {"class": "table table-bordered table-condensed table-striped", "name":"tabla_lugar", "id":"tabla_lugar"}
+        orderable = False
 
 class MccForm_Actor(forms.ModelForm):
     class Meta:
@@ -348,14 +365,14 @@ class ConsultaMccForm(forms.ModelForm):
     class Meta:
         model = Mcc
         #fields = ('nombremmc','nummcctipo','nummccestado_id','region_id','provincia_id','fechaini','fechafin')
-        fields = ('nombremmc', 'organismo', 'dependencia', 'nummcctipo', 'codigo', 'fechaini', 'fechafin', 'region', 'provincia', 'nummcctipo', 'nummccestado')
+        fields = ('nombremmc', 'organismo', 'dependencia', 'nummcctipo', 'codigo', 'fechaini', 'fechafin', 'nummcctipo', 'nummccestado')
         widgets = {
             'nummcctipo': forms.Select(),
             'nummccestado': forms.Select(),
             'organismo': forms.Select(attrs={'onChange':'dependencias(0);', }),
             'dependencia':forms.Select(),
-            'region': forms.Select(attrs={'onChange':'provincias(0);', }),
-            'provincia':forms.Select(),
+            #'region': forms.Select(attrs={'onChange':'provincias(0);', }),
+            #'provincia':forms.Select(),
             'nombremmc': forms.TextInput(attrs={'style':'width:550px', }),
             'fechaini': forms.TextInput(attrs={'style':'width:100px;', }),
             'fechafin': forms.TextInput(attrs={'style':'width:100px;', }),
@@ -368,9 +385,7 @@ class MccTable(tables.Table):
     dependencia = tables.Column(orderable=True, verbose_name='Dependencia')
     nombremmc = tables.Column(orderable=True, verbose_name='Nombre de caso de crisis')
     nummcctipo = tables.Column(orderable=True, verbose_name='Tipo')
-    nummccestado = tables.Column(orderable=True, verbose_name='Estado')
-    region = tables.Column(orderable=True, verbose_name='Región')
-    provincia = tables.Column(orderable=True, verbose_name='Provincia')
+    nummccestado = tables.Column(orderable=True, verbose_name='Estado')    
     usuario = tables.Column(orderable=True, verbose_name='Usuario')
     fec_creac = tables.Column(orderable=True, verbose_name='Fecha de Creación')
     idusuario_mod = tables.Column(orderable=True, verbose_name='Usu Mod')
