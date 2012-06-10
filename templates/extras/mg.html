@@ -36,10 +36,13 @@
 <script>
 $('#frmmg').submit(function() {
 var ok=true;
+if ($.inArray($("#id_arcmg1").val().split('.').pop().toLowerCase(), ['jpg','gif','png','jpeg','avi','swf','flv','f4v','mp4','opt','ods']) == -1) {
+alert('Material Gráfico 1: Solo se acepta archivos en formato Imagen, Audio y Video!');$("#id_arcmg1").focus();ok=false;return false;
+}
 $("form input:file").each(function(index){
 var ext = $(this).val().split('.').pop().toLowerCase();
-if($.inArray(ext, ['jpg','gif','png','jpeg','avi','swf','flv','f4v','mp4','opt','ods']) == -1) {
-    alert('Material Gráfico '+(index+1)+': Solo se acepta archivos en formato Audio y Video!');$(this).focus();ok=false;return false;
+if($.inArray(ext, ['jpg','gif','png','jpeg','avi','swf','flv','f4v','mp4','opt','ods']) == -1 & ext!='') {
+   alert('Material Gráfico '+(index+1)+': Solo se acepta archivos en formato Imagen, Audio y Video!');$(this).focus();ok=false;return false;
 }});
 if(ok){return confirmar('¿Desea grabar el registro?');}else{return false;}
 });

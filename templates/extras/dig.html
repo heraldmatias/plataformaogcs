@@ -41,11 +41,33 @@
 <script>
 $('#frmmg').submit(function() {
 var ok=true;
-$("form input:file").each(function(index){
-var ext = $(this).val().split('.').pop().toLowerCase();
-if($.inArray(ext, ['jpg','gif','png','jpeg','doc','docx','pdf','xls','xlsx','ppt','pptx','txt']) == -1) {
-    alert('DIG '+(index+1)+': Solo se acepta archivos de OFIMATICA. Seleccione presionando el boton EXAMINAR.');$(this).focus();ok=false;return false;
-}});
+fmis = ['#id_archmis1','#id_archmis2','#id_archmis3'];
+faca = ['#id_archaca1','#id_archaca2','#id_archaca3'];
+fbue = ['#id_archbue1','#id_archbue2','#id_archbue3'];
+if($.inArray($(fmis[0]).val().split('.').pop().toLowerCase(), ['jpg','gif','png','jpeg','doc','docx','pdf','xls','xlsx','ppt','pptx','txt']) == -1) {
+alert('DIG Miscelanea 1: Solo se acepta archivos de OFIMATICA. Seleccione presionando el boton EXAMINAR.');$(fmis[0]).focus();ok=false;return false;
+}
+for(index in fmis){
+var ext = $(fmis[index]).val().split('.').pop().toLowerCase();
+if($.inArray(ext, ['jpg','gif','png','jpeg','doc','docx','pdf','xls','xlsx','ppt','pptx','txt']) == -1 & ext!='') {
+    alert('DIG Miscelanea '+(parseInt(index)+1)+': Solo se acepta archivos de OFIMATICA. Seleccione presionando el boton EXAMINAR.');$(fmis[index]).focus();ok=false;return false;
+}}
+if($.inArray($(faca[0]).val().split('.').pop().toLowerCase(), ['jpg','gif','png','jpeg','doc','docx','pdf','xls','xlsx','ppt','pptx','txt']) == -1) {
+alert('DIG Academico 1: Solo se acepta archivos de OFIMATICA. Seleccione presionando el boton EXAMINAR.');$(faca[0]).focus();ok=false;return false;
+}
+for(index in faca){
+var ext = $(faca[0]).val().split('.').pop().toLowerCase();
+if($.inArray(ext, ['jpg','gif','png','jpeg','doc','docx','pdf','xls','xlsx','ppt','pptx','txt']) == -1 & ext!='') {
+    alert('DIG Academico '+(parseInt(index)+1)+': Solo se acepta archivos de OFIMATICA. Seleccione presionando el boton EXAMINAR.');$(faca[index]).focus();ok=false;return false;
+}}
+if($.inArray($(fbue[0]).val().split('.').pop().toLowerCase(), ['jpg','gif','png','jpeg','doc','docx','pdf','xls','xlsx','ppt','pptx','txt']) == -1) {
+alert('DIG Practicas 1: Solo se acepta archivos de OFIMATICA. Seleccione presionando el boton EXAMINAR.');$(fbue[0]).focus();ok=false;return false;
+}
+for(index in fbue){
+var ext = $(fmis[index]).val().split('.').pop().toLowerCase();
+if($.inArray(ext, ['jpg','gif','png','jpeg','doc','docx','pdf','xls','xlsx','ppt','pptx','txt']) == -1 & ext!='') {
+    alert('DIG Practicas '+(parseInt(index)+1)+': Solo se acepta archivos de OFIMATICA. Seleccione presionando el boton EXAMINAR.');$(fbue[index]).focus();ok=false;return false;
+}}
 if(ok){return confirmar('¿Desea grabar el registro?');}else{return false;}
 });
 
