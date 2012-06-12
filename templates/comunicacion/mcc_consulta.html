@@ -47,8 +47,8 @@
   {% endblock %}
   {% block scriptjs %}    
 <script>
-combotodos('id_organismo');combotodos('id_region');
-provincias(0);
+{% if user.get_profile.nivel.codigo == 2 %}combotodos('id_organismo');dependencias(0);{% endif %}
+combotodos('id_nummcctipo');combotodos('id_nummccestado');
 function imprimir(){
 var from_data =  $("#frmmcc_consulta").serialize();
 
