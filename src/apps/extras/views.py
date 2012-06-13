@@ -418,3 +418,36 @@ def documentos_query(request):
     tabla.paginate(page=request.GET.get('page', 1), per_page=6)
     return render_to_response('extras/documento_consulta.html', {'formulario': formulario,'tabla':tabla,'dependencia':dependencia,'usuario':usuario}, context_instance=RequestContext(request),)
 
+@login_required()
+def documentos_print(request):
+    col = "-organismo"
+    query = None
+    dependencia=''
+    usuario = ''
+    filtro = list()
+    if "2-sort" in request.GET:
+        col = request.GET['2-sort']
+    config = RequestConfig(request)
+    formulario = ConsultaDocumentoForm(request.GET)
+    if 'organismo' in request.GET:
+        if request.GET['organismo']:
+            filtro.append(u"documentos.organismo_id =%s"%request.GET['organismo'])
+        if 'dependencia' in request.GET:
+            if request.GET['dependencia']:
+                filtro.append(u"documentos.dependencia =%s"%request.GET['dependencia'])
+                dependencia=request.GET['dependencia']
+    if 'idusuario_creac' in request.GET:
+        if request.GET['idusuario_creac']:
+            filtro.append(u"idusuario_creac_id =%s"%request.GET['idusuario_creac'])
+            usuario=request.GET['idusuario_creac']
+    if 'categoria' in request.GET:
+        if request.GET['categoria']:
+            filtro.append(u"categoria ='%s'"%request.GET['categoria'])
+    if 'tipo' in request.GET:
+        if request.GET['organismo']:
+            filtro.append(u"tipo ='%s'"%request.GET['tipo'])
+    filtro.append(u"idusuario_creac_id=usuario.numero")
+    query = Documento.objects.extra(tables=['usuario',],where=filtro,select={'usuario':'usuario.usuario','dependencia':"case documentos.organismo_id when 1 then (select ministerio from ministerio where nummin=documentos.dependencia) when 2 then (select odp from odp where numodp=documentos.dependencia) when 3 then (select gobernacion from gobernacion where numgob=documentos.dependencia) end"})
+    html = render_to_string('extras/reporte_doc.html',{'data': query,'pagesize':'A4','usuario':request.user.get_profile()},context_instance=RequestContext(request))
+    filename= "doc_%s.pdf" % datetime.today().strftime("%Y%m%d")        
+    return imprimirToPDF(html,filename)
