@@ -373,12 +373,15 @@ def documentos_add(request):
         if 'archivo' in request.FILES:
             profile = request.user.get_profile()
             archivo = request.FILES['archivo']
+            print request.FILES
             extension = archivo.name[archivo.name.rfind('.')+1:].upper()
             cat = get_categoria(extension)
             obj = Documento(organismo=profile.organismo, dependencia=profile.dependencia,tipo= cat == 'OTROS' and 'OTRO' or extension,categoria=cat,idusuario_creac=profile)
             formulario = DocumentoForm(request.POST,request.FILES,instance=obj ) # A form bound to the POST data
+            print obj.archivo.name
             if formulario.is_valid():
                 formulario.save()             
+                print obj.archivo.name
                 obj.url_archivo=obj.archivo.url 
                 obj.save()
                 mensaje="Registro grabado satisfactoriamente."
@@ -411,12 +414,12 @@ def documentos_query(request):
             usuario=request.GET['idusuario_creac']
     if 'categoria' in request.GET:
         if request.GET['categoria']:
-            filtro.append(u"categoria =%s"%request.GET['categoria'])
+            filtro.append(u"categoria ='%s'"%request.GET['categoria'])
     if 'tipo' in request.GET:
         if request.GET['organismo']:
-            filtro.append(u"tipo =%s"%request.GET['tipo'])
-    filtro.append(u"idusuario_creac_id=usuario.numero")
-    query = Documento.objects.extra(tables=['usuario',],where=filtro,select={'usuario':'usuario.usuario','dependencia':"case documentos.organismo_id when 1 then (select ministerio from ministerio where nummin=documentos.dependencia) when 2 then (select odp from odp where numodp=documentos.dependencia) when 3 then (select gobernacion from gobernacion where numgob=documentos.dependencia) end"})
+            filtro.append(u"tipo ='%s'"%request.GET['tipo'])   
+    print filtro 
+    query = Documento.objects.extra(where=filtro,select={'usuario':'idusuario_creac_id','dependencia':"case documentos.organismo_id when 1 then (select ministerio from ministerio where nummin=documentos.dependencia) when 2 then (select odp from odp where numodp=documentos.dependencia) when 3 then (select gobernacion from gobernacion where numgob=documentos.dependencia) end"})
 #.filter(nombreari__icontains=request.GET['nombreari'] if 'nombreari' in request.GET else '')
     tabla = DocumentoTable(query.order_by(col))
     config.configure(tabla)
