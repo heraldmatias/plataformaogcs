@@ -374,7 +374,8 @@ def documentos_add(request):
             profile = request.user.get_profile()
             archivo = request.FILES['archivo']
             extension = archivo.name[archivo.name.rfind('.')+1:].upper()
-            obj = Documento(organismo=profile.organismo, dependencia=profile.dependencia,tipo= cat == 'OTROS' and 'OTRO' or extension,categoria=get_categoria(extension),idusuario_creac=profile)
+            cat = get_categoria(extension)
+            obj = Documento(organismo=profile.organismo, dependencia=profile.dependencia,tipo= cat == 'OTROS' and 'OTRO' or extension,categoria=cat,idusuario_creac=profile)
             formulario = DocumentoForm(request.POST,request.FILES,instance=obj ) # A form bound to the POST data
             if formulario.is_valid():
                 formulario.save()             
