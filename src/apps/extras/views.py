@@ -364,7 +364,6 @@ def documentos_query(request):
         if request.GET['tipo']:
             filtro.append(u"tipo ='%s'"%request.GET['tipo'])
     filtro.append(u"idusuario_creac_id=usuario.numero")
-    print filtro
     query = Documento.objects.extra(tables=['usuario',],where=filtro,select={'usuario':'usuario.usuario','dependencia':"case documentos.organismo_id when 1 then (select ministerio from ministerio where nummin=documentos.dependencia) when 2 then (select odp from odp where numodp=documentos.dependencia) when 3 then (select gobernacion from gobernacion where numgob=documentos.dependencia) end"})
 #.filter(nombreari__icontains=request.GET['nombreari'] if 'nombreari' in request.GET else '')
     tabla = DocumentoTable(query.order_by(col))

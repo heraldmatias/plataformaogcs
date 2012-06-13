@@ -201,7 +201,6 @@ def gobernacionquery(request):
         col = request.GET['2-sort']
     config = RequestConfig(request)
     consultagobernacionform = ConsultaGobernacionForm(request.GET)
-    print consultagobernacionform
     if 'region' in request.GET and 'provincia' in request.GET:
 	if request.GET['region'] and request.GET['provincia']:
 	    gobernaciones = Gobernacion.objects.filter(region=request.GET['region'], provincia=request.GET['provincia']).order_by(col)

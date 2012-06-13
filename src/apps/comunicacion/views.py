@@ -227,7 +227,6 @@ def pgcs_apor_query(request):
         #filtro.append(u"idusuario_creac="+str(request.user.get_profile().numero))
     filtro.append(u"idusuario_creac=usuario.numero")
     filtro.append(u"tipopgcs_id=2")
-    print filtro
     query = Pgcs.objects.extra(tables=['usuario',],where=filtro,select={'usuario':'usuario.usuario','dependencia':"case pgcs.organismo_id when 1 then (select ministerio from ministerio where nummin=pgcs.dependencia) when 2 then (select odp from odp where numodp=pgcs.dependencia) when 3 then (select gobernacion from gobernacion where numgob=pgcs.dependencia) end"})
     tabla = PgcsTable(query.order_by(col))
     config.configure(tabla)

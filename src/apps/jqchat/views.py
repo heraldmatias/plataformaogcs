@@ -82,7 +82,6 @@ class Ajax(object):
         self.request = request       
         try:
             self.request_time = float(self.request.REQUEST['time'])#0 if not 'time' in self.request.REQUEST else
-            print self.request_time 
         except:
             return HttpResponseBadRequest("What's the time?")
         self.ThisRoom = Room.objects.get(id=id)

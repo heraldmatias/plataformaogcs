@@ -83,14 +83,12 @@ def provinciaadd(request):
         num = 1 if len(num)==0 else int(num[0]["numpro"])+1
         provincia = Provincia(numpro=num,estado=Estado.objects.get(pk=1),idusuario_creac=profile.numero)
         frmprovincia = ProvinciaForm(request.POST, instance=provincia) # A form bound to the POST data
-        print request.POST  
         if frmprovincia.is_valid():
             frmprovincia.save()
             frmprovincia = ProvinciaForm()  
             mensaje="Registro grabado satisfactoriamente." # Crear un parametro en home para mostrar los mensajes de exito.
     else:        
         frmprovincia = ProvinciaForm()
-    print frmprovincia.non_field_errors
     return render_to_response('ubigeo/provincia.html', {'frmprovincia': frmprovincia,'opcion':'add','mensaje':mensaje}, context_instance=RequestContext(request),)
 
 @login_required()
