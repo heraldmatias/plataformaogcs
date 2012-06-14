@@ -4,7 +4,7 @@ from django.template import RequestContext
 from django.conf import settings
 from django.contrib.auth.decorators import login_required
 from django.utils.html import escape
-
+from datetime import datetime
 from models import Room, Message
 
 import time
@@ -92,7 +92,8 @@ class Ajax(object):
             if action == 'postmsg':
                 msg_text = self.request.POST['message']    
                 if len(msg_text.strip()) > 0: # Ignore empty strings.
-                    Message.objects.create_message(self.request.user, self.ThisRoom, escape(msg_text))
+                    Message.objects.create_message(self.request.user, self.ThisRoom, msg_text.replace('"',"'").replace(chr(10),""))
+                    #escape(msg_text))
         else:
             # If a GET, make sure that no action was specified.
             if self.request.GET.get('action', None):
@@ -108,10 +109,13 @@ class Ajax(object):
         CustomPayload = self.ExtraHandling()
         if CustomPayload:
             StatusCode = 1
-    
+        hoy = datetime.now().timetuple()
         # Get new messages - do this last in case the ExtraHandling has itself generated
         # new messages. 
-        NewMessages = self.ThisRoom.message_set.filter(unix_timestamp__gt=self.request_time)
+        shoy = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        #print strptime(shoy, "%Y-%m-%d %H:%M:%S") 
+        NewMessages = self.ThisRoom.message_set.filter(unix_timestamp__gt=self.request_time,created__year=2012)
+# self.ThisRoom.message_set.filter(unix_timestamp__gt=self.request_time,created__year=hoy[0],created__month=hoy[1],created__day=hoy[2])
         if NewMessages:
             StatusCode = 1
 

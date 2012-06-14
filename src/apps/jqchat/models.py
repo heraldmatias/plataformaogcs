@@ -91,10 +91,10 @@ except:
 class messageManager(models.Manager):
     
     def create_message(self, user, room, msg):
-        """Create a message for the given user."""
+        """Create a message for the given user."""        
         m = Message.objects.create(user=user,
                                    room=room,
-                                   text='<strong>%s</strong>: %s<br />' % (user, msg))
+                                   text='<strong>%s DICE</strong>: %s<br />' % (user.get_full_name(), msg))
         return m
 
     def create_event(self, user, room, event_id):
@@ -102,7 +102,7 @@ class messageManager(models.Manager):
         m = Message(user=user,
                     room=room,
                     event=event_id)
-        m.text = "<strong>%s</strong> <em>%s</em><br />" % (user, m.get_event_display())
+        m.text = "<strong>%s</strong> <em>%s</em><br />" % (user.get_full_name(), m.get_event_display())
         m.save()
         return m
 

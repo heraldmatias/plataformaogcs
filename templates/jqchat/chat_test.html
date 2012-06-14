@@ -2,23 +2,47 @@
 {% block title %}Chat Client{% endblock %}
 {% block scriptjs %}
 <script type="text/javascript" src="{{ STATIC_URL }}js/jqchat.js"></script>
+<script type="text/javascript" src="{{ STATIC_URL }}grappelli/tinymce/jscripts/tiny_mce/tiny_mce.js"></script>
+
 <script type="text/javascript">
 	$(document).ready(function(){
                 //ExceptionHandler();
 		InitChatWindow("{% url jqchat_ajax room.id %}", null);
+               
 	});
 	$("#msg").keypress(function(event) {
 	  if ( event.which == 13 ) {
             background_post();
 	  }   
 	});
+tinyMCE.init({
+// General options
+mode : "exact",
+elements : "msg",
+theme : "advanced",
+plugins : "emotions",
+width : "560",
+auto_focus : "msg",
+// Theme options
+theme_advanced_buttons1 : "bold,italic,underline,strikethrough,justifyleft,justifycenter,justifyright,justifyfull,fontselect,fontsizeselect,forecolor,emotions",
+theme_advanced_buttons2 : "",
+theme_advanced_buttons3 : "",
+
+theme_advanced_buttons3_add : "emotions",
+theme_advanced_toolbar_location : "top",
+theme_advanced_toolbar_align : "left",
+//theme_advanced_statusbar_location : "bottom",
+theme_advanced_source_editor_height : 300,
+theme_advanced_source_editor_wrap : false,
+// Replace values for the template plugin
+});
+
 </script>
-<script type="text/javascript">document.getElementById("msg").focus();</script>
 <style type="text/css">
 	/* Example styling for the chat window */
    #chatwindow {
      height: 250px;
-     width: 400px;
+     width: 680px;
      border: 1px solid;
      padding: 5px;
      margin: 10px 0;
@@ -41,7 +65,7 @@
                 {% csrf_token %}
 		<div class="row-fluid"><label for="msg">Mensaje:</label>                
 		<textarea rows="1" cols="50" id="msg" style="width:285px;" ></textarea> 
-		<input type="submit" class="btn btn-primary" value="Enviar Mensaje" /><br /></div>
+		<input style="float:right;margin:-75px 9px;" type="submit" class="btn btn-primary" value="Enviar Mensaje" /><br /></div>
 
     </div>
     <div class="modal-footer"></div>

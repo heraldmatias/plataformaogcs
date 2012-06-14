@@ -1,13 +1,15 @@
 var timestamp = 0;
 var url = null;
-var CallInterval = 8000;
+var CallInterval = 1000;
 var IntervalID = 0;
 var prCallback = null;
 
 function callServer(){  
+        // alert(url);
 	$.get(url, 
             {time: timestamp}, 
             function(payload) {
+          //        alert("correcto"); 
                   processResponse(payload);
 	    },'json'
 	    );
@@ -16,7 +18,9 @@ function callServer(){
 function processResponse(payload) {
 	if(payload.status == 0) return;
 	timestamp = parseFloat(payload.time.replace(',','.'));
+         //alert("leyendo...");
 	for(message in payload.messages) {
+           //     alert(payload.messages[message].text);
 		$("#chatwindow").append(payload.messages[message].text);
 	}
 	var objDiv = document.getElementById("chatwindow");
@@ -25,7 +29,7 @@ function processResponse(payload) {
 }
 
 function background_post(){
-if($("#msg").val() == "") return false;
+/*if($("#msg").val() == "") return false;
 var men = $("#msg").val();
 var token =($("input[name='csrfmiddlewaretoken']").val());
 clearInterval(IntervalID);
@@ -35,7 +39,7 @@ $.post(url,{time: timestamp,action: "postmsg",message: men,csrfmiddlewaretoken:t
 		processResponse(payload);
 	},'json'
 ).complete(function() { IntervalID = setInterval(callServer, CallInterval); });                	       	
-//return false;
+//return false;*/
 }
 
 function InitChatWindow(ChatMessagesUrl, ProcessResponseCallback){
@@ -43,15 +47,17 @@ function InitChatWindow(ChatMessagesUrl, ProcessResponseCallback){
 	url = ChatMessagesUrl;
 	prCallback = ProcessResponseCallback;
 	IntervalID = setInterval(callServer, CallInterval);  
-	callServer();
+	//callServer();
 	$("form#chatform").submit(function(){
-		if($("#msg").val() == "") return false;
-                var men = $("#msg").val();
+                //alert( $("#msg").val());
+                var ed = tinyMCE.get('msg');                
+		if(ed.getContent() == "") return false;
+                var men = ed.getContent();
                 var token =($("input[name='csrfmiddlewaretoken']").val());
 		clearInterval(IntervalID);
 		$.post(url,{time: timestamp,action: "postmsg",message: men,csrfmiddlewaretoken:token},
            		function(payload) {                        
-				$("#msg").val(""); $("#msg").focus();
+				ed.setContent(""); tinyMCE.execCommand('mceFocus',false,'msg');
 				processResponse(payload);
 			},'json'
        	).complete(function() { IntervalID = setInterval(callServer, CallInterval); });                	       	
