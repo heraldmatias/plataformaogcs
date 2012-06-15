@@ -345,6 +345,41 @@ function guardar_mcca(){
 					}else{
 						$('#alert').hide();
 					}	
+                                        if($(tablas[0]).find("tbody tr").length == 0){
+                                                 $('#alert1').show().find('strong').text('Debe agregar los sectores de estado involucrados');
+                                                 $("#id_organismo").focus();
+                                                 return false;
+					}else{
+						$('#alert1').hide();
+					}
+                                        if($(tablas[2]).find("tbody tr").length == 0){
+                                                 $('#alert3').show().find('strong').text('Debe agregar los Indicadores de la MCCA');
+                                                 $("#id_indicador").focus();
+                                                 return false;
+					}else{
+						$('#alert3').hide();
+					}
+                                        if($(tablas[3]).find("tbody tr").length == 0){
+                                                 $('#alert4').show().find('strong').text('Debe agregar los Mensajes de la MCCA');
+                                                 $("#id_mensaje").focus();
+                                                 return false;
+					}else{
+						$('#alert4').hide();
+					}
+                                        if($(tablas[4]).find("tbody tr").length == 0){
+                                                 $('#alert5').show().find('strong').text('Debe agregar los Canales de Comunicación de la MCCA');
+                                                 $("#id_tipommca").focus();
+                                                 return false; 
+					}else{
+						$('#alert5').hide();
+					}
+                                        if($(tablas[5]).find("tbody tr").length == 0){
+                                                 $('#alert6').show().find('strong').text('Debe agregar las Acciones Planteadas de la MCCA');
+                                                 $("#id_fechaini_acc").focus();
+                                                 return false;
+					}else{
+						$('#alert6').hide();
+					}
 					$("#id_fechaini_acc").attr("disabled","disabled")
 					$("#id_fechafin_acc").attr("disabled","disabled")
 					return true;

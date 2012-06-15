@@ -32,13 +32,13 @@ function lugares(){
     }else {
 		$('#alert4').hide();
 	}
-	if ($.trim(lugar.val())==''){
+	/*if ($.trim(lugar.val())==''){
         $('#alert4').show().find('strong').text('Debe ingresar el lugar de acción.')
 		lugar.focus();
         return false;
     }else {
 		$('#alert4').hide();
-	}
+	}*/
     $.each(tabla.find("tr"),function(){   
         if ($(this).find("td:eq(1) input:hidden").val()==region.val() & $(this).find("td:eq(2) input:hidden").val()==provincia.val() & $(this).find("td:eq(3) input:hidden").val()==lugar.val()){
             ok=false;
@@ -257,13 +257,26 @@ function guardar_mcc(){
 					}else{
 						$('#alert').hide();
 					}	
-					if($.trim($("#id_propuestamcc").val())=="" ){
+					/*if($.trim($("#id_propuestamcc").val())=="" ){
 							$('#alert4').show().find('strong').text('Debe ingresar una propuesta para el caso de crisis.');$("#id_propuestamcc").focus();
 							return false;
 					}else{
 						$('#alert4').hide();
 						
+					}*/
+					if($(tablas[3]).find("tbody tr").length == 0){
+                                                 $('#alert4').show().find('strong').text('Debe agregar los lugares de acción');
+                                                 $("#id_region").focus();
+                                                 return false;
+					}else{
+						$('#alert4').hide();
 					}
-					
+                                        if($(tablas[0]).find("tbody tr").length == 0){
+                                                 $('#alert1').show().find('strong').text('Debe agregar las actores involucrados');
+                                                 $("#id_actor").focus();
+                                                 return false;
+					}else{
+						$('#alert1').hide();
+					}
 					return true;
 }

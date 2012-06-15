@@ -4,7 +4,7 @@
   {% block content %}  
   {% load render_table from django_tables2 %}
 <ul class="nav nav-tabs">
-    {% if user.get_profile.nivel.codigo == 1 %}<li><a href="{% url ogcs-mantenimiento-ari-add %}">Nuevo</a></li>{% endif %}
+    {% if user.get_profile.nivel.codigo == 2 %}<li><a href="{% url ogcs-mantenimiento-ari-add %}">Nuevo</a></li>{% endif %}
     <li class="active"><a href="{% url ogcs-mantenimiento-ari-query %}" >Consultar</a></li>
 </ul>
 <div class="tab-content" id="contenido_izq">
@@ -15,20 +15,11 @@
       <a class="close" data-dismiss="modal" href="javascript: cerrarformulario('contenido');">&times;</a>
       <h3>Consulta de ARI (Acta de Reunión Intersectorial)</h3>
     </div>
-    <div class="modal-body">
- {% if user.get_profile.nivel.codigo == 2 %}
+    <div class="modal-body"> 
       <div class="row-fluid">
-      <div class="span2">{{ formulario.organismo.label_tag }}:</div><div class="span4">{{ formulario.organismo }}</div>
-      <div class="span2">{{ formulario.dependencia.label_tag }}:</div><div class="span2">{{ formulario.dependencia }}</div></div><p></p>
-      <div class="row-fluid">
-      <div class="span2"><label for="id_nombreari">Reuni&oacute;n:</label></div><div class="span5">{{ formulario.nombreari }}</div>
- <div class="span2"><input  class="btn-primary" name="grabar" value="Consultar" type="submit"></div><div class="span2"><a class="btn btn-primary" href="javascript: imprimir();">Imprimir</a> </div></div>
-      <br><input type="hidden" value="{{ dependencia }}" id="id_dep" name="id_dep">
-      {% else %}
-      <div class="row-fluid">      
-      <center><a class="btn btn-primary" href="javascript: imprimir();">Imprimir</a> </center>
-      </div>
-      {% endif %}
+      <div class="span2"><label for="id_nombreari">Reuni&oacute;n:</label></div><div class="span7">{{ formulario.nombreari }}</div>
+ <div class="span2"><input  class="btn-primary" name="grabar" value="Consultar" type="submit"></div><div class="span1"><a class="btn btn-primary" href="javascript: imprimir();">Imprimir</a> </div></div>
+      <br>     
       <fieldset>
 	<legend><h4>Lista de ARI</h4></legend>
       {% render_table tabla %}    

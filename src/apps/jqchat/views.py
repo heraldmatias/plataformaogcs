@@ -111,10 +111,12 @@ class Ajax(object):
             StatusCode = 1
         hoy = datetime.now().timetuple()
         # Get new messages - do this last in case the ExtraHandling has itself generated
-        # new messages. 
-        shoy = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-        #print strptime(shoy, "%Y-%m-%d %H:%M:%S") 
-        NewMessages = self.ThisRoom.message_set.filter(unix_timestamp__gt=self.request_time,created__year=2012)
+        # new messages.         
+        filtro = list()
+        filtro.append(u"date(created)='%s'"%datetime.now().strftime("%Y-%m-%d"))
+        NewMessages = self.ThisRoom.message_set.filter(unix_timestamp__gt=self.request_time).extra(where=filtro)
+        #print datetime.fromtimestamp(self.request_time)  
+        #NewMessages = self.ThisRoom.message_set.extra(where=filtro)
 # self.ThisRoom.message_set.filter(unix_timestamp__gt=self.request_time,created__year=hoy[0],created__month=hoy[1],created__day=hoy[2])
         if NewMessages:
             StatusCode = 1

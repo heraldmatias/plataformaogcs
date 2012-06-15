@@ -2,12 +2,13 @@
   {% load static %}
   {% block title %} Plataforma Intersectorial de Comunicaci&oacute;n OGCS {% endblock %}
   {% block content %}  
+{% if user.get_profile.nivel.codigo == 2 %}
 {% if mensaje %}
 <h4><div class="alert alert-success"><a class="close" data-dismiss="alert">×</a><strong>Mensaje:</strong>
 <p>{{ mensaje }}</p></div></h4>
 {% endif %}
 <ul class="nav nav-tabs">
-<li class="active"><a href="{% url ogcs-mantenimiento-ari-add %}">Nuevo</a></li>
+{% if user.get_profile.nivel.codigo == 2 %}<li class="active"><a href="{% url ogcs-mantenimiento-ari-add %}">Nuevo</a></li>{% endif %}
 <li><a href="{% url ogcs-mantenimiento-ari-query %}" >Consultar</a></li>
 </ul>
 <div class="tab-content" id="contenido_izq">
@@ -20,12 +21,12 @@
     </div>
     <div class="modal-body">
       {% csrf_token %}      
-     <div class="row-fluid">
-      {% for campo in formulario %}
       <div class="row-fluid">
-      <div class="span3">{{ campo.label_tag }}</div><div class="span3">{{ campo }}</div></div><p></p>
-      {% endfor %}
-    </div></div>
+      <div class="span3">{{ formulario.archari.label_tag }}:</div><div class="span7">{{ formulario.archari }}</div>
+   <div class="span2"><input class="btn" name="limpiar" value="Limpiar" type="button" onClick="$('#id_archari').val('');"></div></div><p></p>
+      <div class="row-fluid">
+      <div class="span3">{{ formulario.nombreari.label_tag }}:</div><div class="span3">{{ formulario.nombreari }}</div></div><p></p>
+    </div>
     <div class="modal-footer">
      <input class="btn-primary" name="grabar" value="Guardar" type="submit">
      <input class="btn" name="grabar" value="Cerrar" type="button" onclick="cerrarformulario('contenido');">
@@ -33,9 +34,29 @@
 </div>
 </form>
 </div></div>
+{% else %}
+<div class="tab-content" id="contenido_izq">
+<div id="frmprovincia" class="modal" style="position: relative; top: auto; left: auto; margin: 0 auto auto 20px; z-index: 1;width:720px;height:auto">
+    <div class="modal-header">
+      <a class="close" data-dismiss="modal" >&times;</a>
+      <h3>ARI (Acta de Reunión Intersectorial)</h3>
+    </div>
+<div class="modal-body"> 
+       <div class="row-fluid">
+       <div class="span12"><div class="alert alert-error">
+	<strong> <h4>PERMISO DENEGADO! Usted no tiene permiso para acceder a esta opción. Consulte con el Administrador del Sistema.</h4></strong></div>
+       </div></div> 
+</div>
+<div class="modal-footer">
+     <a href="{% url ogcs-logout %}" class="btn btn-primary" name="grabar">Iniciar Sesión con otra cuenta</a>
+     <input class="btn" name="grabar" value="Cerrar" type="button" onclick="cerrarformulario('contenido');">
+    </div>
+</div></div>
+{% endif %}
   {% endblock %}
   {% block scriptjs %}    
 <script>
+
 $('#frmmg').submit(function() {
 var ok=true;
 $("form input:file").each(function(){
@@ -49,11 +70,5 @@ if(ok){if($("#id_nombreari").val()==''){
 if(ok){return confirmar('¿Desea grabar el registro?');}else{return false;}
 });
 validaletra('id_nombreari');
-/*var ext = $('#id_arcmg1').val().split('.').pop().toLowerCase();
-if($.inArray(ext, ['jpg','gif','png','jpeg','avi','swf','flv','mp4']) == -1) {
-    alert('Solo se acepta archivos en formato Audio y Video!');return false;
-}else{
-return confirmar('¿Desea grabar el registro?');}
-});*/
 </script>
   {% endblock %}

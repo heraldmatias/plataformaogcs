@@ -72,15 +72,21 @@ class AriForm(forms.ModelForm):
     class Meta:
         model = ActaReunionIntersectorial
         fields = ('archari','nombreari')
+        widgets = {
+            'nombreari': forms.TextInput(attrs={'style':'width:470px', }),
+        } 
 
 class ConsultaAriForm(forms.ModelForm):
     class Meta:
         model = ActaReunionIntersectorial
-        fields = ('organismo','dependencia','nombreari')
+        fields = ('nombreari',)
         widgets = {
-            'organismo': forms.Select(attrs={'onChange':'dependencias(0);',}),
-            'dependencia':forms.Select(),
-        } 
+            'nombreari': forms.TextInput(attrs={'style':'width:350px', }),
+        }
+        #widgets = {
+        #    'organismo': forms.Select(attrs={'onChange':'dependencias(0);',}),
+        #    'dependencia':forms.Select(),
+        #} 
 
 class AriTable(tables.Table):
     item = tables.Column()

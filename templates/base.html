@@ -112,7 +112,7 @@ table tr td{padding-left:10px;}
 		</ul></li>
             <li class="dropdown principal"><a class="dropdown-toggle menublanco" data-toggle="dropdown" rel="popover" data-original-title="Acta de Reunión Intersectorial" href="">ARI<b class="caret"></b></a>
                 <ul class="dropdown-menu">                  
-                  {% if user.get_profile.nivel.codigo == 1 %}<li><a href="{% url ogcs-mantenimiento-ari-add %}" data-toggle="modal">Nuevo Acta de Reunión Intersectorial</a></li>      {% endif %}          
+                  {% if user.get_profile.nivel.codigo == 2 %}<li><a href="{% url ogcs-mantenimiento-ari-add %}" data-toggle="modal">Nuevo Acta de Reunión Intersectorial</a></li>      {% endif %}          
 		  <li><a href="{% url ogcs-mantenimiento-ari-query %}" data-toggle="modal">Consultar Acta de Reunión Intersectorial</a></li>		  
 		</ul></li>
         </ul>
@@ -129,7 +129,7 @@ table tr td{padding-left:10px;}
            	<div class="links"><a href="/foro/">Foro OGCS</a> </div>
                 <div class="links"><a href="{% url jqchat_test_window 1 %}"> Chat OGCS </a></div>
                 <div class="links"><a href="{% url ogcs-mantenimiento-doc-add %}">Documentos</a></div>
-                <div class="links"><a href="{% url ogcs-calendar %}">Calendario</a></div>
+                <div class="links"><a href="{% url ogcs-calendar %}">Actividades</a></div>
             </div>
         </div>  </div>{% endif %}
 </div>

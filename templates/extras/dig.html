@@ -2,6 +2,7 @@
   {% load static %}
   {% block title %} Plataforma Intersectorial de Comunicaci&oacute;n OGCS {% endblock %}
   {% block content %}  
+{% if user.get_profile.nivel.codigo == 1 %}
 {% if mensaje %}
 <h4><div class="alert alert-success"><a class="close" data-dismiss="alert">×</a><strong>Mensaje:</strong>
 <p>{{ mensaje }}</p></div></h4>
@@ -25,7 +26,8 @@
       {% if forloop.counter == 1 %}<p><h4> Miscelanea</h4></p>{% endif %}
       {% if forloop.counter == 4 %}<p><h4> Información Academica</h4></p>{% endif %}
       {% if forloop.counter == 7 %}<p><h4> Buenas Practicas</h4></p>{% endif %}
-      <p>{{ campo.label_tag }}:{{ campo }}</p>
+      <div class="row-fluid"><div class="span3">{{ campo.label_tag }}:</div><div class="span6">{{ campo }}</div>
+      <div class="span2"><input class="btn" name="limpiar{{ forloop.counter }}" value="Limpiar" type="button" onClick="limpiar({{ forloop.counter }})"></div></div>
       {% endfor %}
     </div>
     </div>
@@ -36,6 +38,25 @@
 </div>
 </form>
 </div></div>
+{% else %}
+<div class="tab-content" id="contenido_izq">
+<div id="frmprovincia" class="modal" style="position: relative; top: auto; left: auto; margin: 0 auto auto 20px; z-index: 1;width:720px;height:auto">
+    <div class="modal-header">
+      <a class="close" data-dismiss="modal" >&times;</a>
+      <h3>DIG (Documentos de Interes General)</h3>
+    </div>
+<div class="modal-body"> 
+       <div class="row-fluid">
+       <div class="span12"><div class="alert alert-error">
+	<strong> <h4>PERMISO DENEGADO! Usted no tiene permiso para acceder a esta opción. Consulte con el Administrador del Sistema.</h4></strong></div>
+       </div></div> 
+</div>
+<div class="modal-footer">
+     <a href="{% url ogcs-logout %}" class="btn btn-primary" name="grabar">Iniciar Sesión con otra cuenta</a>
+     <input class="btn" name="grabar" value="Cerrar" type="button" onclick="cerrarformulario('contenido');">
+    </div>
+</div></div>
+{% endif %}
   {% endblock %}
   {% block scriptjs %}    
 <script>
@@ -71,11 +92,14 @@ if($.inArray(ext, ['jpg','gif','png','jpeg','doc','docx','pdf','xls','xlsx','ppt
 if(ok){return confirmar('¿Desea grabar el registro?');}else{return false;}
 });
 
-/*var ext = $('#id_arcmg1').val().split('.').pop().toLowerCase();
-if($.inArray(ext, ['jpg','gif','png','jpeg','avi','swf','flv','mp4']) == -1) {
-    alert('Solo se acepta archivos en formato Audio y Video!');return false;
-}else{
-return confirmar('¿Desea grabar el registro?');}
-});*/
+function limpiar(fileinput){
+	if(fileinput<=3){
+            $("#id_archmis"+fileinput).val('');
+	}else if(fileinput<=6){
+            $("#id_archaca"+(fileinput-3)).val('');
+	}else if(fileinput<=9){
+            $("#id_archbue"+(fileinput-6)).val('');
+	}
+}
 </script>
   {% endblock %}

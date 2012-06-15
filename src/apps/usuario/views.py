@@ -105,7 +105,7 @@ def get_user_permissions():
     for permiso in permisos: 
         perms.append(permiso) 
     #ARI
-    permisos = Permission.objects.filter(content_type__id=40)
+    permisos = Permission.objects.filter(content_type__id=40,codename__contains='query')
     for permiso in permisos: 
         perms.append(permiso) 
     #CHAT

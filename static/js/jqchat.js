@@ -1,6 +1,6 @@
 var timestamp = 0;
 var url = null;
-var CallInterval = 1000;
+var CallInterval = 2000;
 var IntervalID = 0;
 var prCallback = null;
 

@@ -302,18 +302,18 @@ def ariquery(request):
         col = request.GET['2-sort']
     config = RequestConfig(request)
     formulario = ConsultaAriForm(request.GET)
-    if request.user.get_profile().nivel.codigo == 2:
-        if 'organismo' in request.GET:
-            if request.GET['organismo']:
-                filtro.append(u"actareunionintersectorial.organismo_id =%s"%request.GET['organismo'])
-        if 'dependencia' in request.GET:
-            if request.GET['dependencia']:
-                filtro.append(u"actareunionintersectorial.dependencia =%s"%request.GET['dependencia'])
-                dependencia=request.GET['dependencia']
-    else:
-        filtro.append(u"actareunionintersectorial.organismo_id =%s"%request.user.get_profile().organismo.codigo)
-        filtro.append(u"actareunionintersectorial.dependencia =%s"%request.user.get_profile().dependencia) 
-        filtro.append(u"idusuario_creac="+str(request.user.get_profile().numero))
+    #if request.user.get_profile().nivel.codigo == 2:
+    #    if 'organismo' in request.GET:
+    #        if request.GET['organismo']:
+    #            filtro.append(u"actareunionintersectorial.organismo_id =%s"%request.GET['organismo'])
+    #    if 'dependencia' in request.GET:
+    #        if request.GET['dependencia']:
+    #            filtro.append(u"actareunionintersectorial.dependencia =%s"%request.GET['dependencia'])
+    #            dependencia=request.GET['dependencia']
+    #else:
+    #filtro.append(u"actareunionintersectorial.organismo_id =%s"%request.user.get_profile().organismo.codigo)
+    #filtro.append(u"actareunionintersectorial.dependencia =%s"%request.user.get_profile().dependencia) 
+    #filtro.append(u"idusuario_creac="+str(request.user.get_profile().numero))
     filtro.append(u"idusuario_creac=usuario.numero")
     query = ActaReunionIntersectorial.objects.extra(tables=['usuario',],where=filtro,select={'usuario':'usuario.usuario','dependencia':"case actareunionintersectorial.organismo_id when 1 then (select ministerio from ministerio where nummin=actareunionintersectorial.dependencia) when 2 then (select odp from odp where numodp=actareunionintersectorial.dependencia) when 3 then (select gobernacion from gobernacion where numgob=actareunionintersectorial.dependencia) end"}).filter(nombreari__icontains=request.GET['nombreari'] if 'nombreari' in request.GET else '')
     #if 'nombreari' in request.GET:
@@ -329,19 +329,7 @@ def ariprint(request):
     query = None
     filtro = list()
     if "2-sort" in request.GET:
-        col = request.GET['2-sort']
-    if request.user.get_profile().nivel.codigo == 2:
-        if 'organismo' in request.GET:
-            if request.GET['organismo']:
-                filtro.append(u"actareunionintersectorial.organismo_id =%s"%request.GET['organismo'])
-        if 'dependencia' in request.GET:
-            if request.GET['dependencia']:
-                filtro.append(u"actareunionintersectorial.dependencia =%s"%request.GET['dependencia'])
-                dependencia=request.GET['dependencia']
-    else:
-        filtro.append(u"actareunionintersectorial.organismo_id =%s"%request.user.get_profile().organismo.codigo)
-        filtro.append(u"actareunionintersectorial.dependencia =%s"%request.user.get_profile().dependencia) 
-        filtro.append(u"idusuario_creac="+str(request.user.get_profile().numero))
+        col = request.GET['2-sort']    
     filtro.append(u"idusuario_creac=usuario.numero")
     query = ActaReunionIntersectorial.objects.extra(tables=['usuario',],where=filtro,select={'usuario':'usuario.usuario','dependencia':"case actareunionintersectorial.organismo_id when 1 then (select ministerio from ministerio where nummin=actareunionintersectorial.dependencia) when 2 then (select odp from odp where numodp=actareunionintersectorial.dependencia) when 3 then (select gobernacion from gobernacion where numgob=actareunionintersectorial.dependencia) end"}).filter(nombreari__icontains=request.GET['nombreari'] if 'nombreari' in request.GET else '')
     html = render_to_string('extras/reporte_ari.html',{'data': query,'pagesize':'A4','usuario':request.user.get_profile()},context_instance=RequestContext(request))
