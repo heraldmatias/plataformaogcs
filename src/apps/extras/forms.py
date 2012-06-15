@@ -129,7 +129,7 @@ class DocumentoTable(tables.Table):
     tipo = tables.Column(orderable=True)
     categoria = tables.Column(orderable=True)        
     fec_creac = tables.Column(verbose_name='Fecha de Creación',orderable=True)
-    usuario = tables.Column(verbose_name='Usuario',orderable=True)
+    idusuario_creac = tables.Column(verbose_name='Usuario',accessor='idusuario_creac.usuario',orderable=True)
     Descargar = tables.TemplateColumn('<a href={{ record.url_archivo }}>Descargar</a>')
 
     def render_item(self):
