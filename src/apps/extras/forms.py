@@ -130,7 +130,7 @@ class DocumentoTable(tables.Table):
     categoria = tables.Column(orderable=True)        
     fec_creac = tables.Column(verbose_name='Fecha de Creación',orderable=True)
     idusuario_creac = tables.Column(verbose_name='Usuario',accessor='idusuario_creac.usuario',orderable=True)
-    Descargar = tables.TemplateColumn('<a href={{ record.url_archivo }}>Descargar</a>')
+    Descargar = tables.TemplateColumn('<a href={% url ogcs-descarga %}?k={{ record.codigo }}>Descargar</a>')
 
     def render_item(self):
         value = getattr(self, '_counter', 1)

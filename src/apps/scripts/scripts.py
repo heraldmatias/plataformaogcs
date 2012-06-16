@@ -50,4 +50,3 @@ def imprimirToExcel(template,parametros,filename):
     reporte['Content-Disposition'] = 'attachment; filename='+filename
     reporte.write(html)    
     return reporte
-

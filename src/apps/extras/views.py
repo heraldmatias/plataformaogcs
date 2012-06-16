@@ -12,7 +12,7 @@ from django_tables2.config import RequestConfig
 from datetime import datetime
 from scripts.scripts import imprimirToPDF
 from django.http import HttpResponse, Http404
-from django.core.files.storage import  FileSystemStorage
+from django.core.files.storage import  FileSystemStorage,default_storage
 from usuario.models import Usuario
 from django.template.loader import render_to_string
 @login_required()
@@ -346,7 +346,7 @@ def get_categoria(tipo):
        categoria = 'IMAGENES'
    elif tipo in ('AVI','MOV','MP4','WMV','FLV','F4V','3GP'):   
        categoria = 'VIDEOS' 
-   elif tipo in ('MP3','WAV','AMF','AMV'):
+   elif tipo in ('MP3','WAV','AMF','AMV','OGG'):
        categoria = 'AUDIOS'
    elif tipo in ('DOC','DOCX','PDF','PPT','PPTX','XLS','XLSX','TXT','ODT'):
        categoria = 'DOCUMENTOS'
@@ -360,9 +360,12 @@ def documentos_add(request):
     if request.method == 'POST':
         if 'archivo' in request.FILES:
             profile = request.user.get_profile()
+            ini=profile.get_dependencia()            
             archivo = request.FILES['archivo']
             extension = archivo.name[archivo.name.rfind('.')+1:].upper()
             cat = get_categoria(extension)
+            filename= "%s%s.%s" % (ini.iniciales,datetime.today().strftime("%d%m%Y%S"),extension)
+            request.FILES['archivo'].name = filename
             obj = Documento(organismo=profile.organismo, dependencia=profile.dependencia,tipo= cat == 'OTROS' and 'OTRO' or extension,categoria=cat,idusuario_creac=profile)
             formulario = DocumentoForm(request.POST,request.FILES,instance=obj ) # A form bound to the POST data
             if formulario.is_valid():
@@ -438,7 +441,21 @@ def documentos_print(request):
     if 'tipo' in request.GET:
         if request.GET['tipo']:
             filtro.append(u"tipo ='%s'"%request.GET['tipo'])
-    query = Documento.objects.extra(where=filtro,select={'usuario':'usuario.usuario','dependencia':"case documentos.organismo_id when 1 then (select ministerio from ministerio where nummin=documentos.dependencia) when 2 then (select odp from odp where numodp=documentos.dependencia) when 3 then (select gobernacion from gobernacion where numgob=documentos.dependencia) end"})
+    query = Documento.objects.extra(where=filtro,select={'dependencia':"case documentos.organismo_id when 1 then (select ministerio from ministerio where nummin=documentos.dependencia) when 2 then (select odp from odp where numodp=documentos.dependencia) when 3 then (select gobernacion from gobernacion where numgob=documentos.dependencia) end"})
     html = render_to_string('extras/reporte_doc.html',{'data': query,'pagesize':'A4','usuario':request.user.get_profile()},context_instance=RequestContext(request))
     filename= "doc_%s.pdf" % datetime.today().strftime("%Y%m%d")        
     return imprimirToPDF(html,filename)
+
+def descargar(request):    
+    if 'k' in request.GET:         
+        if request.GET['k']: 
+            try:
+                doc = get_object_or_404(Documento,pk=request.GET['k'])
+                content = default_storage.open(doc.archivo.path).read()
+            except:
+                raise Http404
+            reporte = HttpResponse(content_type='application/octet-stream')
+            reporte['Content-Disposition'] = 'attachment; filename="%s"'%doc.archivo.name[doc.archivo.name.rfind('/')+1:]
+            reporte['Content-Length'] = default_storage.size(doc.archivo.path)
+            reporte.write(content)
+            return reporte

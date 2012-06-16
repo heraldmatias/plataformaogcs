@@ -25,7 +25,7 @@ EXTENSIONES = (
         )
     ),
     ('AUDIOS',(
-        ('MP3','MP3'),('WAV','WAV'),('AMF','AMF'),('AMV','AMV'),
+        ('MP3','MP3'),('WAV','WAV'),('AMF','AMF'),('AMV','AMV'),('OGG','OGG'),
         )
     ),
     ('DOCUMENTOS',(
