@@ -90,13 +90,13 @@ def mgquery(request):
     filtro.append(u"idusuario_creac=usuario.numero")
     filtro.append(u"materialgrafico.organismo_id=organismo.codigo")
     try:
-        query = MaterialGrafico.objects.extra(tables=['usuario','organismo'],where=filtro,select={'organismo':'organismo.nombre','usuario':'usuario.usuario','dependencia':"case materialgrafico.organismo_id when 1 then (select ministerio from ministerio where nummin=materialgrafico.dependencia) when 2 then (select odp from odp where numodp=materialgrafico.dependencia) when 3 then (select gobernacion from gobernacion where numgob=materialgrafico.dependencia) end",'tipo1':"SUBSTRING_INDEX(arcmg1, '.', -1)",'tipo2':"SUBSTRING_INDEX(arcmg2, '.', -1)",'tipo3':"SUBSTRING_INDEX(arcmg3, '.', -1)",'tipo4':"SUBSTRING_INDEX(arcmg4, '.', -1)",'tipo5':"SUBSTRING_INDEX(arcmg5, '.', -1)",'tipo6':"SUBSTRING_INDEX(arcmg6, '.', -1)",'tipo7':"SUBSTRING_INDEX(arcmg7, '.', -1)",'tipo8':"SUBSTRING_INDEX(arcmg8, '.', -1)"}).order_by(col).values('organismo','dependencia','fec_creac','usuario','dependencia','urlmg1','urlmg2','urlmg3','urlmg4','urlmg5','urlmg6','urlmg7','urlmg8','tipo1','tipo2','tipo3','tipo4','tipo5','tipo6','tipo7','tipo8')
+        query = MaterialGrafico.objects.extra(tables=['usuario','organismo'],where=filtro,select={'organismo':'organismo.nombre','usuario':'usuario.usuario','dependencia':"case materialgrafico.organismo_id when 1 then (select ministerio from ministerio where nummin=materialgrafico.dependencia) when 2 then (select odp from odp where numodp=materialgrafico.dependencia) when 3 then (select gobernacion from gobernacion where numgob=materialgrafico.dependencia) end",'tipo1':"SUBSTRING_INDEX(arcmg1, '.', -1)",'tipo2':"SUBSTRING_INDEX(arcmg2, '.', -1)",'tipo3':"SUBSTRING_INDEX(arcmg3, '.', -1)",'tipo4':"SUBSTRING_INDEX(arcmg4, '.', -1)",'tipo5':"SUBSTRING_INDEX(arcmg5, '.', -1)",'tipo6':"SUBSTRING_INDEX(arcmg6, '.', -1)",'tipo7':"SUBSTRING_INDEX(arcmg7, '.', -1)",'tipo8':"SUBSTRING_INDEX(arcmg8, '.', -1)"}).order_by(col).values('organismo','dependencia','fec_creac','usuario','dependencia','arcmg1','arcmg2','arcmg3','arcmg4','arcmg5','arcmg6','arcmg7','arcmg8','tipo1','tipo2','tipo3','tipo4','tipo5','tipo6','tipo7','tipo8')
         data = list()
         dmg = dict()     
         for mg in query:
             for a in range(1,9):
-                if mg['urlmg'+str(a)]:
-                    dmg = {'organismo':mg['organismo'],'dependencia':mg['dependencia'],'fec_creac':mg['fec_creac'],'usuario':mg['usuario'],'Descargar':mg['urlmg'+str(a)],'Tipo':mg['tipo'+str(a)]}
+                if mg['arcmg'+str(a)]:
+                    dmg = {'organismo':mg['organismo'],'dependencia':mg['dependencia'],'fec_creac':mg['fec_creac'],'usuario':mg['usuario'],'Descargar':mg['arcmg'+str(a)],'Tipo':mg['tipo'+str(a)]}
                     data.append(dmg)          
         tabla = MGTable(data)
         config.configure(tabla)
@@ -213,14 +213,14 @@ def digquery(request):
     filtro.append(u"idusuario_creac=usuario.numero")
     filtro.append(u"documentointeresgeneral.organismo_id=organismo.codigo")
     try:
-        query = DocumentoInteresGeneral.objects.extra(tables=['usuario','organismo'],where=filtro,select={'organismo':'organismo.nombre','usuario':'usuario.usuario','dependencia':"case documentointeresgeneral.organismo_id when 1 then (select ministerio from ministerio where nummin=documentointeresgeneral.dependencia) when 2 then (select odp from odp where numodp=documentointeresgeneral.dependencia) when 3 then (select gobernacion from gobernacion where numgob=documentointeresgeneral.dependencia) end",'tipomis1':"SUBSTRING_INDEX(archmis1, '.', -1)",'tipomis2':"SUBSTRING_INDEX(archmis2, '.', -1)",'tipomis3':"SUBSTRING_INDEX(archmis3, '.', -1)",'tipoaca1':"SUBSTRING_INDEX(archaca1, '.', -1)",'tipoaca2':"SUBSTRING_INDEX(archaca2, '.', -1)",'tipoaca3':"SUBSTRING_INDEX(archaca3, '.', -1)",'tipobue1':"SUBSTRING_INDEX(archbue1, '.', -1)",'tipobue2':"SUBSTRING_INDEX(archbue2, '.', -1)",'tipobue3':"SUBSTRING_INDEX(archbue3, '.', -1)"}).order_by(col).values('organismo','dependencia','fec_creac','usuario','dependencia','urlmis1','urlmis2','urlmis3','urlaca1','urlaca2','urlaca3','urlbue1','urlbue2','urlbue3','tipomis1','tipomis2','tipomis3','tipoaca1','tipoaca2','tipoaca3','tipobue1','tipobue2','tipobue3')
+        query = DocumentoInteresGeneral.objects.extra(tables=['usuario','organismo'],where=filtro,select={'organismo':'organismo.nombre','usuario':'usuario.usuario','dependencia':"case documentointeresgeneral.organismo_id when 1 then (select ministerio from ministerio where nummin=documentointeresgeneral.dependencia) when 2 then (select odp from odp where numodp=documentointeresgeneral.dependencia) when 3 then (select gobernacion from gobernacion where numgob=documentointeresgeneral.dependencia) end",'tipomis1':"SUBSTRING_INDEX(archmis1, '.', -1)",'tipomis2':"SUBSTRING_INDEX(archmis2, '.', -1)",'tipomis3':"SUBSTRING_INDEX(archmis3, '.', -1)",'tipoaca1':"SUBSTRING_INDEX(archaca1, '.', -1)",'tipoaca2':"SUBSTRING_INDEX(archaca2, '.', -1)",'tipoaca3':"SUBSTRING_INDEX(archaca3, '.', -1)",'tipobue1':"SUBSTRING_INDEX(archbue1, '.', -1)",'tipobue2':"SUBSTRING_INDEX(archbue2, '.', -1)",'tipobue3':"SUBSTRING_INDEX(archbue3, '.', -1)"}).order_by(col).values('organismo','dependencia','fec_creac','usuario','dependencia','archmis1','archmis2','archmis3','archaca1','archaca2','archaca3','archbue1','archbue2','archbue3','tipomis1','tipomis2','tipomis3','tipoaca1','tipoaca2','tipoaca3','tipobue1','tipobue2','tipobue3')
         data = list()
         dmg = dict()     
         for mg in query:
             for ar in ('mis','aca','bue'):
                 for a in range(1,4):
-                    if mg['url'+ar+str(a)]:
-                        dmg = {'organismo':mg['organismo'],'dependencia':mg['dependencia'],'fec_creac':mg['fec_creac'],'usuario':mg['usuario'],'Descargar':mg['url'+ar+str(a)],'TipoArchivo':mg['tipo'+ar+str(a)],'Tipo':ar.upper()}
+                    if mg['arch'+ar+str(a)]:
+                        dmg = {'organismo':mg['organismo'],'dependencia':mg['dependencia'],'fec_creac':mg['fec_creac'],'usuario':mg['usuario'],'Descargar':mg['arch'+ar+str(a)],'TipoArchivo':mg['tipo'+ar+str(a)],'Tipo':ar.upper()}
                         data.append(dmg)          
         tabla = DIGTable(data)
         config.configure(tabla)
@@ -446,16 +446,13 @@ def documentos_print(request):
     filename= "doc_%s.pdf" % datetime.today().strftime("%Y%m%d")        
     return imprimirToPDF(html,filename)
 
-def descargar(request):    
-    if 'k' in request.GET:         
-        if request.GET['k']: 
-            try:
-                doc = get_object_or_404(Documento,pk=request.GET['k'])
-                content = default_storage.open(doc.archivo.path).read()
-            except:
-                raise Http404
-            reporte = HttpResponse(content_type='application/octet-stream')
-            reporte['Content-Disposition'] = 'attachment; filename="%s"'%doc.archivo.name[doc.archivo.name.rfind('/')+1:]
-            reporte['Content-Length'] = default_storage.size(doc.archivo.path)
-            reporte.write(content)
-            return reporte
+def descargar(request,archivoo):    
+    try:
+        archivo = default_storage.open(archivoo)
+    except:
+        raise Http404
+    reporte = HttpResponse(content_type='application/octet-stream')
+    reporte['Content-Disposition'] = 'attachment; filename="%s"'%archivo.name[archivo.name.rfind('/')+1:]
+    reporte['Content-Length'] = default_storage.size(archivo.name)
+    reporte.write(archivo.read())
+    return reporte

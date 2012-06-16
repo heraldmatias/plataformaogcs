@@ -15,5 +15,5 @@ urlpatterns = patterns('extras.views',
     url(r'^documentos/consulta/$','documentos_query', name='ogcs-mantenimiento-doc-query'),
     url(r'^documentos/print/$','documentos_print', name='ogcs-mantenimiento-doc-print'),
     url(r'^documentos/print/$','documentos_print', name='ogcs-mantenimiento-doc-print'),
-    url(r'^descarga/$','descargar', name='ogcs-descarga'), 
+    url(r'^descarga/(?P<archivoo>[a-zA-Z0-9_./]+)/$','descargar', name='ogcs-descarga'), 
 )

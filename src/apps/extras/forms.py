@@ -25,7 +25,7 @@ class MGTable(tables.Table):
     dependencia = tables.Column(orderable=True)
     fec_creac = tables.Column(verbose_name='Fecha de Creación')
     usuario = tables.Column(verbose_name='Usuario')
-    Descargar = tables.TemplateColumn('<a href={{ record.Descargar }} target="_blank">Descargar</a>')
+    Descargar = tables.TemplateColumn('<a href={% url ogcs-descarga record.Descargar %}>Descargar</a>')
     Tipo = tables.Column(orderable=True)
     def render_item(self):
         value = getattr(self, '_counter', 1)
@@ -56,7 +56,7 @@ class DIGTable(tables.Table):
     dependencia = tables.Column(orderable=True)
     fec_creac = tables.Column(verbose_name='Fecha de Creación')
     usuario = tables.Column(verbose_name='Usuario')
-    Descargar = tables.TemplateColumn('<a href={{ record.Descargar }} target="_blank">Descargar</a>')
+    Descargar = tables.TemplateColumn('<a href={% url ogcs-descarga record.Descargar %}>Descargar</a>')
     TipoArchivo = tables.Column(orderable=True)
     Tipo = tables.Column(orderable=True)
     def render_item(self):
@@ -95,7 +95,7 @@ class AriTable(tables.Table):
     nombreari = tables.Column(verbose_name='Reunión',orderable=True)
     fec_creac = tables.Column(verbose_name='Fecha de Creación')
     usuario = tables.Column(verbose_name='Usuario',)
-    Descargar = tables.TemplateColumn('<a href={{ record.urlari }}>Descargar</a>')
+    Descargar = tables.TemplateColumn('<a href={% url ogcs-descarga record.archari.name %}>Descargar</a>')
 
     def render_item(self):
         value = getattr(self, '_counter', 1)
@@ -130,7 +130,7 @@ class DocumentoTable(tables.Table):
     categoria = tables.Column(orderable=True)        
     fec_creac = tables.Column(verbose_name='Fecha de Creación',orderable=True)
     idusuario_creac = tables.Column(verbose_name='Usuario',accessor='idusuario_creac.usuario',orderable=True)
-    Descargar = tables.TemplateColumn('<a href={% url ogcs-descarga %}?k={{ record.codigo }}>Descargar</a>')
+    Descargar = tables.TemplateColumn('<a href={% url ogcs-descarga record.archivo.name %}>Descargar</a>')
 
     def render_item(self):
         value = getattr(self, '_counter', 1)
