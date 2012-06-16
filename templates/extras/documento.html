@@ -35,7 +35,7 @@
 <script>
 $('#frmdoc').submit(function() {
 if($('#id_archivo').val()==''){
-alert('Debe adjuntar el archivo a subir');
+alert('Debe adjuntar el archivo a subir');return false;
 }else{
 return confirmar('¿Desea grabar el registro?');}
 });
