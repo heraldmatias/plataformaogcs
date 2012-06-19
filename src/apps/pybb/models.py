@@ -66,6 +66,10 @@ class Category(models.Model):
     hidden = models.BooleanField(_('Hidden'), blank=False, null=False, default=False,
         help_text = _('If checked, this category will be visible only for staff')
     )
+    idusuario_creac = models.ForeignKey(User, related_name='creador',verbose_name='Usuario creador', null=True, blank=True,)
+    fec_creac = models.DateTimeField(verbose_name='Fecha de creacion del registro',auto_now_add=True)
+    idusuario_mod = models.ForeignKey(User, related_name='modificador',verbose_name='Usuario modifico', null=True, blank=True,)
+    fec_mod = models.DateTimeField(verbose_name='Fecha modifico', null=True, blank=True)
 
     class Meta(object):
         ordering = ['position']
@@ -102,6 +106,10 @@ class Forum(models.Model):
     hidden = models.BooleanField(_('Hidden'), blank=False, null=False, default=False)
     readed_by = models.ManyToManyField(User, through='ForumReadTracker', related_name='readed_forums')
     headline = models.TextField(_('Headline'), blank=True, null=True)
+    idusuario_creac = models.ForeignKey(User, related_name='foro_creador',verbose_name='Usuario creador', null=True, blank=True,)
+    fec_creac = models.DateTimeField(verbose_name='Fecha de creacion del registro',auto_now_add=True)
+    idusuario_mod = models.ForeignKey(User, related_name='foro_modificador',verbose_name='Usuario modifico', null=True, blank=True,)
+    fec_mod = models.DateTimeField(verbose_name='Fecha modifico', null=True, blank=True)
 
     class Meta(object):
         ordering = ['position']
@@ -161,6 +169,10 @@ class Topic(models.Model):
     post_count = models.IntegerField(_('Post count'), blank=True, default=0)
     readed_by = models.ManyToManyField(User, through='TopicReadTracker', related_name='readed_topics')
     on_moderation = models.BooleanField(_('On moderation'), default=False)
+    idusuario_creac = models.ForeignKey(User, related_name='tema_creador',verbose_name='Usuario creador', null=True, blank=True,)
+    fec_creac = models.DateTimeField(verbose_name='Fecha de creacion del registro',auto_now_add=True)
+    idusuario_mod = models.ForeignKey(User, related_name='tema_modificador',verbose_name='Usuario modifico', null=True, blank=True,)
+    fec_mod = models.DateTimeField(verbose_name='Fecha modifico', null=True, blank=True)
 
     class Meta(object):
         ordering = ['-created']

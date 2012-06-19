@@ -15,6 +15,8 @@ from django.http import HttpResponse, Http404
 from django.core.files.storage import  FileSystemStorage,default_storage
 from usuario.models import Usuario
 from django.template.loader import render_to_string
+from pybb.models import Category
+from django.core.urlresolvers import reverse
 @login_required()
 def mgadd(request):
     mensaje=""
@@ -456,3 +458,88 @@ def descargar(request,archivoo):
     reporte['Content-Length'] = default_storage.size(archivo.name)
     reporte.write(archivo.read())
     return reporte
+
+################################################################################
+################################################################################
+@login_required()
+def categoria_add(request):
+    mensaje=""
+    if request.method == 'POST':        
+        cat = Category(idusuario_creac=request.user,name=request.POST.getlist('name')[0],position=request.POST.getlist('position')[0],hidden=True if 'hidden' in request.POST else False)         
+        cat.save()        
+        foros = request.POST.getlist('cforo')
+        cpos = request.POST.getlist('cpos')
+        chid = request.POST.getlist('chid')
+        for c in range(len(foros)):
+            Forum(name=foros[c],position=cpos[c],hidden= True if chid[c]=='1' else False,category=cat,idusuario_creac=request.user).save()
+        formulario = CategoryForm() # Crear un parametro en home para mostrar los mensajes de exito.
+        mensaje="Registro grabado satisfactoriamente."
+    else:        
+        formulario = CategoryForm()
+    tabla = ForumTable(list())
+    forum_form = ForumForm()  
+    return render_to_response('extras/categoria.html', {'formulario': formulario,'opcion':'add','mensaje':mensaje,'tabla':tabla,'forum_form':forum_form,}, context_instance=RequestContext(request),)
+
+@login_required()
+def categoria_edit(request, codigo):
+    if request.method == 'POST':    
+        cat = get_object_or_404(Category, pk=int(codigo))    
+        cat.idusuario_mod=request.user
+        cat.name=request.POST.getlist('name')[0]
+        cat.position=request.POST.getlist('position')[0]
+        cat.hidden=True if 'hidden' in request.POST else False
+        cat.fec_mod = datetime.now()
+        cat.save()
+        foros = request.POST.getlist('cforo')
+        cpos = request.POST.getlist('cpos')
+        chid = request.POST.getlist('chid')
+        query = Forum.objects.filter(category=cat)
+        for c in range(len(foros)):
+            try:
+                row = Forum.objects.get(category=cat,pk=query[c].id)
+                row.name=foros[c]
+                row.position= cpos[c]
+                row.hidden=True if chid[c]=='1' else False
+                row.save()
+            except:
+                Forum(name=foros[c],position=cpos[c],hidden=True if chid[c]=='1' else False,category=cat,idusuario_creac=request.user).save()
+        resto= len(foros)
+        while resto < len(query):
+            row = Forum.objects.get(category=cat)
+            row.delete()
+            resto = resto + 1        
+        return redirect(reverse('ogcs-mantenimiento-categoria-query')+'?m=edit')
+    else:
+        obj = get_object_or_404(Category, pk=int(codigo))
+        formulario = CategoryForm(instance=obj)
+        foros = obj.forums.all()
+        tabla = ForumTable(foros) 
+    forum_form = ForumForm()  
+    return render_to_response('extras/categoria.html', {'formulario': formulario,'opcion':'edit','codigo':codigo,'tabla':tabla,'forum_form':forum_form,}, context_instance=RequestContext(request),)
+
+
+@login_required()
+def categoria_query(request):
+    col = "-name"
+    query = None
+    if "2-sort" in request.GET:
+        col = request.GET['2-sort']
+    config = RequestConfig(request)
+    formulario = CategoryConsultaForm(request.GET)
+    if "name" in request.GET:     
+        query = Category.objects.filter(name__icontains=request.GET['name']).order_by(col)
+    if query is None:
+       query = Category.objects.all()
+    tabla = CategoryTable(query.order_by(col))
+    config.configure(tabla)
+    tabla.paginate(page=request.GET.get('page', 1), per_page=6)
+    return render_to_response('extras/categoria_consulta.html', {'formulario':formulario,'tabla':tabla,'mensaje':(request.GET['m'] if 'm' in request.GET else '')}, context_instance=RequestContext(request),)
+
+@login_required()
+def categoria_print(request):
+    if "region" in request.GET:        
+        qregiones = Category.objects.all().filter(name__icontains=request.GET['region']).order_by("region")
+        html = render_to_string('ubigeo/reporter.html',{'data': qregiones,'pagesize':'A4','usuario':request.user.get_profile()},context_instance=RequestContext(request))
+        filename= "region_%s.pdf" % datetime.today().strftime("%Y%m%d")        
+        return imprimirToPDF(html,filename)
+
