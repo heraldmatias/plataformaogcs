@@ -167,9 +167,9 @@ class TopicForm(forms.ModelForm):
 
 class TopicTablee(tables.Table):
     item = tables.Column()
-    name = tables.TemplateColumn('<a title="Modificar el Tema" href={% url ogcs-mantenimiento-tema-edit record.id %}>{{ record.name }}</a>',orderable=True,verbose_name='Tema')
     categoria = tables.Column(verbose_name='Categoría',orderable=True,accessor="forum.category")
     forum = tables.Column(verbose_name='Foro',orderable=True)
+    name = tables.TemplateColumn('<a title="Modificar el Tema" href={% url ogcs-mantenimiento-tema-edit record.id %}>{{ record.name }}</a>',orderable=True,verbose_name='Tema')
     idusuario_creac = tables.Column(verbose_name='Creador',orderable=True)
     fec_creac = tables.Column(verbose_name='Fec. Creacion',orderable=True)
     idusuario_mod = tables.Column(verbose_name='Modificador',orderable=True)
@@ -197,8 +197,8 @@ class ForumConsultaForm(forms.ModelForm):
 
 class ForumTablee(tables.Table):
     item = tables.Column()
-    name = tables.TemplateColumn('<a title="Modificar el Foro" href={% url ogcs-mantenimiento-foro-edit record.id %}>{{ record.name }}</a>',orderable=True,verbose_name='Foro')
     category = tables.Column(verbose_name='Categoría',orderable=True)
+    name = tables.TemplateColumn('<a title="Modificar el Foro" href={% url ogcs-mantenimiento-foro-edit record.id %}>{{ record.name }}</a>',orderable=True,verbose_name='Foro')
     position = tables.TemplateColumn('{{ record.position }}',verbose_name='Posicion',orderable=True)
     admins = tables.TemplateColumn('{% if record.hidden %} SI{% else %}NO{% endif %}',verbose_name='Solo Administrador',orderable=True)
     idusuario_creac = tables.Column(verbose_name='Creador',orderable=True)
