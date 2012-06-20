@@ -1,6 +1,9 @@
   {% extends 'base.html' %}
   {% load static %}
   {% block title %} Plataforma Intersectorial de Comunicaci&oacute;n OGCS {% endblock %}
+  {% block csspage %}
+  <link href="{{ STATIC_URL  }}css/jquery-ui.css" rel="stylesheet" type="text/css"/>
+  {% endblock %}
   {% block content %}  
   {% load render_table from django_tables2 %}
 {% if mensaje %}
@@ -8,24 +11,27 @@
 <p>Registro modificado satisfactoriamente.</p></div></h4>
 {% endif %}
 <ul class="nav nav-tabs">
-    <li><a href="{% url ogcs-mantenimiento-categoria-add %}">Nuevo</a></li>
-    <li class="active"><a href="{% url  ogcs-mantenimiento-categoria-query %}" >Consultar</a></li>
+    <li><a href="{% url ogcs-mantenimiento-foro-add %}">Nuevo</a></li>
+    <li class="active"><a href="{% url  ogcs-mantenimiento-foro-query %}" >Consultar</a></li>
 </ul>
 <div class="tab-content" id="contenido_izq">
 <div id="consulta" class="tab-pane fade in active">
-<form class="form-inline" name="frmreg" method="get" action="{% url  ogcs-mantenimiento-categoria-query %}"><!--data-toggle="modal"-->
+<form class="form-inline" name="frmreg" method="get" action="{% url  ogcs-mantenimiento-foro-query %}"><!--data-toggle="modal"-->
 <div id="frmregion" class="modal" style="position: relative; top: auto; left: auto; margin:auto auto auto 20px; z-index: 1;width:720px;height:auto"><!--class="modal hide fade">-->
     <div class="modal-header">
       <a class="close" data-dismiss="modal" href="javascript: cerrarformulario('contenido');">&times;</a>
-      <h3>Consulta de Categorias</h3>
+      <h3>Consulta de Foros</h3>
     </div>
     <div class="modal-body">
 
       <div class="row-fluid">
-      <div class="span8">{{ formulario }}</div><div class="span2"><input  class="btn-primary" name="grabar" value="Consultar" type="submit"></div></div>
+      <div class="span2"><label for="id_name">Foro:</label></div><div class="span2">{{ formulario.name }}</div></div><p></p>
+      <div class="row-fluid">
+      <div class="span2"><label for="id_category">Categoría:</label></div><div class="span4">{{ formulario.category }}</div>
+      <div class="span2"><input  class="btn-primary" name="grabar" value="Consultar" type="submit"></div></div>
       <br><!---->
       <fieldset>
-	<legend><h4>Lista de Categorias</h4></legend>
+	<legend><h4>Lista de Foros</h4></legend>
       {% render_table tabla %}    
       </fieldset>
     </div>
@@ -37,7 +43,20 @@
 </div></div>
   {% endblock %}
   {% block scriptjs %}    
+  <script src="{{ STATIC_URL }}bootstrap/js/jquery-ui.js" type="text/javascript"></script>
 <script>
+$( ".accordion" ).accordion({
+collapsible: true,
+autoHeight: false,
+navigation: true,
+animated: 'bounceslide',
+active : false, 
+icons: {
+    header: "ui-icon-circle-arrow-e",
+    headerSelected: "ui-icon-circle-arrow-s"
+}
+});
+combotodos('id_category');
 function imprimir(){
 var region=$('#id_region').val();
 var url="{% url  ogcs-mantenimiento-region-print %}?region="+region;

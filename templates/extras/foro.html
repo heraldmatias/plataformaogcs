@@ -1,0 +1,142 @@
+  {% extends 'base.html' %}
+  {% load static %}
+  {% block title %} Plataforma Intersectorial de Comunicaci&oacute;n OGCS {% endblock %}
+  {% block content %}
+  {% load render_table from django_tables2 %}
+{% if mensaje %}
+<h4><div class="alert alert-success"><a class="close" data-dismiss="alert">×</a><strong>Mensaje:</strong>
+<p>{{ mensaje }}</p></div></h4>
+{% endif %}
+    <ul class="nav nav-tabs">
+    {% if opcion == "add" %}
+    <li class="active"><a href="{% url ogcs-mantenimiento-foro-add %}">Nuevo</a></li>{% else %}
+    <li class="active"><a href="{% url ogcs-mantenimiento-foro-edit codigo %}">Modificar</a></li>{% endif %}
+    <li><a href="{% url  ogcs-mantenimiento-foro-query %}" >Consultar</a></li>
+    </ul>
+<div class="tab-content" id="contenido_izq">
+<div id="nuevo" class="tab-pane fade in active">
+{% if opcion == "add" %}
+<form class="form-inline" name="frmcat" method="post" action="{% url ogcs-mantenimiento-foro-add %}" onsubmit="return guardar();" >{% else %}
+<form class="form-inline" name="frmcat" method="post" action="{% url ogcs-mantenimiento-foro-edit codigo %}" onsubmit="return guardar();">
+{% endif %}
+<div id="frmregion" class="modal" style="position: relative; top: auto; left: auto; margin: 0 auto auto 20px; z-index: 1;width:720px;height:auto"><!--class="modal hide fade">-->
+    <div class="modal-header">
+      <a class="close" data-dismiss="modal" href="javascript: cerrarformulario('contenido');" >&times;</a>
+      <h3>Mantenimiento de Foro-Temas</h3>
+    </div>
+    <div class="modal-body">
+      {% csrf_token %}
+<div class="alert alert-error" id="alert"><strong></strong></div>
+      <div class="row-fluid">
+                <div class="row-fluid"><div class="span2"><label>Foro:</label></div>
+                <div class="span6">{{ formulario.name }}</div></div><p></p>
+                <div class="row-fluid">
+                <div class="span2"><label>Categoría:</label></div> 
+                <div class="span5">{{ formulario.category }}</div>                 
+                <div class="span3"><label>{{ formulario.hidden }} Solo Administradores</label></div></div><p></p>
+                <div class="row-fluid">
+                <div class="span2"><label>Posición:</label></div>
+                <div class="span2">{{ formulario.position }}</div> </div>
+    </div><br />
+   <!---------------------------------TEMAS-------------------------------------->
+   <div class="modal-header">
+        <h3>Temas</h3>
+        </div><br />
+        <div class="row-fluid">
+            <div class="alert alert-error" id="alert1"><strong></strong></div>
+                <div class="row-fluid"><div class="span2"><label>Tema:</label></div>
+                <div class="span9"><input type="text" name="name_tema" id="id_name_tema" style="width:500px;"></div>
+                <input class="btn-primary" name="agregar" value="Agregar" type="button" onclick="temas()"></div>            
+        </div><br /><br />
+      {% render_table tabla %} 
+<!----------------------------------------------------------------------------------->
+    </div>
+    <div class="modal-footer">
+     <input class="btn-primary" name="grabar" value="{% if opcion == 'add' %}Guardar {% else %} Modificar {% endif %}" type="submit">
+     <input class="btn" name="grabar" value="Cerrar" type="button" onclick="cerrarformulario('contenido');">
+    </div>
+</div>
+</form>
+</div></div>
+  {% endblock %}
+  {% block scriptjs %}
+<script>
+validanumero('id_position');comboelegir('id_category');
+function temas(){
+    var foro=$('#id_name_tema');    
+    var tabla= $('#id_temas').find("tbody");
+    var n= tabla.find("tr").length;
+    var ok=true;
+    if ($.trim(foro.val())==''){
+        $('#alert1').show().find('strong').text('Debe ingresar el Tema.');
+              foro.focus();
+        return false;
+    }else{
+                $('#alert1').hide();
+    }
+    $.each(tabla.find("tr"),function(){   
+        if ($(this).find("td:eq(1) input:hidden").val()==foro.val()){
+            ok=false;
+            return false;
+        }
+    });
+    if(ok==true){
+        n+=1;
+        fila="<tr class='"+n+"'><td>"+n+"</td><td><input type='hidden' name='ctema' value='"+foro.val()+"'>"+foro.val()+"</td><td> <a href='javascript: removedetalle("+n+")'><div id='delete'></div></a></td></tr>"
+        tabla.append(fila);
+                $('#alert1').hide();
+    }else{
+        $('#alert1').show().find('strong').text('Este TEMA ya ha sido agregado. Ingrese otro porfavor!');
+        foro.select();
+        foro.focus();
+        return false;
+    }
+    foro.val('');
+    foro.focus();
+}
+function removedetalle(fila){
+    tabla="#id_temas";
+    $(tabla+" tr:eq("+fila+")").remove();
+    var n=1;
+    var tdetalle= $(tabla);
+    /*AUTO REORDENAMIENTO DE ITEMS LUEGO DE ELIMINAR*/
+    $.each(tdetalle.find("tbody tr"),function(){
+        this.cells[0].innerHTML=n;    
+this.cells[2].innerHTML="<a href='javascript: removedetalle("+n+")'><div id='delete'></div></a>";
+
+        n+=1;
+    });
+}
+
+function guardar() {
+var foro=$('#id_name_foro');
+var posicion=$('#id_position_foro');
+var cat = $('#id_category');
+
+if ($.trim(foro.val())==''){
+    $('#alert').show().find('strong').text('Debe ingresar el nombre del Foro.');
+    foro.focus();
+    return false;
+}else{
+        $('#alert').hide();
+}
+if ($.trim(posicion.val())==''){
+    $('#alert').show().find('strong').text('Debe ingresar la posicion del Foro,caso contrario escriba 0 (cero).');
+    posicion.focus();
+    return false;
+}else{
+        $('#alert').hide();
+}
+if ($.trim(cat.val())==''){
+    $('#alert').show().find('strong').text('Debe seleccionar la categoría del Foro.');
+    cat.focus();
+    return false;
+}else{
+        $('#alert').hide();
+}
+
+return confirmar("¿Desea {% if opcion == 'add' %}Guardar {% else %} Modificar {% endif %} el registro?");
+}
+</script>
+  {% endblock %}
+

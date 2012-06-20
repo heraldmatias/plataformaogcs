@@ -31,6 +31,7 @@ class Migration:
             ('fec_creac', orm['pybb.Category:fec_creac']),
             ('idusuario_mod', orm['pybb.Category:idusuario_mod']),
             ('fec_mod', orm['pybb.Category:fec_mod']),
+            ('estado', orm['pybb.Category:estado']),
         ))
         db.send_create_signal('pybb', ['Category'])
    
@@ -48,6 +49,7 @@ class Migration:
             ('fec_creac', orm['pybb.Forum:fec_creac']),
             ('idusuario_mod', orm['pybb.Forum:idusuario_mod']),
             ('fec_mod', orm['pybb.Forum:fec_mod']),
+            ('estado', orm['pybb.Forum:estado']),
         ))
         db.send_create_signal('pybb', ['Forum'])
         
@@ -105,6 +107,7 @@ class Migration:
             ('fec_creac', orm['pybb.Topic:fec_creac']),
             ('idusuario_mod', orm['pybb.Topic:idusuario_mod']),
             ('fec_mod', orm['pybb.Topic:fec_mod']),
+            ('estado', orm['pybb.Topic:estado']),
         ))
         db.send_create_signal('pybb', ['Topic'])
         
@@ -207,6 +210,7 @@ class Migration:
             'fec_creac': ('django.db.models.fields.DateTimeField', [], {'default': 'datetime.datetime.now'}),
             'idusuario_mod': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'modificador'", 'to': "orm['auth.User']",'null':'True', 'blank':'True',}),
             'fec_mod': ('django.db.models.fields.DateTimeField', [], {'blank': 'True','null':'True', 'blank':'True'}),
+            'estado': ('django.db.models.fields.IntegerField', [], {'null':'True','blank':'True'})
         },
         'pybb.forum': {
             'category': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'forums'", 'to': "orm['pybb.Category']"}),
@@ -222,6 +226,7 @@ class Migration:
             'fec_creac': ('django.db.models.fields.DateTimeField', [], {'default': 'datetime.datetime.now'}),
             'idusuario_mod': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'foro_modificador'", 'to': "orm['auth.User']",'null':'True', 'blank':'True'}),
             'fec_mod': ('django.db.models.fields.DateTimeField', [], {'blank': 'True','null':'True', 'blank':'True'}),
+            'estado': ('django.db.models.fields.IntegerField', [], {'null':'True','blank':'True'})
         },
         'pybb.post': {
             'body': ('django.db.models.fields.TextField', [], {}),
@@ -271,6 +276,7 @@ class Migration:
             'fec_creac': ('django.db.models.fields.DateTimeField', [], {'default': 'datetime.datetime.now'}),
             'idusuario_mod': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'tema_modificador'", 'to': "orm['auth.User']",'null':'True', 'blank':'True'}),
             'fec_mod': ('django.db.models.fields.DateTimeField', [], {'blank': 'True','null':'True', 'blank':'True'}),
+            'estado': ('django.db.models.fields.IntegerField', [], {'null':'True','blank':'True'})
         }
     }
     

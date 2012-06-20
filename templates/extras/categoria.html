@@ -30,10 +30,11 @@
       <div class="row-fluid">
             	<div class="row-fluid"><div class="span2"><label>Categoría:</label></div>
                 <div class="span6">{{ formulario.name }}</div></div><p></p>
+                <div class="row-fluid"><div class="span2"><label>Estado:</label></div>
+                <div class="span5">{{ formulario.estado }}</div>
+                <div class="span3"><label>{{ formulario.hidden }} Solo Administradores</label></div></div><p></p>
                 <div class="row-fluid"><div class="span2"><label>Posición:</label></div>
-                <div class="span2">{{ formulario.position }}</div>
-            	<div class="span3"><label>{{ formulario.hidden }} Solo Administradores</label></div>
-                </div>
+                <div class="span2">{{ formulario.position }}</div></div>                                
     </div><br />
     <!--------------------------------- FOROS-------------------------------------->
    <div class="modal-header">
@@ -43,12 +44,17 @@
             <div class="alert alert-error" id="alert1"><strong></strong></div>
             	<div class="row-fluid"><div class="span2"><label>Foro:</label></div>
                 <div class="span6">{{ forum_form.name }}</div></div><p></p>
-            	<div class="row-fluid"><div class="span2"><label>Posición:</label></div>
-                <div class="span2">{{ forum_form.position }}</div>
-            	<div class="span7"><label>{{ forum_form.hidden }} Solo Administradores</label></div>
-                <input class="btn-primary" name="agregar" value="Agregar" type="button" onclick="foros()"></div>            
+            	<div class="row-fluid"><div class="span2"><label>Estado:</label></div>
+                <div class="span5">{{ forum_form.estado }}</div>
+            	<div class="span4"><label>{{ forum_form.hidden }} Solo Administradores</label></div>
+                <input class="btn-primary" name="agregar" value="Agregar" type="button" onclick="foros()"></div><p></p>
+            	<div class="row-fluid">
+                <div class="span2"><label>Posición:</label></div>
+                <div class="span1">{{ forum_form.position }}</div></div>            
     	</div><br /><br />
       {% render_table tabla %} 
+<!----------------------------------------------------------------------------------->
+
 <!----------------------------------------------------------------------------------->
     </div>
     <div class="modal-footer">
@@ -61,9 +67,9 @@
   {% endblock %}
   {% block scriptjs %}    
 <script>
-validanumero('id_position');validanumero('id_position_foro');
+validanumero('id_position');validanumero('id_position_foro');comboelegir('id_estado');comboelegir('id_estado_forum');
 function foros(){
-    var foro=$('#id_name_foro');
+    var foro=$('#id_name_foro');var estado=$('#id_estado_forum');
     var posicion=$('#id_position_foro');
     var admin=document.getElementById("id_hidden_foro");
     var tabla= $('#id_foros').find("tbody");
@@ -83,6 +89,14 @@ function foros(){
     }else{
 		$('#alert1').hide();
     }
+if ($.trim(estado.val())==''){
+    $('#alert1').show().find('strong').text('Debe seleccionar el estado.');
+    estado.focus();
+    return false;
+}else{
+        $('#alert1').hide();
+}
+
     $.each(tabla.find("tr"),function(){   
         if ($(this).find("td:eq(1) input:hidden").val()==foro.val()){
             ok=false;
@@ -91,7 +105,7 @@ function foros(){
     });//document.getElementById("id_politica").checked
     if(ok==true){
         n+=1;
-        fila="<tr class='"+n+"'><td>"+n+"</td><td><input type='hidden' name='cforo' value='"+foro.val()+"'>"+foro.val()+"</td><td><input type='hidden' name='cpos' value='"+posicion.val()+"'>"+posicion.val()+"</td><td><input type='hidden' name='chid' value='"+(admin.checked?1:0)+"'>"+(admin.checked?'SI':'NO')+"</td><td> <a href='javascript: removedetalle("+n+")'><div id='delete'></div></a></td></tr>"
+fila="<tr class='"+n+"'><td>"+n+"</td><td><input type='hidden' name='cforo' value='"+foro.val()+"'>"+foro.val()+"</td><td><input type='hidden' name='cpos' value='"+posicion.val()+"'>"+posicion.val()+"</td><td><input type='hidden' name='chid' value='"+(admin.checked?1:0)+"'>"+(admin.checked?'SI':'NO')+"</td><td><input type='hidden' name='cest' value='"+estado.val()+"'>"+estado.find('option:selected').text()+"</td><td> <a href='javascript: removedetalle("+n+")'><div id='delete'></div></a></td></tr>"
         tabla.append(fila);
 		$('#alert1').hide();
     }else{
@@ -114,12 +128,13 @@ function removedetalle(fila){
     /*AUTO REORDENAMIENTO DE ITEMS LUEGO DE ELIMINAR*/
     $.each(tdetalle.find("tbody tr"),function(){
         this.cells[0].innerHTML=n;    
+        this.cells[4].innerHTML="<a href='javascript: removedetalle("+n+")'><div id='delete'></div></a>";
         n+=1;
     });
 }
 
 function guardar() {
-var categoria=$('#id_name');
+var categoria=$('#id_name');var estado=$('#id_estado');
 var posicion=$('#id_position');
 if ($.trim(categoria.val())==''){
     $('#alert').show().find('strong').text('Debe ingresar el nombre de la Categoría.');
@@ -135,6 +150,14 @@ if ($.trim(posicion.val())==''){
 }else{
 	$('#alert').hide();
 }
+if ($.trim(estado.val())==''){
+    $('#alert').show().find('strong').text('Debe seleccionar el estado.');
+    estado.focus();
+    return false;
+}else{
+        $('#alert').hide();
+}
+
 return confirmar("¿Desea {% if opcion == 'add' %}Guardar {% else %} Modificar {% endif %} el registro?");
 }
 </script>

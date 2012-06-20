@@ -17,6 +17,9 @@ urlpatterns = patterns('extras.views',
     url(r'^descarga/(?P<archivoo>[a-zA-Z0-9_./]+)/$','descargar', name='ogcs-descarga'), 
     url(r'^categoria/add/$','categoria_add', name='ogcs-mantenimiento-categoria-add'),
     url(r'^categoria/edit/(?P<codigo>\d+)/$','categoria_edit', name='ogcs-mantenimiento-categoria-edit'),
-    url(r'^categoria/consulta/$','categoria_query', name='ogcs-mantenimiento-categoria-query'),
-    
+    url(r'^categoria/consulta/$','categoria_query', name='ogcs-mantenimiento-categoria-query'),   
+    url(r'^forum/add/$','forum_add', name='ogcs-mantenimiento-foro-add'),
+    url(r'^forum/edit/(?P<codigo>\d+)/$','forum_edit', name='ogcs-mantenimiento-foro-edit'),
+    url(r'^forum/consulta/$','forum_query', name='ogcs-mantenimiento-foro-query'),
+
 )

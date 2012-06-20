@@ -47,7 +47,10 @@ TZ_CHOICES = [(float(x[0]), x[1]) for x in (
 (9, '+09'), (9.5, '+09.5'), (10, '+10'), (10.5, '+10.5'), (11, '+11'),
 (11.5, '+11.5'), (12, '+12'), (13, '+13'), (14, '+14'),
 )]
-
+ESTADO = (
+    (0,'ACTIVO'),
+    (1,'INACTIVO')
+)
 #noinspection PyUnusedLocal
 def get_file_path(instance, filename, to='pybb/avatar'):
     """
@@ -70,7 +73,7 @@ class Category(models.Model):
     fec_creac = models.DateTimeField(verbose_name='Fecha de creacion del registro',auto_now_add=True)
     idusuario_mod = models.ForeignKey(User, related_name='modificador',verbose_name='Usuario modifico', null=True, blank=True,)
     fec_mod = models.DateTimeField(verbose_name='Fecha modifico', null=True, blank=True)
-
+    estado = models.IntegerField(verbose_name='Estado',choices=ESTADO,null=True,blank=True)
     class Meta(object):
         ordering = ['position']
         verbose_name = _('Category')
@@ -110,7 +113,7 @@ class Forum(models.Model):
     fec_creac = models.DateTimeField(verbose_name='Fecha de creacion del registro',auto_now_add=True)
     idusuario_mod = models.ForeignKey(User, related_name='foro_modificador',verbose_name='Usuario modifico', null=True, blank=True,)
     fec_mod = models.DateTimeField(verbose_name='Fecha modifico', null=True, blank=True)
-
+    estado = models.IntegerField(verbose_name='Estado',choices=ESTADO,null=True,blank=True)
     class Meta(object):
         ordering = ['position']
         verbose_name = _('Forum')
@@ -173,7 +176,7 @@ class Topic(models.Model):
     fec_creac = models.DateTimeField(verbose_name='Fecha de creacion del registro',auto_now_add=True)
     idusuario_mod = models.ForeignKey(User, related_name='tema_modificador',verbose_name='Usuario modifico', null=True, blank=True,)
     fec_mod = models.DateTimeField(verbose_name='Fecha modifico', null=True, blank=True)
-
+    estado = models.IntegerField(verbose_name='Estado',choices=ESTADO,null=True,blank=True)
     class Meta(object):
         ordering = ['-created']
         verbose_name = _('Topic')
