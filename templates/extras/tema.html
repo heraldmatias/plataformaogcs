@@ -24,6 +24,7 @@
       <h3>Mantenimiento de Tema</h3>
     </div>
     <div class="modal-body">
+      <input type="hidden" name="foru" id="id_foru" value="{{ foru }}">
       {% csrf_token %}
       <div class="row-fluid">      
       {{ formulario.name.errors }}
@@ -46,10 +47,25 @@
   {% endblock %}
   {% block scriptjs %}    
 <script>
+{% if opcion == 'edit' %}
+function tema(){
+var cat= $("#id_categoria").find('option');
+$.each(cat, function(){                
+ if(this.value=={{ cate }}){
+    this.selected = true;
+ }});
+var estado= $("#id_estado").find('option');
+$.each(estado, function(){                
+ if(this.value=={{ estado }}){
+    this.selected = true;
+ }});
+}
+tema();
+{% endif %}
 validaalfa('id_name');comboelegir('id_forum');comboelegir('id_estado');comboelegir('id_categoria');
 function foros(label){
         var id= $("#id_categoria").val();
-	var foro = $('#id_forum');		
+	var foro = $('#id_forum');{% if opcion == 'edit' %}var idf = $('#id_foru').val();{% endif %}
 	foro.find('option').remove();
 if(label==0){
 foro.append("<option selected='selected' value=''>---TODOS---</option>");
@@ -57,11 +73,20 @@ foro.append("<option selected='selected' value=''>---TODOS---</option>");
 foro.append("<option selected='selected' value=''>---ELEGIR---</option>");
 }
        $.getJSON('{% url ogcs-foros-jsonforos %}?r='+id, function(data){
- 	  $.each(data, function(key,value){                
+ 	  $.each(data, function(key,value){  
+            {% if opcion == 'edit' %}
+            if(value.pk==idf){
+	    foro.append("<option value='"+value.pk+"' selected='selected'>"+value.fields.name+"</option>");
+            }else{
+            foro.append("<option value='"+value.pk+"'>"+value.fields.name+"</option>");
+            }             
+            {% else %}
 	    foro.append("<option value='"+value.pk+"'>"+value.fields.name+"</option>");
+            {% endif %}
 	  });
        });
 }
 foros(1);
+
 </script>
   {% endblock %}

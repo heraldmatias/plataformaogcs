@@ -544,8 +544,11 @@ def tema_edit(request,codigo):
             return redirect(reverse('ogcs-mantenimiento-tema-query')+'?m=edit')
     else:
         obj = get_object_or_404(Topic, pk=int(codigo))
+        cate = obj.forum.category.id
+        foru = obj.forum.id
+        estado = obj.estado           
         formulario = TopicForm(instance=obj)         
-    return render_to_response('extras/tema.html', {'formulario': formulario,'opcion':'edit','codigo':codigo,}, context_instance=RequestContext(request),)
+    return render_to_response('extras/tema.html', {'formulario': formulario,'opcion':'edit','codigo':codigo,'cate':cate,'foru':foru,'estado':estado}, context_instance=RequestContext(request),)
 
 
 login_required()

@@ -20,13 +20,6 @@
             <h4>{% trans "No se han creado categorias para el Foro" %}</h4>
             <h5>Consulte con el administrador del sistema, acerca del funcionamiento del Foro. Muchas Gracias.</h5>
         {% endif %}
-        {% if user.is_authenticated %}
-            <div id='mark-all-as-read'>
-                <a href='{% url pybb:mark_all_as_read %}'>
-                    {% trans "Marcar todos los foros como leidos" %}
-                </a>
-            </div>
-        {% endif %}
     	</div>
     </div>
 </div>
