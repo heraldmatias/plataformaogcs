@@ -70,6 +70,15 @@ dependencia.append("<option selected='selected' value=''>---ELEGIR---</option>")
 //if(select){dependencia.append("<option selected='selected' value=''>---------</option>");}else{dependencia.append("<option value=''>---------</option>");}
 	});
 }
+function validaalfa(campo){
+ $('#'+campo).keyup(function () {
+  this.value = this.value.replace(/[^0-9A-Za-záéíóúÁÉÍÓÚÜüñÑ._ ]/g,'');
+});
+$('#'+campo).focusout(function () {
+  l = $.trim($('#'+campo).val().toUpperCase());
+  $('#'+campo).val(l);
+});
+}
 
 function validaletra(campo){
 var l='';
