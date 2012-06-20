@@ -520,7 +520,9 @@ def tema_add(request):
         cat = Topic(idusuario_creac=request.user,user=request.user,created=datetime.now(),updated=datetime.now())
         formulario = TopicForm(request.POST,instance=cat)
         if formulario.is_valid():
-            formulario.save()        
+            formulario.save()
+            cat.forum.topic_count = cat.forum.topics.count()
+            cat.forum.save()
             formulario = TopicForm() # Crear un parametro en home para mostrar los mensajes de exito.
             mensaje="Registro grabado satisfactoriamente."
     else:
