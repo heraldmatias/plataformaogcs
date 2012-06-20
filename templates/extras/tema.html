@@ -1,0 +1,67 @@
+  {% extends 'base.html' %}
+  {% load static %}
+  {% block title %} Plataforma Intersectorial de Comunicaci&oacute;n OGCS {% endblock %}
+  {% block content %}
+{% if mensaje %}
+<h4><div class="alert alert-success"><a class="close" data-dismiss="alert">×</a><strong>Mensaje:</strong>
+<p>{{ mensaje }}</p></div></h4>
+{% endif %}
+    <ul class="nav nav-tabs">
+    {% if opcion == "add" %}
+    <li class="active"><a href="{% url ogcs-mantenimiento-tema-add %}">Nuevo</a></li>{% else %}
+    <li class="active"><a href="{% url ogcs-mantenimiento-tema-edit codigo %}">Modificar</a></li>{% endif %}
+    <li><a href="{% url  ogcs-mantenimiento-tema-query %}" >Consultar</a></li>
+    </ul>
+<div class="tab-content" id="contenido_izq">
+<div id="nuevo" class="tab-pane fade in active">
+{% if opcion == "add" %}
+<form class="form-inline" name="frmreg" method="post" action="{% url ogcs-mantenimiento-tema-add %}" onSubmit="return confirmar('¿Desea grabar el registro?'); ">{% else %}
+<form class="form-inline" name="frmreg" method="post" action="{% url ogcs-mantenimiento-tema-edit codigo %}" onSubmit="return confirmar('¿Desea modificar el registro?'); ">
+{% endif %}
+<div id="frmregion" class="modal" style="position: relative; top: auto; left: auto; margin: 0 auto auto 20px; z-index: 1;width:720px;height:auto"><!--class="modal hide fade">-->
+    <div class="modal-header">
+      <a class="close" data-dismiss="modal" href="javascript: cerrarformulario('contenido');" >&times;</a>
+      <h3>Mantenimiento de Tema</h3>
+    </div>
+    <div class="modal-body">
+      {% csrf_token %}
+      <div class="row-fluid">      
+      {{ formulario.name.errors }}
+       <div class="span2"><label>Tema:</label></div> <div class="span8"> {{ formulario.name }}</div></div><p></p>
+      <div class="row-fluid">
+      {{ formulario.forum.errors }}
+      <div class="span2"><label>Categoría:</label></div> <div class="span4"> {{ formulario.categoria }}</div>
+      <div class="span2"><label>Foro:</label></div> <div class="span4"> {{ formulario.forum }}</div></div><p></p> 
+      <div class="row-fluid">
+      {{ formulario.estado.errors }}
+      <div class="span2"><label>Estado:</label></div> <div class="span4"> {{ formulario.estado }}</div></div><p></p>      	
+    </div>
+    <div class="modal-footer">
+     <input class="btn-primary" name="grabar" value="{% if opcion == 'add' %}Guardar {% else %} Modificar {% endif %}" type="submit">
+     <input class="btn" name="grabar" value="Cerrar" type="button" onclick="cerrarformulario('contenido');">     
+    </div>
+</div>
+</form>
+</div></div>
+  {% endblock %}
+  {% block scriptjs %}    
+<script>
+validaletra('id_name');comboelegir('id_forum');comboelegir('id_estado');comboelegir('id_categoria');
+function foros(label){
+        var id= $("#id_categoria").val();
+	var foro = $('#id_forum');		
+	foro.find('option').remove();
+if(label==0){
+foro.append("<option selected='selected' value=''>---TODOS---</option>");
+}else{
+foro.append("<option selected='selected' value=''>---ELEGIR---</option>");
+}
+       $.getJSON('{% url ogcs-foros-jsonforos %}?r='+id, function(data){
+ 	  $.each(data, function(key,value){                
+	    foro.append("<option value='"+value.pk+"'>"+value.fields.name+"</option>");
+	  });
+       });
+}
+foros(1);
+</script>
+  {% endblock %}

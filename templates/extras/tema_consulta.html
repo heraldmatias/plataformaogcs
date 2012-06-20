@@ -1,0 +1,76 @@
+  {% extends 'base.html' %}
+  {% load static %}
+  {% block title %} Plataforma Intersectorial de Comunicaci&oacute;n OGCS {% endblock %}
+  {% block csspage %}
+  <link href="{{ STATIC_URL  }}css/jquery-ui.css" rel="stylesheet" type="text/css"/>
+  {% endblock %}
+  {% block content %}  
+  {% load render_table from django_tables2 %}
+{% if mensaje %}
+<h4><div class="alert alert-success"><a class="close" data-dismiss="alert">×</a><strong>Mensaje:</strong>
+<p>Registro modificado satisfactoriamente.</p></div></h4>
+{% endif %}
+<ul class="nav nav-tabs">
+    <li><a href="{% url ogcs-mantenimiento-tema-add %}">Nuevo</a></li>
+    <li class="active"><a href="{% url  ogcs-mantenimiento-tema-query %}" >Consultar</a></li>
+</ul>
+<div class="tab-content" id="contenido_izq">
+<div id="consulta" class="tab-pane fade in active">
+<form class="form-inline" name="frmreg" method="get" action="{% url  ogcs-mantenimiento-tema-query %}"><!--data-toggle="modal"-->
+<div id="frmregion" class="modal" style="position: relative; top: auto; left: auto; margin:auto auto auto 20px; z-index: 1;width:720px;height:auto"><!--class="modal hide fade">-->
+    <div class="modal-header">
+      <a class="close" data-dismiss="modal" href="javascript: cerrarformulario('contenido');">&times;</a>
+      <h3>Consulta de Temas</h3>
+    </div>
+    <div class="modal-body">
+      <div class="row-fluid">
+      <div class="span2"><label for="id_categoria">Categoria:</label></div><div class="span4">{{ formulario.categoria }}</div>
+      <div class="span2"><label for="id_forum">Foro:</label></div><div class="span4">{{ formulario.forum }}</div></div><p></p>
+      <div class="row-fluid">
+      <div class="span2"><label for="id_name">Tema:</label></div><div class="span8">{{ formulario.name }}</div>
+      <div class="span2"><input  class="btn-primary" name="grabar" value="Consultar" type="submit"></div></div><p></p>
+      <br><!---->
+      <input type='hidden' name="forumsel" id="id_forumsel" value="{{ idforum }}">
+      <fieldset>
+	<legend><h4>Lista de Temas</h4></legend>
+      {% render_table tabla %}    
+      </fieldset>
+    </div>
+    <div class="modal-footer">
+     <input class="btn" name="grabar" value="Cerrar" type="button" onclick="cerrarformulario('contenido');">
+    </div>
+</div>
+</form>
+</div></div>
+  {% endblock %}
+  {% block scriptjs %}    
+  <script src="{{ STATIC_URL }}bootstrap/js/jquery-ui.js" type="text/javascript"></script>
+<script>
+function foros(label){
+        var id= $("#id_categoria").val();
+	var foro = $('#id_forum');var idfor = $('#id_forumsel').val();		
+	foro.find('option').remove();
+if(label==0){
+foro.append("<option selected='selected' value=''>---TODOS---</option>");
+}else{
+foro.append("<option selected='selected' value=''>---ELEGIR---</option>");
+}
+       $.getJSON('{% url ogcs-foros-jsonforos %}?r='+id, function(data){
+ 	  $.each(data, function(key,value){                
+            if (value.pk == idfor){
+	       foro.append("<option value='"+value.pk+"' selected='selected' >"+value.fields.name+"</option>"); 
+            }else{
+	       foro.append("<option value='"+value.pk+"'>"+value.fields.name+"</option>");
+            }
+	  });
+       });
+}
+foros(0);
+combotodos('id_forum');combotodos('id_categoria');
+function imprimir(){
+var region=$('#id_region').val();
+var url="{% url  ogcs-mantenimiento-region-print %}?region="+region;
+location.href=url;
+}
+</script>
+  {% endblock %}
