@@ -469,15 +469,16 @@ def forum_add(request):
         formulario = ForummForm(request.POST,instance=cat)
         if formulario.is_valid():
             formulario.save()
-            temas = request.POST.getlist('ctema')
-            for c in range(len(temas)):
-                Topic(name=temas[c],forum=cat,idusuario_creac=request.user,user=request.user,created=datetime.now(),updated=datetime.now()).save()
-        formulario = ForummForm() # Crear un parametro en home para mostrar los mensajes de exito.
-        mensaje="Registro grabado satisfactoriamente."
+            #temas = request.POST.getlist('ctema')
+            #cest = request.POST.getlist('cest')
+            #for c in range(len(temas)):
+            #    Topic(estado=cest[c],name=temas[c],forum=cat,idusuario_creac=request.user,user=request.user,created=datetime.now(),updated=datetime.now()).save()
+            formulario = ForummForm() # Crear un parametro en home para mostrar los mensajes de exito.
+            mensaje="Registro grabado satisfactoriamente."
     else:
         formulario = ForummForm()
-    tabla = TopicTable(list())
-    return render_to_response('extras/foro.html', {'formulario': formulario,'opcion':'add','mensaje':mensaje,'tabla':tabla,}, context_instance=RequestContext(request),)
+    #tabla = TopicTable(list())
+    return render_to_response('extras/foro.html', {'formulario': formulario,'opcion':'add','mensaje':mensaje,}, context_instance=RequestContext(request),)
 
 login_required()
 def forum_edit(request, codigo):
@@ -488,30 +489,11 @@ def forum_edit(request, codigo):
         formulario = ForummForm(request.POST,instance=cat)
         if formulario.is_valid():
             formulario.save()
-            foros = request.POST.getlist('ctema')
-            query = Topic.objects.filter(forum=cat)
-            for c in range(len(foros)):
-                try:
-                    row = Topic.objects.get(forum=cat,pk=query[c].id)
-                    row.name=foros[c]
-                    row.idusuario_mod=request.user
-                    row.fec_mod = datetime.now()
-                    row.updated=datetime.now()
-                    row.save()
-                except:
-                    Topic(name=foros[c],forum=cat,idusuario_creac=request.user,user=request.user,created=datetime.now(),updated=datetime.now()).save()
-            resto= len(foros)
-            while resto < len(query):
-                row = Topic.objects.get(forum=cat,pk=query[resto].id)
-                row.delete()
-                resto = resto + 1
             return redirect(reverse('ogcs-mantenimiento-foro-query')+'?m=edit')
     else:
         obj = get_object_or_404(Forum, pk=int(codigo))
         formulario = ForummForm(instance=obj)
-        temas = obj.topics.all()
-        tabla = TopicTable(temas)
-    return render_to_response('extras/foro.html', {'formulario': formulario,'opcion':'edit','codigo':codigo,'tabla':tabla,}, context_instance=RequestContext(request),)
+        return render_to_response('extras/foro.html', {'formulario': formulario,'opcion':'edit','codigo':codigo,}, context_instance=RequestContext(request),)
 
 @login_required()
 def forum_query(request):
@@ -532,64 +514,113 @@ def forum_query(request):
     return render_to_response('extras/foro_consulta.html', {'formulario':formulario,'tabla':tabla,'mensaje':(request.GET['m'] if 'm' in request.GET else '')}, context_instance=RequestContext(request),)
 
 @login_required()
-def categoria_add(request):
+def tema_add(request):
     mensaje=""
     if request.method == 'POST':
-        cat = Category(idusuario_creac=request.user,name=request.POST.getlist('name')[0],position=request.POST.getlist('position')[0],hidden=True if 'hidden' in request.POST else False,estado=request.POST.getlist('estado')[0])
-        cat.save()
-        foros = request.POST.getlist('cforo')
-        cpos = request.POST.getlist('cpos')
-        chid = request.POST.getlist('chid')
-        cest = request.POST.getlist('cest')
-        for c in range(len(foros)):
-            Forum(name=foros[c],position=cpos[c],hidden= True if chid[c]=='1' else False,category=cat,idusuario_creac=request.user,estado=cest[c]).save()
-        formulario = CategoryForm() # Crear un parametro en home para mostrar los mensajes de exito.
-        mensaje="Registro grabado satisfactoriamente."
+        cat = Topic(idusuario_creac=request.user,user=request.user,created=datetime.now(),updated=datetime.now())
+        formulario = TopicForm(request.POST,instance=cat)
+        if formulario.is_valid():
+            formulario.save()        
+            formulario = TopicForm() # Crear un parametro en home para mostrar los mensajes de exito.
+            mensaje="Registro grabado satisfactoriamente."
+    else:
+        formulario = TopicForm()
+    return render_to_response('extras/tema.html', {'formulario': formulario,'opcion':'add','mensaje':mensaje,}, context_instance=RequestContext(request),)
+
+@login_required()
+def tema_edit(request,codigo):
+    mensaje=""
+    if request.method == 'POST':
+        cat = get_object_or_404(Topic, pk=int(codigo))
+        cat.idusuario_mod=request.user
+        cat.updated=datetime.now()
+        cat.fec_mod=datetime.now()
+        formulario = TopicForm(request.POST,instance=cat)
+        if formulario.is_valid():
+            formulario.save()
+            formulario = TopicForm() # Crear un parametro en home para mostrar los mensajes de exito.
+            return redirect(reverse('ogcs-mantenimiento-tema-query')+'?m=edit')
+    else:
+        obj = get_object_or_404(Topic, pk=int(codigo))
+        formulario = TopicForm(instance=obj)         
+    return render_to_response('extras/tema.html', {'formulario': formulario,'opcion':'edit','codigo':codigo,}, context_instance=RequestContext(request),)
+
+
+login_required()
+def tema_query(request):
+    col = "-name"
+    query = Topic.objects.all()
+    idforum = ''
+    if "2-sort" in request.GET:
+        col = request.GET['2-sort']
+    config = RequestConfig(request)
+    formulario = TopicConsultaForm(request.GET)
+    if "name" in request.GET:
+        query = query.filter(name__icontains=request.GET['name']).order_by(col)
+    if "forum" in request.GET:
+        if request.GET['forum']:
+            query = query.filter(forum__id=request.GET['forum'])
+            idforum  = request.GET['forum']
+    if "categoria" in request.GET:
+        if request.GET['categoria']:
+            query = query.filter(forum__category__id=request.GET['categoria'])
+    tabla = TopicTablee(query.order_by(col))
+    config.configure(tabla)
+    tabla.paginate(page=request.GET.get('page', 1), per_page=6)
+    return render_to_response('extras/tema_consulta.html', {'formulario':formulario,'tabla':tabla,'mensaje':(request.GET['m'] if 'm' in request.GET else ''),'idforum':idforum}, context_instance=RequestContext(request),)
+
+
+
+@login_required()
+def categoria_add(request):
+    mensaje=""        
+    if request.method == 'POST':
+        cat = Category(idusuario_creac=request.user)
+        formulario = CategoryForm(request.POST, instance=cat)
+        if formulario.is_valid():
+            formulario.save()
+        #cat = Category(idusuario_creac=request.user,name=request.POST.getlist('name')[0],position=request.POST.getlist('position')[0],hidden=True if 'hidden' in request.POST else False,estado=request.POST.getlist('estado')[0])
+        #cat.save()
+        #foros = request.POST.getlist('cforo')
+        #cpos = request.POST.getlist('cpos')
+        #chid = request.POST.getlist('chid')
+        #cest = request.POST.getlist('cest')
+        #for c in range(len(foros)):
+        #    Forum(name=foros[c],position=cpos[c],hidden= True if chid[c]=='1' else False,category=cat,idusuario_creac=request.user,estado=cest[c]).save()
+            formulario = CategoryForm() # Crear un parametro en home para mostrar los mensajes de exito.
+            mensaje="Registro grabado satisfactoriamente."
     else:
         formulario = CategoryForm()
-    tabla = ForumTable(list())
-    forum_form = ForumForm()
-    return render_to_response('extras/categoria.html', {'formulario': formulario,'opcion':'add','mensaje':mensaje,'tabla':tabla,'forum_form':forum_form,}, context_instance=RequestContext(request),)
+    #tabla = ForumTable(list())
+    #forum_form = ForumForm()
+    return render_to_response('extras/categoria.html', {'formulario': formulario,'opcion':'add','mensaje':mensaje,}, context_instance=RequestContext(request),)
 
 @login_required()
 def categoria_edit(request, codigo):
     if request.method == 'POST':
         cat = get_object_or_404(Category, pk=int(codigo))
         cat.idusuario_mod=request.user
-        cat.name=request.POST.getlist('name')[0]
-        cat.position=request.POST.getlist('position')[0]
-        cat.hidden=True if 'hidden' in request.POST else False
+        #cat.name=request.POST['name']
+        #cat.position=request.POST['position']
+        #cat.hidden=True if 'hidden' in request.POST else False
         cat.fec_mod = datetime.now()
-        cat.estado=request.POST.getlist('estado')[0]
-        cat.save()
-        foros = request.POST.getlist('cforo')
-        cpos = request.POST.getlist('cpos')
-        chid = request.POST.getlist('chid')
-        cest = request.POST.getlist('cest')
-        query = Forum.objects.filter(category=cat)
-        for c in range(len(foros)):
-            try:
-                row = Forum.objects.get(category=cat,pk=query[c].id)
-                row.name=foros[c]
-                row.position= cpos[c]
-                row.hidden=True if chid[c]=='1' else False
-                row.estado=cest[c]
-                row.save()
-            except:
-                Forum(name=foros[c],position=cpos[c],hidden=True if chid[c]=='1' else False,category=cat,idusuario_creac=request.user,estado=cest[c]).save()
-        resto= len(foros)
-        while resto < len(query):
-            row = Forum.objects.get(category=cat,pk=query[resto].id)
-            row.delete()
-            resto = resto + 1
-        return redirect(reverse('ogcs-mantenimiento-categoria-query')+'?m=edit')
+        #cat.estado=request.POST['estado']
+        #cat.save()
+        #foros = request.POST.getlist('cforo')
+        #cpos = request.POST.getlist('cpos')
+        #chid = request.POST.getlist('chid')
+        #cest = request.POST.getlist('cest')
+        formulario = CategoryForm(request.POST,instance=cat)
+        if formulario.is_valid():
+            formulario.save()
+            return redirect(reverse('ogcs-mantenimiento-categoria-query')+'?m=edit')
     else:
         obj = get_object_or_404(Category, pk=int(codigo))
         formulario = CategoryForm(instance=obj)
-        foros = obj.forums.all()
-        tabla = ForumTable(foros)
-    forum_form = ForumForm()
-    return render_to_response('extras/categoria.html', {'formulario': formulario,'opcion':'edit','codigo':codigo,'tabla':tabla,'forum_form':forum_form,}, context_instance=RequestContext(request),)
+        #foros = obj.forums.all()
+        #tabla = ForumTable(foros)
+    #forum_form = ForumForm()
+    return render_to_response('extras/categoria.html', {'formulario': formulario,'opcion':'edit','codigo':codigo,}, context_instance=RequestContext(request),)
 
 
 @login_required()
@@ -617,3 +648,10 @@ def categoria_print(request):
         filename= "region_%s.pdf" % datetime.today().strftime("%Y%m%d")
         return imprimirToPDF(html,filename)
 
+@login_required()
+def json_foros(request):
+    if request.GET['r']:
+        foros = Forum.objects.filter(category = Category.objects.get(pk = request.GET['r'])).order_by('name')
+    else:
+        foros = {}
+    return HttpResponse(serializers.serialize("json", foros, ensure_ascii=False),mimetype='application/json')

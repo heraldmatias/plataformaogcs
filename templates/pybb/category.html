@@ -19,6 +19,7 @@
                 </th>
         </tr>
         {% for forum in category.forums_accessed|pybb_forum_unread:user %}
+           {% if forum.estado == 0 %}
             <tr class="forum-row">
                 <td class="forum-name {% if forum.unread %} unread {% endif %}">
                     <div class='state-indicator'></div>
@@ -38,7 +39,7 @@
                         {{ forum.updated|date:"d.m.Y H:i" }}
                     {% endif %}
                 </td>
-            </tr>
+            </tr>{% endif %}
         {% empty %}
             <h4>{% trans "No hay Foros creados" %}</h4>
        {% endfor %}

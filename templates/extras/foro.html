@@ -22,7 +22,7 @@
 <div id="frmregion" class="modal" style="position: relative; top: auto; left: auto; margin: 0 auto auto 20px; z-index: 1;width:720px;height:auto"><!--class="modal hide fade">-->
     <div class="modal-header">
       <a class="close" data-dismiss="modal" href="javascript: cerrarformulario('contenido');" >&times;</a>
-      <h3>Mantenimiento de Foro-Temas</h3>
+      <h3>Mantenimiento de Foro</h3>
     </div>
     <div class="modal-body">
       {% csrf_token %}
@@ -32,23 +32,16 @@
                 <div class="span6">{{ formulario.name }}</div></div><p></p>
                 <div class="row-fluid">
                 <div class="span2"><label>Categoría:</label></div> 
-                <div class="span5">{{ formulario.category }}</div>                 
-                <div class="span3"><label>{{ formulario.hidden }} Solo Administradores</label></div></div><p></p>
+                <div class="span5">{{ formulario.category }}</div>   
+		<div class="span2"><label>Posición:</label></div>
+                <div class="span2">{{ formulario.position }}</div></div><p></p>              
                 <div class="row-fluid">
-                <div class="span2"><label>Posición:</label></div>
-                <div class="span2">{{ formulario.position }}</div> </div>
+		<div class="span2"><label>Estado:</label></div>
+                <div class="span5">{{ formulario.estado }}</div>
+		<div class="span3"><label>{{ formulario.hidden }} Solo Administradores</label></div></div>
     </div><br />
    <!---------------------------------TEMAS-------------------------------------->
-   <div class="modal-header">
-        <h3>Temas</h3>
-        </div><br />
-        <div class="row-fluid">
-            <div class="alert alert-error" id="alert1"><strong></strong></div>
-                <div class="row-fluid"><div class="span2"><label>Tema:</label></div>
-                <div class="span9"><input type="text" name="name_tema" id="id_name_tema" style="width:500px;"></div>
-                <input class="btn-primary" name="agregar" value="Agregar" type="button" onclick="temas()"></div>            
-        </div><br /><br />
-      {% render_table tabla %} 
+
 <!----------------------------------------------------------------------------------->
     </div>
     <div class="modal-footer">
@@ -61,9 +54,9 @@
   {% endblock %}
   {% block scriptjs %}
 <script>
-validanumero('id_position');comboelegir('id_category');
-function temas(){
-    var foro=$('#id_name_tema');    
+validanumero('id_position');comboelegir('id_category');comboelegir('id_estado');
+/*function temas(){
+    var foro=$('#id_name_tema');   estado=$('#id_estado_tema'); 
     var tabla= $('#id_temas').find("tbody");
     var n= tabla.find("tr").length;
     var ok=true;
@@ -74,6 +67,14 @@ function temas(){
     }else{
                 $('#alert1').hide();
     }
+    if ($.trim(estado.val())==''){
+        $('#alert1').show().find('strong').text('Debe seleccionar el Estado del Tema.');
+              estado.focus();
+        return false;
+    }else{
+                $('#alert1').hide();
+    }
+
     $.each(tabla.find("tr"),function(){   
         if ($(this).find("td:eq(1) input:hidden").val()==foro.val()){
             ok=false;
@@ -82,7 +83,7 @@ function temas(){
     });
     if(ok==true){
         n+=1;
-        fila="<tr class='"+n+"'><td>"+n+"</td><td><input type='hidden' name='ctema' value='"+foro.val()+"'>"+foro.val()+"</td><td> <a href='javascript: removedetalle("+n+")'><div id='delete'></div></a></td></tr>"
+        fila="<tr class='"+n+"'><td>"+n+"</td><td><input type='hidden' name='ctema' value='"+foro.val()+"'>"+foro.val()+"</td><td><input type='hidden' name='cest' value='"+estado.val()+"'>"+estado.find('option:selected').text()+"</td><td> <a href='javascript: removedetalle("+n+")'><div id='delete'></div></a></td></tr>"
         tabla.append(fila);
                 $('#alert1').hide();
     }else{
@@ -93,7 +94,7 @@ function temas(){
     }
     foro.val('');
     foro.focus();
-}
+}*/
 function removedetalle(fila){
     tabla="#id_temas";
     $(tabla+" tr:eq("+fila+")").remove();
@@ -102,14 +103,14 @@ function removedetalle(fila){
     /*AUTO REORDENAMIENTO DE ITEMS LUEGO DE ELIMINAR*/
     $.each(tdetalle.find("tbody tr"),function(){
         this.cells[0].innerHTML=n;    
-this.cells[2].innerHTML="<a href='javascript: removedetalle("+n+")'><div id='delete'></div></a>";
+this.cells[3].innerHTML="<a href='javascript: removedetalle("+n+")'><div id='delete'></div></a>";
 
         n+=1;
     });
 }
 
 function guardar() {
-var foro=$('#id_name_foro');
+var foro=$('#id_name_foro');var estado=$('#id_estado');
 var posicion=$('#id_position_foro');
 var cat = $('#id_category');
 
@@ -130,6 +131,13 @@ if ($.trim(posicion.val())==''){
 if ($.trim(cat.val())==''){
     $('#alert').show().find('strong').text('Debe seleccionar la categoría del Foro.');
     cat.focus();
+    return false;
+}else{
+        $('#alert').hide();
+}
+if ($.trim(estado.val())==''){
+    $('#alert').show().find('strong').text('Debe seleccionar el estado del Foro.');
+    estado.focus();
     return false;
 }else{
         $('#alert').hide();

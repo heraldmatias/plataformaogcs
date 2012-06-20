@@ -22,7 +22,7 @@
 <div id="frmregion" class="modal" style="position: relative; top: auto; left: auto; margin: 0 auto auto 20px; z-index: 1;width:720px;height:auto"><!--class="modal hide fade">-->
     <div class="modal-header">
       <a class="close" data-dismiss="modal" href="javascript: cerrarformulario('contenido');" >&times;</a>
-      <h3>Mantenimiento de Categoria-Foro</h3>
+      <h3>Mantenimiento de Categoría</h3>
     </div>
     <div class="modal-body">
       {% csrf_token %}
@@ -36,23 +36,7 @@
                 <div class="row-fluid"><div class="span2"><label>Posición:</label></div>
                 <div class="span2">{{ formulario.position }}</div></div>                                
     </div><br />
-    <!--------------------------------- FOROS-------------------------------------->
-   <div class="modal-header">
-      	<h3>Foros</h3>
-      	</div><br />
-    	<div class="row-fluid">
-            <div class="alert alert-error" id="alert1"><strong></strong></div>
-            	<div class="row-fluid"><div class="span2"><label>Foro:</label></div>
-                <div class="span6">{{ forum_form.name }}</div></div><p></p>
-            	<div class="row-fluid"><div class="span2"><label>Estado:</label></div>
-                <div class="span5">{{ forum_form.estado }}</div>
-            	<div class="span4"><label>{{ forum_form.hidden }} Solo Administradores</label></div>
-                <input class="btn-primary" name="agregar" value="Agregar" type="button" onclick="foros()"></div><p></p>
-            	<div class="row-fluid">
-                <div class="span2"><label>Posición:</label></div>
-                <div class="span1">{{ forum_form.position }}</div></div>            
-    	</div><br /><br />
-      {% render_table tabla %} 
+   
 <!----------------------------------------------------------------------------------->
 
 <!----------------------------------------------------------------------------------->
@@ -67,8 +51,8 @@
   {% endblock %}
   {% block scriptjs %}    
 <script>
-validanumero('id_position');validanumero('id_position_foro');comboelegir('id_estado');comboelegir('id_estado_forum');
-function foros(){
+validanumero('id_position');comboelegir('id_estado');
+/*function foros(){
     var foro=$('#id_name_foro');var estado=$('#id_estado_forum');
     var posicion=$('#id_position_foro');
     var admin=document.getElementById("id_hidden_foro");
@@ -119,7 +103,7 @@ fila="<tr class='"+n+"'><td>"+n+"</td><td><input type='hidden' name='cforo' valu
     document.getElementById("id_hidden_foro").checked = false;
     posicion.val('0');
 }
-
+*/
 function removedetalle(fila){
     tabla="#id_foros";
     $(tabla+" tr:eq("+fila+")").remove();
@@ -128,7 +112,7 @@ function removedetalle(fila){
     /*AUTO REORDENAMIENTO DE ITEMS LUEGO DE ELIMINAR*/
     $.each(tdetalle.find("tbody tr"),function(){
         this.cells[0].innerHTML=n;    
-        this.cells[5].innerHTML="<a href='javascript: removedetalle("+n+")'><div id='delete'></div></a>";
+        //this.cells[5].innerHTML="<a href='javascript: removedetalle("+n+")'><div id='delete'></div></a>";
         n+=1;
     });
 }

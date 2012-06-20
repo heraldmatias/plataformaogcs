@@ -21,5 +21,8 @@ urlpatterns = patterns('extras.views',
     url(r'^forum/add/$','forum_add', name='ogcs-mantenimiento-foro-add'),
     url(r'^forum/edit/(?P<codigo>\d+)/$','forum_edit', name='ogcs-mantenimiento-foro-edit'),
     url(r'^forum/consulta/$','forum_query', name='ogcs-mantenimiento-foro-query'),
-
+    url(r'^tema/add/$','tema_add', name='ogcs-mantenimiento-tema-add'),
+    url(r'^tema/edit/(?P<codigo>\d+)/$','tema_edit', name='ogcs-mantenimiento-tema-edit'),
+    url(r'^tema/consulta/$','tema_query', name='ogcs-mantenimiento-tema-query'),
+    url(r'^foros/json/$','json_foros', name='ogcs-foros-jsonforos'),
 )

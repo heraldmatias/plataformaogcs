@@ -7,16 +7,18 @@
 	<div id="nuevo" class="tab-pane fade in active" >
     	<div id="frmprovincia" class="modal" style="position: relative; top: auto; left: auto; margin: 0 auto auto 20px; z-index: 1;width:720px;height:auto">
         <div class="modal-header">
-      		<h3>Bienvendio al Foro de la OGCS</h3>
+      		<h2>Bienvenido al Foro de la OGCS</h2>
       
     	</div>
         {% if categories %}
             {% for category in categories %}
+                {% if category.estado == 0 %}
                 {% include 'pybb/category.html' %}
+                {% endif %}
             {% endfor %}
         {% else %}
             <h4>{% trans "No se han creado categorias para el Foro" %}</h4>
-            <a href="{% url admin:pybb_category_add %}">{% trans "Agregar una categoria" %}</a>
+            <h5>Consulte con el administrador del sistema, acerca del funcionamiento del Foro. Muchas Gracias.</h5>
         {% endif %}
         {% if user.is_authenticated %}
             <div id='mark-all-as-read'>

@@ -1,9 +1,6 @@
   {% extends 'base.html' %}
   {% load static %}
   {% block title %} Plataforma Intersectorial de Comunicaci&oacute;n OGCS {% endblock %}
-  {% block csspage %}
-  <link href="{{ STATIC_URL  }}css/jquery-ui.css" rel="stylesheet" type="text/css"/>
-  {% endblock %}
   {% block content %}  
   {% load render_table from django_tables2 %}
 {% if mensaje %}
@@ -43,19 +40,7 @@
 </div></div>
   {% endblock %}
   {% block scriptjs %}    
-  <script src="{{ STATIC_URL }}bootstrap/js/jquery-ui.js" type="text/javascript"></script>
 <script>
-$( ".accordion" ).accordion({
-collapsible: true,
-autoHeight: false,
-navigation: true,
-animated: 'bounceslide',
-active : false, 
-icons: {
-    header: "ui-icon-circle-arrow-e",
-    headerSelected: "ui-icon-circle-arrow-s"
-}
-});
 combotodos('id_category');
 function imprimir(){
 var region=$('#id_region').val();

@@ -3,7 +3,7 @@ import django_tables2 as tables
 from django_tables2.utils import A
 from models import MaterialGrafico, DocumentoInteresGeneral, ActaReunionIntersectorial, Documento, CATEGORIAS
 from usuario.models import Organismo, Usuario
-from pybb.models import Category, Forum
+from pybb.models import Category, Forum, Topic
 from django import forms
 from django.utils.safestring import mark_safe
 
@@ -145,6 +145,46 @@ class DocumentoTable(tables.Table):
 
 ########################################################
 ########################################################
+class TopicConsultaForm(forms.ModelForm):
+    categoria = forms.ModelChoiceField(queryset=Category.objects.all(),widget=forms.Select(attrs={'onchange':'foros(0);'}))
+    class Meta:
+        model = Topic
+        fields = ('forum','name','estado')
+        widgets = {
+            #'forum': forms.Select(attrs={'style':'width:200px;'}),
+            'name': forms.TextInput(attrs={'style':'width:450px;'}),            
+        }
+
+class TopicForm(forms.ModelForm):
+    categoria = forms.ModelChoiceField(queryset=Category.objects.all(),widget=forms.Select(attrs={'onchange':'foros(1);'}))
+    class Meta:
+        model = Topic
+        fields = ('forum','name','estado')
+        widgets = {
+            #'forum': forms.Select(attrs={'style':'width:200px;'}),
+            'name': forms.TextInput(attrs={'style':'width:550px;'}),            
+        }
+
+class TopicTablee(tables.Table):
+    item = tables.Column()
+    name = tables.TemplateColumn('<a title="Modificar el Tema" href={% url ogcs-mantenimiento-tema-edit record.id %}>{{ record.name }}</a>',orderable=True,verbose_name='Tema')
+    forum = tables.Column(verbose_name='Foro',orderable=True)
+    idusuario_creac = tables.Column(verbose_name='Creador',orderable=True)
+    fec_creac = tables.Column(verbose_name='Fec. Creacion',orderable=True)
+    idusuario_mod = tables.Column(verbose_name='Modificador',orderable=True)
+    fec_mod = tables.Column(verbose_name='Fec. Modificacion',orderable=True)
+    post_count = tables.Column(verbose_name='Numero Posts',orderable=True)
+    #topic_count = tables.Column(verbose_name='Numero Temas',orderable=True)
+    def render_item(self):
+        value = getattr(self, '_counter', 1)
+        self._counter = value + 1
+        return '%d' % value
+
+    class Meta:
+        attrs = {"class": "table table-bordered table-condensed table-striped",'id':'id_foros'}
+        orderable = False
+
+
 class ForumConsultaForm(forms.ModelForm):
     class Meta:
         model = Forum
@@ -156,18 +196,8 @@ class ForumConsultaForm(forms.ModelForm):
 
 class ForumTablee(tables.Table):
     item = tables.Column()
-    name = tables.TemplateColumn("""<a title="Modificar el Foro" href={% url ogcs-mantenimiento-foro-edit record.id %}>{{ record.name }}</a>
-<div class="accordion ui-accordion ui-widget ui-helper-reset ui-accordion-icons" id="accordion" role="tablist">    
-       	<h3 class="ui-accordion-header ui-helper-reset ui-state-default ui-corner-all" role="tab" aria-expanded="true" aria-selected="true" tabindex="0"><span class="ui-icon ui-icon-circle-arrow-e"></span><a href="#" tabindex="-1">Ver Temas</a></h3>
-<div class="ui-accordion-content"  role="tabpanel" style="display: none;width:auto;min-width:300px;"  style="background-color:FFFFFF">
-            <h5>Lista de Temas</h5><br />
-               <table width="100%" style="background-color:FFFFFF"><thead><tr><th>Item</th><th>Tema</th><th>Modificar</th></tr></thead><tbody>
-               {% for foro in record.topics.all %}
-	           <tr><td>{{ forloop.counter }}</td><td>{{ foro }}</td><td><a target="_blank" title="Modificar el Foro" href={% url ogcs-mantenimiento-foro-edit foro.id %}>Modificar</a></td></tr>{% empty %}<tr><td colspan="3">NO SE ENCONTRARON TEMAS</td></tr>
-               {% endfor %}</tbody>
-            </table>
-        </div>
-</div>""",orderable=True,verbose_name='Foro')
+    name = tables.TemplateColumn('<a title="Modificar el Foro" href={% url ogcs-mantenimiento-foro-edit record.id %}>{{ record.name }}</a>',orderable=True,verbose_name='Foro')
+    category = tables.Column(verbose_name='Categoría',orderable=True)
     position = tables.TemplateColumn('{{ record.position }}',verbose_name='Posicion',orderable=True)
     admins = tables.TemplateColumn('{% if record.hidden %} SI{% else %}NO{% endif %}',verbose_name='Solo Administrador',orderable=True)
     idusuario_creac = tables.Column(verbose_name='Creador',orderable=True)
@@ -187,17 +217,18 @@ class ForumTablee(tables.Table):
 
 class TopicTable(tables.Table):
     item = tables.Column()
-    name = tables.TemplateColumn('<input type="hidden" name="ctema" value="{{ record.name }}">{{ record.name }}',orderable=True,verbose_name='Tema')
+    name = tables.TemplateColumn('<input type="hidden" name="ctema" value="{{ record.name }}"><a title="Modificar el Tema" href={% url ogcs-mantenimiento-tema-edit record.id %}>{{ record.name }}</a>',orderable=True,verbose_name='Tema')
+    estado = tables.TemplateColumn('<input type="hidden" name="cest" value="{{ record.estado }}">{% if record.estado == 0 %}ACTIVO{% else %}INACTIVO{% endif %}',orderable=True,verbose_name='Estado')    
     eliminar = tables.Column()
     def render_item(self):
         value = getattr(self, '_counter', 1)
         self._counter = value + 1
         return '%d' % value
 
-    def render_eliminar(self):
-        value = getattr(self, '_counterr', 1)
-        self._counterr = value + 1
-        return mark_safe('<a href="javascript: removedetalle(%d)"><div id="delete"></div></a>' % value)
+   # def render_eliminar(self):
+    #    value = getattr(self, '_counterr', 1)
+    #    self._counterr = value + 1
+    #    return mark_safe('<a href="javascript: removedetalle(%d)"><div id="delete"></div></a>' % value)
 
     class Meta:
         attrs = {"class": "table table-bordered table-condensed table-striped",'id':'id_temas'}
@@ -206,7 +237,7 @@ class TopicTable(tables.Table):
 class ForummForm(forms.ModelForm):
     class Meta:
         model = Forum
-        fields = ('name','position','hidden','category')
+        fields = ('name','position','hidden','category','estado')
         widgets = {
             'name': forms.TextInput(attrs={'id':'id_name_foro','name':'name_foro','style':'width:560px;'}),
             'position': forms.TextInput(attrs={'id':'id_position_foro','style':'width:30px;'}),
@@ -233,18 +264,7 @@ class CategoryConsultaForm(forms.ModelForm):
 
 class CategoryTable(tables.Table):
     item = tables.Column()
-    Categoria = tables.TemplateColumn("""<a title="Modificar Categoría" href={% url ogcs-mantenimiento-categoria-edit record.id %}>{{ record.name }}</a>
-<div class="accordion ui-accordion ui-widget ui-helper-reset ui-accordion-icons" id="accordion" role="tablist">    
-       	<h3 class="ui-accordion-header ui-helper-reset ui-state-default ui-corner-all" role="tab" aria-expanded="true" aria-selected="true" tabindex="0"><span class="ui-icon ui-icon-circle-arrow-e"></span><a href="#" tabindex="-1">Ver Foros</a></h3>
-<div class="ui-accordion-content"  role="tabpanel" style="display: none;width:auto;min-width:300px;"  style="background-color:FFFFFF">
-            <h5>Lista de Foros</h5><br />
-               <table width="100%" style="background-color:FFFFFF"><thead><tr><th>Item</th><th>Foro</th><th>Modificar</th></tr></thead><tbody>
-               {% for foro in record.forums.all %}
-	           <tr><td>{{ forloop.counter }}</td><td>{{ foro }}</td><td><a target="_blank" title="Modificar el Foro" href={% url ogcs-mantenimiento-foro-edit foro.id %}>Modificar</a></td></tr>{% empty %}<tr><td colspan="3">NO SE ENCONTRARON FOROS</td></tr>
-               {% endfor %}</tbody>
-            </table>
-        </div>
-</div>""",orderable=True)
+    Categoria = tables.TemplateColumn('<a title="Modificar Categoría" href={% url ogcs-mantenimiento-categoria-edit record.id %}>{{ record.name }}</a>',orderable=True)
     Posicion = tables.TemplateColumn('{{ record.position }}',orderable=True)
     idusuario_creac = tables.Column(verbose_name='Creador',orderable=True)
     fec_creac = tables.Column(verbose_name='Fec. Creacion',orderable=True)
@@ -283,10 +303,10 @@ class ForumTable(tables.Table):
         self._counter = value + 1
         return '%d' % value
 
-    def render_eliminar(self):
-        value = getattr(self, '_counterr', 1)
-        self._counterr = value + 1
-        return mark_safe('<a href="javascript: removedetalle(%d)"><div id="delete"></div></a>' % value)
+    #def render_eliminar(self):
+     #   value = getattr(self, '_counterr', 1)
+      #  self._counterr = value + 1
+      #  return mark_safe('{% if opcion == "add" %}<a href="javascript: removedetalle(%d)"><div id="delete"></div></a>' % value)
 
     class Meta:
         attrs = {"class": "table table-bordered table-condensed table-striped",'id':'id_foros'}
