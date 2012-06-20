@@ -2,7 +2,7 @@
 
 <div class='category'>
     <h3>{{ category.name }} {% if category.hidden %}[{% trans "Hidden" %}]{% endif %}</h3>
-    <p>Creado por {{ category.idusuario_creac.get_full_name }} de {{ category.idusuario_creac.get_profile.get_dependencia }}</p>
+    <p>Creado por {{ category.idusuario_creac.get_full_name }} de {{ category.idusuario_creac.get_profile.get_dependencia.iniciales }} el {{ category.fec_creac }}</p>
     <table class="category-table">
         <tr class="forum-row head-row">
                 <th class="forum-name">
@@ -22,7 +22,7 @@
             <tr class="forum-row">
                 <td class="forum-name {% if forum.unread %} unread {% endif %}">
                     <div class='state-indicator'></div>
-                    <a href='{{ forum.get_absolute_url }}'>{{ forum.name }}</a><p>Creado por {{ forum.idusuario_creac.get_full_name  }} de {{ forum.idusuario_creac.get_profile.get_dependencia }}</p> {% if forum.hidden %}[{% trans "Hidden" %}]{% endif %}
+                    <a href='{{ forum.get_absolute_url }}'>{{ forum.name }}</a><p>Creado por {{ forum.idusuario_creac.get_full_name  }} de {{ forum.idusuario_creac.get_profile.get_dependencia.iniciales }} el {{ forum.fec_creac }}</p> {% if forum.hidden %}[{% trans "Hidden" %}]{% endif %}
                     <div class='forum-description'>
                         {{ forum.description|safe }}
                     </div>

@@ -9,7 +9,7 @@
     	<div id="frmprovincia" class="modal" style="position: relative; top: auto; left: auto; margin: 0 auto auto 20px; z-index: 1;width:720px;height:auto">
         <div class="modal-header">
       		<h3>{{ forum.name }}</h3>
-      
+      <p>Creado por {{ forum.idusuario_creac.get_full_name }} de {{ forum.idusuario_creac.get_profile.get_dependencia.iniciales }} el {{ forum.fec_creac }}</p>
     	</div>
     {% if forum.headline %}
         <div class='forum-headline'>
@@ -37,6 +37,7 @@
                 <td class="topic-name{% if topic.unread %} unread {% endif %}">
                     <div class='state-indicator'></div>
                     <a href='{{ topic.get_absolute_url }}'>{{ topic.name|truncatewords:10 }}</a>
+      <p class="ministerio">Creado por {{ topic.idusuario_creac.get_full_name }} de {{ topic.idusuario_creac.get_profile.get_dependencia.iniciales }} el {{ topic.fec_creac }}</p>
                     {% if topic.sticky %} &nbsp;[{% trans "Sticky" %}] {% endif %}
                     {% if topic.closed %} &nbsp;[{% trans "Closed" %}] {% endif %}
                     {% with topic|pybb_topic_inline_pagination as pages %}
@@ -72,17 +73,7 @@
     </table>
     {% include "pybb/pagination.html" %}
 
-    {% if PYBB_ENABLE_ANONYMOUS_POST or not user.get_profile.is_banned %}
-        <div class="controls">
-            <a href="{% url pybb:add_topic forum.id %}" class='new-topic'>
-                {% if PYBB_BUTTONS.new_topic %}
-                    <img src="{{ STATIC_URL }}{{ PYBB_BUTTONS.new_topic }}" alt='{% trans "New topic" %}'>
-                {% else %}
-                    {% trans "Nuevo Tema" %}
-                {% endif %}
-            </a>
-        </div>
-    {% endif %}
+
     </div>
     </div>
 </div>

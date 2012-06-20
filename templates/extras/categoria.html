@@ -128,7 +128,7 @@ function removedetalle(fila){
     /*AUTO REORDENAMIENTO DE ITEMS LUEGO DE ELIMINAR*/
     $.each(tdetalle.find("tbody tr"),function(){
         this.cells[0].innerHTML=n;    
-        this.cells[4].innerHTML="<a href='javascript: removedetalle("+n+")'><div id='delete'></div></a>";
+        this.cells[5].innerHTML="<a href='javascript: removedetalle("+n+")'><div id='delete'></div></a>";
         n+=1;
     });
 }
