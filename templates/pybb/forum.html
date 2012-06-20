@@ -27,10 +27,7 @@
             </th>
             <th class="topic-view-count">
                 {% trans "Vistas" %}
-            </th>
-            <th class="topic-last-post">
-                {% trans "Ultimo post" %}
-            </th>
+            </th>            
         </tr>
         {% for topic in topic_list|pybb_topic_unread:user  %}
            {% if topic.estado == 0 %}
@@ -63,12 +60,7 @@
                 </td>
                 <td class="topic-view-count">
                     {{ topic.views }}
-                </td>
-                <td class="topic-last-post">
-                    {% if topic.updated %}
-                        {{ topic.updated|date:"d.m.Y H:i" }}
-                    {% endif %}
-                </td>
+                </td>                
             </tr>
 	  {% endif %}
         {%  endfor %}
