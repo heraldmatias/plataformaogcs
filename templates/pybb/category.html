@@ -14,9 +14,6 @@
                 <th class="forum-post-count">
                     {% trans "Posts" %}
                 </th>
-                <th class="forum-last-post">
-                    {% trans "Ultimos posts" %}
-                </th>
         </tr>
         {% for forum in category.forums_accessed|pybb_forum_unread:user %}
            {% if forum.estado == 0 %}
@@ -33,12 +30,7 @@
                 </td>
                 <td class="forum-post-count">
                     {{ forum.post_count }}
-                </td>
-                <td class="forum-last-post">
-                    {% if forum.updated %}
-                        {{ forum.updated|date:"d.m.Y H:i" }}
-                    {% endif %}
-                </td>
+                </td>                
             </tr>{% endif %}
         {% empty %}
             <h4>{% trans "No hay Foros creados" %}</h4>
