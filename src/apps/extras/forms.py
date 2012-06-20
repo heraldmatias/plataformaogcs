@@ -168,6 +168,7 @@ class TopicForm(forms.ModelForm):
 class TopicTablee(tables.Table):
     item = tables.Column()
     name = tables.TemplateColumn('<a title="Modificar el Tema" href={% url ogcs-mantenimiento-tema-edit record.id %}>{{ record.name }}</a>',orderable=True,verbose_name='Tema')
+    categoria = tables.Column(verbose_name='Foro',orderable=True,accessor="forum.category")
     forum = tables.Column(verbose_name='Foro',orderable=True)
     idusuario_creac = tables.Column(verbose_name='Creador',orderable=True)
     fec_creac = tables.Column(verbose_name='Fec. Creacion',orderable=True)
