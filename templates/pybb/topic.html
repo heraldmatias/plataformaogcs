@@ -33,35 +33,6 @@
         {% include "pybb/pagination.html" %}
     {% endwith %}
 
-    {% if user.is_authenticated %}
-        <div class="controls">
-            {% if user.is_moderator %}
-                {% if topic.sticky %}
-                    <a href="{% url pybb:unstick_topic topic.id %}">{% trans "Desadherir Tema" %}</a> /
-                {% else %}
-                    <a href="{% url pybb:stick_topic topic.id %}">{% trans "Adherir Tema" %}</a> /
-                {% endif %}
-
-                {% if topic.closed %}
-                    <a href="{% url pybb:open_topic topic.id %}">{% trans "Abri tema" %}</a> /
-                {% else %}
-                    <a href="{% url pybb:close_topic topic.id %}">{% trans "Cerar tema" %}</a> /
-                {% endif %}
-                {% if perms.pybb.change_topic and user.is_staff %}
-                    <a href="{% url admin:pybb_topic_change topic.id %}">{% trans 'Admin' %}</a> / 
-                {% endif %}
-                {% comment %}
-        <a href="{% url pybb:merge_topics %}?topic={{ topic.id }}">{% trans 'Mezclar Temas' %}</a> /
-        {% endcomment %}
-            {% endif %}
-
-            {% if user.is_subscribed %}
-                <a href="{% url pybb:delete_subscription topic.id %}?from_topic">{% trans "Dejar suscripcion" %}</a>
-            {% else %}
-                <a href="{% url pybb:add_subscription topic.id %}">{% trans "Suscribete" %}</a>
-            {% endif %}
-        </div>
-    {% endif %}
 
     {% if user.is_authenticated or PYBB_ENABLE_ANONYMOUS_POST %}
         {% if not user.get_profile.is_banned %}
@@ -69,18 +40,10 @@
                 {% include "pybb/post_form.html" %}
             {% endif %}
         {% endif %}
-    {% else %}
-        <a href="{% url registration_register %}">{% trans "Register" %}</a> {% trans "or" %} <a href="{% url auth_login %}">{% trans "login" %}</a> {% trans "to create to post a reply" %}.
+    
     {% endif %}
 
-    {% if user.is_staff %}
-        <div class='subscriber-list'>
-            {% trans "Suscritos" %}:
-            {% for subscriber in topic.subscribers.all %}
-                <a href='{{ subscriber.get_absolute_url }}'>{{ subscriber.username }}</a>,
-            {% endfor %}
-        </div>
-    {% endif %}
+    
     	</div>
     </div>
 </div>
@@ -88,4 +51,7 @@
 {% endblock %}
 {% block scriptjs %}
 {% include "pybb/markitup.html" %}
+<script>
+$('#id_login').attr('readonly','readonly');
+</script>
 {% endblock scriptjs %}

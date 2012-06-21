@@ -10,8 +10,11 @@
         {% endif %}
     {% endif %}" method="post" enctype="multipart/form-data">
     {% csrf_token %}
-       <fieldset style="margin:0 10px">
-            {{ form.as_p }}
+       <fieldset style="margin:0 10px">            
+            {% if user.get_profile.nivel.codigo == 2 %}<div class="row-fluid">  
+            <div class="span2"><label for="id_login">Usuario:</label></div><div class="span5">{{ form.login }}</div></div>{% endif %}
+            <div class="row-fluid"><div class="span2"><label for="id_login">Mensaje:</label></div></div>
+            {{ form.body }}
             <div id='emoticons'>
                 {% for smile, url in form.available_smiles.items %}
                     <a href='#' title='{{ smile|safe }}'><img src='{{ STATIC_URL }}images/emoticons/{{ url }}'></a>
@@ -22,8 +25,9 @@
                 {% if PYBB_BUTTONS.submit %}
                     <input type='image' src="{{ STATIC_URL }}{{ PYBB_BUTTONS.submit }}" alt='{% trans "Submit" %}' >
                 {% else %}
-                   <input type="submit" value="{% trans 'Submit' %}" class="btn-primary" />
+                   <input type="submit" value="{% trans 'Comentar' %}" class="btn-primary" />
                 {% endif %}
             </div>
     </fieldset>
 </form>
+
