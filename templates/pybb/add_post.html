@@ -18,4 +18,18 @@
 {% endblock content %}
 {% block scriptjs %}
 {% include "pybb/markitup.html" %}
+<script>
+function mensajee(){
+$('#id_login').attr('readonly','readonly');
+var mencita='<input type="hidden" name="mencita" id="id_mencita" style="width:500px">';
+$('#form_post').prepend(mencita);
+$('#id_mencita').val($('#id_body').val());$('#id_body').val('');
+}
+mensajee();
+$('#form_post').submit(function() {
+var mcitar=$('#id_mencita').val();
+var nmensaje=$('#id_body').val();
+$('#id_body').val(mcitar+nmensaje);
+});
+</script>
 {% endblock scriptjs %}

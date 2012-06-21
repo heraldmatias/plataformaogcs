@@ -8,7 +8,7 @@
         {% else %}
             {% url pybb:edit_post pk=object.pk %}
         {% endif %}
-    {% endif %}" method="post" enctype="multipart/form-data">
+    {% endif %}" method="post" enctype="multipart/form-data" id="form_post" name="form_post">
     {% csrf_token %}
        <fieldset style="margin:0 10px">            
             {% if user.get_profile.nivel.codigo == 2 %}<div class="row-fluid">  

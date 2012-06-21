@@ -11,7 +11,7 @@
     <tr>
         <td class="info">
             {% include "pybb/avatar.html" %}
-            <div class="author"><a style="font-size:10px;" href="{{ post.user.get_profile.get_absolute_url }}">{{ post.user.get_full_name }} de {{ post.user.get_profile.get_dependencia.iniciales }} el {{ post.created|date:"d-m-Y \a \l\a\s H:s" }}</a></div>
+            <div class="author"><a style="font-size:10px;" href="{{ post.user.get_profile.get_absolute_url }}">{{ post.user.get_full_name }} de {{ post.user.get_profile.get_dependencia.iniciales }} el {{ post.created|date:"d-m-Y \a \l\a\s H:i:s" }}</a></div>
             {% if post.user.get_profile.rank %}
                 {% with post.user.get_profile as profile %}
                     <div class='rank'>
@@ -28,7 +28,7 @@
             {% endif %}
 
             <div class="post-controls">
-                {% if user.is_moderator or post|pybb_posted_by:user %}
+                {% if post|pybb_posted_by:user %}
                     <a href="{% url pybb:edit_post pk=post.id %}">{% trans "Editar" %}</a>
                 {% endif %}
                 {% if user.is_moderator %}
