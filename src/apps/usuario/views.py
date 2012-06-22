@@ -285,7 +285,7 @@ def userprint(request, nivel):
         usuarios = usuarios.extra(where=filtro)
     usuarios = usuarios.extra(select={'dependencia':"case organismo_id when 1 then (select ministerio from ministerio where nummin=dependencia) when 2 then (select odp from odp where numodp=dependencia) when 3 then (select gobernacion from gobernacion where numgob=dependencia) end"})
     html = loader.render_to_string(nivel == "1" and 'usuario/reporteusu.html' or 'usuario/reporteadmin.html',{'data': usuarios,'pagesize':'A4','usuario':request.user.get_profile()},context_instance=RequestContext(request))
-    filename= ("usuario" if nivel == "1" else "administrador")+"_%s.xls" % datetime.today().strftime("%Y%m%d")    
+    filename= ("usuario" if nivel == "1" else "administrador")+"_%s.pdf" % datetime.today().strftime("%Y%m%d")    
     return imprimirToPDF(html,filename)    
 
 @login_required()
