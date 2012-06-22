@@ -259,6 +259,9 @@ def userprint(request, nivel):
     filtro=list()
     usuarios = None
     dependencia=0
+    col = "-nombres"
+    if "2-sort" in request.GET:
+        col = request.GET['2-sort']
     if ('nombres' in request.GET and 'organismo' in request.GET and 'estado' in request.GET and 'apellidos' in request.GET) or 'dependencia' in request.GET:
         if request.GET['nombres']:
             usuarios = Usuario.objects.filter(nombres__icontains=request.GET['nombres'])
@@ -284,7 +287,7 @@ def userprint(request, nivel):
     else:
         usuarios = usuarios.extra(where=filtro)
     usuarios = usuarios.extra(select={'dependencia':"case organismo_id when 1 then (select ministerio from ministerio where nummin=dependencia) when 2 then (select odp from odp where numodp=dependencia) when 3 then (select gobernacion from gobernacion where numgob=dependencia) end"})
-    html = loader.render_to_string(nivel == "1" and 'usuario/reporteusu.html' or 'usuario/reporteadmin.html',{'data': usuarios,'pagesize':'A4','usuario':request.user.get_profile()},context_instance=RequestContext(request))
+    html = loader.render_to_string(nivel == "1" and 'usuario/reporteusu.html' or 'usuario/reporteadmin.html',{'data': usuarios.order_by(col),'pagesize':'A4','usuario':request.user.get_profile()},context_instance=RequestContext(request))
     filename= ("usuario" if nivel == "1" else "administrador")+"_%s.pdf" % datetime.today().strftime("%Y%m%d")    
     return imprimirToPDF(html,filename)    
 
