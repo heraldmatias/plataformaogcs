@@ -260,8 +260,8 @@ def userprint(request, nivel):
     usuarios = None
     dependencia=0
     col = "-nombres"
-    if "2-sort" in request.GET:
-        col = request.GET['2-sort']
+    if "sort" in request.GET:
+        col = request.GET['sort']
     if ('nombres' in request.GET and 'organismo' in request.GET and 'estado' in request.GET and 'apellidos' in request.GET) or 'dependencia' in request.GET:
         if request.GET['nombres']:
             usuarios = Usuario.objects.filter(nombres__icontains=request.GET['nombres'])
