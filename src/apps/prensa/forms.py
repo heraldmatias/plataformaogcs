@@ -37,7 +37,7 @@ class RepTable(tables.Table):
     fecha = tables.DateColumn(format="d/m/Y",verbose_name='Fecha',orderable=True)
     descripcion = tables.TemplateColumn("{{ record.descripcion|truncatewords:10 }}")    
     fec_creac = tables.DateColumn(format="d/m/Y H:i a",verbose_name='Fecha de Registro',orderable=True)
-    usuario = tables.Column(verbose_name='Usuario',)
+    idusuario_creac = tables.Column(verbose_name='Usuario',)
     descargar = tables.TemplateColumn('<a href={% url ogcs-descarga record.archivo %}>Descargar</a>',verbose_name="Descargar")
     modificar = tables.TemplateColumn("""{% if record.idusuario_creac_id == user.get_profile.numero %}
         <a href={% url ogcs-mantenimiento-prensa-rep-edit record.codigo %}>Modificar</a>{% endif %}

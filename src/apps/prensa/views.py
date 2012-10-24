@@ -82,9 +82,7 @@ def query_resumen_prensa(request):
             query = query.filter(fecha__gte=start_date)
         elif end_date:
             query = query.filter(fecha__lte=end_date)    
-    query = query.extra(tables=
-        ['usuario',],select={'usuario':'usuario.usuario',
-        'dependencia':"""case tbl_resumen_prensa.organismo_id when 1
+    query = query.extra(select={'dependencia':"""case tbl_resumen_prensa.organismo_id when 1
          then (select ministerio from ministerio where nummin=tbl_resumen_prensa.dependencia) 
          when 2 then (select odp from odp where numodp=tbl_resumen_prensa.dependencia) 
          when 3 then (select gobernacion from gobernacion 
