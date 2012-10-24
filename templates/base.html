@@ -127,8 +127,8 @@ table tr td{padding-left:10px;}
     </ul></li>
 <li class="dropdown principal"><a class="dropdown-toggle menublanco" data-toggle="dropdown" rel="popover" data-original-title="Casos de Éxito" href="">CE<b class="caret"></b></a>
                 <ul class="dropdown-menu">                  
-                  {% if user.get_profile.nivel.codigo == 2 %}<li><a href="{% url ogcs-mantenimiento-ari-add %}" data-toggle="modal">Nuevo Caso de Éxito</a></li>      {% endif %}          
-      <li><a href="{% url ogcs-mantenimiento-ari-query %}" data-toggle="modal">Consultar Caso de Éxito</a></li>      
+                  {% if user.get_profile.nivel.codigo == 2 %}<li><a href="{% url ogcs-mantenimiento-prensa-ce-add %}" data-toggle="modal">Nuevo Caso de Éxito</a></li>      {% endif %}          
+      <li><a href="{% url ogcs-mantenimiento-prensa-ce-query %}" data-toggle="modal">Consultar Caso de Éxito</a></li>      
     </ul></li>
     <!------------------------------------------------FIN NUEVOS MODULOS ------------------------------------>
         </ul>

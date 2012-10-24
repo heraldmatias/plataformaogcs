@@ -37,7 +37,7 @@ class ResumenPrensa(PrensaBase):
         return self.archivo
 
 class CasoExito(PrensaBase):
-    estado = models.ForeignKey(Estado, related_name="ce_estado", verbose_name='Estado')
+    estado = models.ForeignKey(Estado, related_name="ce_estado", verbose_name='Estado', default=1)
     archivo = models.FileField(verbose_name='Adjuntar Archivo',upload_to='prensa/casos_exito/')    
     idusuario_creac = models.ForeignKey(Usuario,related_name="ce_userc",verbose_name='Usuario creador',to_field='numero')
     fec_creac = models.DateTimeField(verbose_name='Fecha de creación del registro',auto_now_add=True)
