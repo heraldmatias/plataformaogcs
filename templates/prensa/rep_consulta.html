@@ -1,0 +1,74 @@
+  {% extends 'base.html' %}
+  {% load static %}
+  {% block title %} Plataforma Intersectorial de Comunicaci&oacute;n OGCS {% endblock %}
+  {% block content %}  
+  {% load render_table from django_tables2 %}
+  {% if messages %}
+{% for message in messages %}
+<h4><div class="alert alert-{{ message.tags }}"><a class="close" data-dismiss="alert">×</a><strong>Exito!!!</strong> <p>{{ message }}</p></div></h4>
+{% endfor %}
+{% endif %}
+<ul class="nav nav-tabs">
+  <li class="active"><a href="{% url ogcs-mantenimiento-prensa-rep-query %}" >Consultar</a></li>
+    {% if user.get_profile.nivel.codigo == 2 %}<li><a href="{% url ogcs-mantenimiento-prensa-rep-add %}">Nuevo</a></li>{% endif %}    
+</ul>
+<div class="tab-content" id="contenido_izq">
+<div id="consulta" class="tab-pane fade in active">
+<form class="form-inline" id="frmrep" name="frmrep" method="get" action="{% url ogcs-mantenimiento-prensa-rep-query %}"><!--data-toggle="modal"-->
+<div id="cuerpo" class="modal" style="position: relative; top: auto; left: auto; margin: 0 auto auto 20px; z-index: 1;width:720px;height:auto"><!--class="modal hide fade">-->
+    <div class="modal-header">
+      <a class="close" data-dismiss="modal" href="javascript: cerrarformulario('contenido');">&times;</a>
+      <h3>Consulta de REP (Resumen de Prensa)</h3>
+    </div>
+    <div class="modal-body">       
+      <div class="row-fluid">
+        <div class="span2" >{{ formulario.organismo.label_tag }}:</div><div class="span4">{{ formulario.organismo }}</div>
+        <div class="span2" >{{ formulario.dependencia.label_tag }}:</div><div class="span4">{{ formulario.dependencia }}</div></div><br /> 
+        <div class="row-fluid">          
+          <div class="span2"><label>Fecha inicial:</label></div><div class="span3">
+          <label class="input-append date" style="display:inline" id="dp1" data-date-format="dd/mm/yyyy" >{{ formulario.fechaini }}<span class="add-on"><i class="icon-th"></i></span></label></div> 
+          <div class="span2"><label>Fecha final:</label></div><div class="span3">
+          <label id="dp2" style="display:inline" class="input-append date" data-date-format="dd/mm/yyyy" >{{ formulario.fechafin }}<span class="add-on"><i class="icon-th"></i></span></label></div><input  class="btn-primary" name="grabar" value="Consultar" type="submit">&nbsp;&nbsp;<a class="btn btn-primary" href="javascript: imprimir();">Imprimir</a> </div><br />
+      <br><input type="hidden" value="{{ dependencia }}" id="id_dep" name="id_dep">     
+      <fieldset>
+	<legend><h4>Lista de REP</h4></legend>
+      {% render_table tabla %}    
+      </fieldset>
+    </div>
+    <div class="modal-footer">
+     <input class="btn" name="grabar" value="Cerrar" type="button" onclick="cerrarformulario('contenido');">
+    </div>
+</div>
+</form>
+</div></div>
+  {% endblock %}
+
+  {% block scriptjs %}    
+<script>
+$(document).ready(function() {
+  dependencias(0); combotodos('id_organismo');
+});
+function imprimir(){
+var data = $("#frmrep").serialize();
+var url="{% url ogcs-mantenimiento-prensa-rep-print %}?"+data;
+location.href=url;
+}
+
+$('#id_fechaini').datepicker({
+    format: 'dd/mm/yyyy',
+    language: 'es',
+    autoclose: true,
+    endDate: new Date(),
+}).on('changeDate', function(ev){
+$('#id_fechaini').datepicker('hide');});
+
+$('#id_fechafin').datepicker({
+    format: 'dd/mm/yyyy',
+    language: 'es',
+    autoclose: true,
+    endDate: new Date(),
+}).on('changeDate', function(ev){
+$('#id_fechafin').datepicker('hide');});
+
+</script>
+  {% endblock %}

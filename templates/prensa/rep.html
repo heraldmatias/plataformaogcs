@@ -1,0 +1,97 @@
+  {% extends 'base.html' %}
+  {% load static %}
+  {% block title %} Plataforma Intersectorial de Comunicaci&oacute;n OGCS {% endblock %}
+  {% block content %}  
+
+{% if messages %}
+{% for message in messages %}
+<h4><div class="alert alert-{{ message.tags }}"><a class="close" data-dismiss="alert">×</a><strong>Exito!!!</strong> <p>{{ message }}</p></div></h4>
+{% endfor %}
+{% endif %}
+<ul class="nav nav-tabs">
+<li><a href="{% url ogcs-mantenimiento-prensa-rep-query %}" >Consultar</a></li>
+{% if resumen %}
+<li class="active"><a href="{% url ogcs-mantenimiento-prensa-rep-edit resumen.codigo %}">Modificar</a></li>
+{% else %}
+<li class="active"><a href="{% url ogcs-mantenimiento-prensa-rep-add %}">Nuevo</a></li>
+{% endif %}
+</ul>
+<div class="tab-content" id="contenido_izq">
+<div id="nuevo" class="tab-pane fade in active">
+<form enctype="multipart/form-data" class="form-inline" id="frmmg" name="frmmg" method="post" 
+{% if resumen %}
+action="{% url ogcs-mantenimiento-prensa-rep-edit resumen.codigo %}" 
+{% else %}
+action="{% url ogcs-mantenimiento-prensa-rep-add %}" 
+{% endif %}>
+<div id="frmprovincia" class="modal" style="position: relative; top: auto; left: auto; margin: 0 auto auto 20px; z-index: 1;width:720px;height:auto">
+    <div class="modal-header">
+      <a class="close" data-dismiss="modal" >&times;</a>
+      <h3>REP (Resumen de Prensa)</h3>
+    </div>
+    <div class="modal-body">
+      {% csrf_token %}
+      {{ formulario.archivo.errors }}
+      <div class="row-fluid">         
+      <div class="span3">{{ formulario.archivo.label_tag }}:</div><div class="span7">{{ formulario.archivo }}</div>
+   <div class="span2"><input class="btn" name="limpiar" value="Limpiar" type="button" onClick="$('#id_archivo').val('');">
+   </div></div><p></p>
+      {{ formulario.descripcion.errors }}
+      <div class="row-fluid">        
+      <div class="span3">{{ formulario.descripcion.label_tag }}:</div><div class="span9">{{ formulario.descripcion }}</div></div>
+      <br>
+      <div class="row-fluid">
+        {{ formulario.fecha.errors }}
+      <div class="span3"><label>Fecha del Reporte:</label></div> <div class="span6"><label class="input-append date" style="display:inline" id="dp1" data-date-format="dd/mm/yyyy" > {{ formulario.fecha }}<span class="add-on"><i class="icon-th"></i></span></label> </div> </div>
+      <br>
+      <div class="row-fluid">
+        {{ formulario.estado.errors }}
+      <div class="span3">{{ formulario.estado.label_tag }}:</div><div class="span3">{{ formulario.estado }}</div></div>
+    </div>
+    <div class="modal-footer">
+     <input class="btn-primary" name="grabar" value="{% if resumen %}Modificar{% else %}Guardar{% endif %}" type="submit">
+     <input class="btn" name="grabar" value="Cerrar" type="button" onclick="cerrarformulario('contenido');">
+    </div>
+</div>
+</form>
+</div></div>
+
+  {% endblock %}
+  {% block scriptjs %}    
+  {% spaceless %}
+<script>
+$('#frmmg').submit(function() {
+var ok=true;
+{% if not resumen %}
+if($("#id_archivo").val()==''){
+  alert("Debe seleccionar el archivo de resumen de prensa");$("#id_archivo").focus();return false;
+}
+{% endif %}
+if(ok){if($("#id_descripcion").val()==''){
+    alert('Escriba una breve descripción acerca del documento');$("#id_descripcion").focus();return false;
+}}
+if(ok){return confirmar('¿Desea {% if resumen %}Modificar{% else %}Grabar{% endif %} el registro?');}else{return false;}
+});
+
+$("#id_archivo").change(function() {
+var ext = $(this).val().split('.').pop().toLowerCase();
+if($.inArray(ext, ['pdf', 'doc', 'ppt', 'jpg', 'gif', 'png','docx']) == -1) {
+    alert('Solo se acepta archivos en formato PDF, DOC(X), PPT, JPG, GIF y PNG!');
+    $(this).val('');$(this).focus();ok=false;return false;
+}});
+
+$(document).ready(function() {
+  fecha = new Date();
+   $("#id_fecha").attr('readonly', 'readonly');//   Fecha Inicial.
+ 
+$('#dp1').datepicker({
+    format: 'dd/mm/yyyy',
+    language: 'es',
+    autoclose: true,
+    endDate: new Date(),
+}).on('changeDate', function(ev){
+$('#dp1').datepicker('hide');});
+});
+</script>
+{% endspaceless %}
+  {% endblock %}

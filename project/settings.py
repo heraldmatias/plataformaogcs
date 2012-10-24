@@ -20,7 +20,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql', # Add 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
         'NAME': 'dbplataformaogcs',                      # Or path to database file if using sqlite3.
         'USER': 'root',                      # Not used with sqlite3.
-        'PASSWORD': '',                  # Not used with sqlite3.
+        'PASSWORD': 'ollanta2011',                  # Not used with sqlite3.
         'HOST': 'localhost',                      # Set to empty string for localhost. Not used with sqlite3.
         'PORT': '',                      # Set to empty string for default. Not used with sqlite3.
         'OPTIONS': {
@@ -147,6 +147,7 @@ INSTALLED_APPS = (
     'pytils',
     'sorl.thumbnail',
     'pure_pagination',
+    'prensa'
 )
 
 GRAPPELLI_ADMIN_TITLE = 'Sitio Administrativo de la Plataforma Intersectorial de Comunicaión Social'
@@ -161,7 +162,7 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     "django.core.context_processors.request",
     "django.core.context_processors.static",
     "django.core.context_processors.csrf",
-	#'pybb.context_processors.processor',
+	"django.contrib.messages.context_processors.messages",
 )
 
 AUTH_PROFILE_MODULE = 'usuario.Usuario'

@@ -448,6 +448,7 @@ def documentos_print(request):
     filename= "doc_%s.pdf" % datetime.today().strftime("%Y%m%d")        
     return imprimirToPDF(html,filename)
 
+@login_required
 def descargar(request,archivoo):    
     try:
         archivo = default_storage.open(archivoo)
@@ -551,7 +552,7 @@ def tema_edit(request,codigo):
     return render_to_response('extras/tema.html', {'formulario': formulario,'opcion':'edit','codigo':codigo,'cate':cate,'foru':foru,'estado':estado}, context_instance=RequestContext(request),)
 
 
-login_required()
+@login_required()
 def tema_query(request):
     col = "-name"
     query = Topic.objects.all()

@@ -8,6 +8,14 @@ from xhtml2pdf import pisa # TODO: Change this when the lib changes.
 import cStringIO as StringIO
 import os
 import cgi
+from django.utils.safestring import mark_safe
+from django.forms.util import ErrorList
+class DivErrorList(ErrorList):
+    def __unicode__(self):
+        return self.as_divs()
+    def as_divs(self):
+        if not self: return u''
+        return mark_safe('<div class="alert alert-error">%s</div>' % ''.join([u'<strong>%s</strong>' % e for e in self]))
 #===============================================================================
 # HELPERS
 #===============================================================================
