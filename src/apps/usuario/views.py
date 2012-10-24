@@ -10,7 +10,7 @@ from django.shortcuts import get_object_or_404
 import django_tables2 as tables
 from django_tables2.config import RequestConfig
 from datetime import datetime
-from scripts.scripts import imprimirToPDF
+from scripts.scripts import imprimirToPDF, DivErrorList
 from django.core.urlresolvers import reverse
 from django.core import serializers
 from django.conf import settings
@@ -128,7 +128,7 @@ def useradd(request,nivel):
     if request.method == 'POST':
         num = Usuario.objects.values("numero").order_by("-numero",)[:1]
         num = 1 if len(num)==0 else int(num[0]["numero"])+1
-        frmusuario = UsuarioForm(request.POST) 
+        frmusuario = UsuarioForm(request.POST,error_class=DivErrorList) 
         if frmusuario.is_valid():
             if request.POST['nivel'] == "1":
                 try:
@@ -158,7 +158,7 @@ def useradd(request,nivel):
                 user.user_permissions = get_admin_permissions() if nivel == "2" else get_user_permissions()
                 user.save()
                 usuario = Usuario(user=user,numero=num,usuario=usernamee,nivel=Nivel.objects.get(codigo=request.POST['nivel']))
-                frmusuario = UsuarioForm(request.POST,request.FILES, instance=usuario)
+                frmusuario = UsuarioForm(request.POST,request.FILES, instance=usuario,error_class=DivErrorList)
                 frmusuario.save()
                 usuario.contrasena = user.password
                 usuario.save() 
@@ -196,7 +196,7 @@ def useredit(request,nivel, codigo):
         profile = Usuario.objects.get(user = request.user)
         usuario = Usuario.objects.get(numero=int(codigo))
         usuario.idusuario_mod=profile.numero
-        frmusuario = EditUsuarioForm(request.POST,request.FILES, instance=usuario) 
+        frmusuario = EditUsuarioForm(request.POST,request.FILES, instance=usuario,error_class=DivErrorList) 
         dependencia = request.POST['dependencia']
         if frmusuario.is_valid():
             usuario.user.is_active= 0 if request.POST['estado']=="2" else 1

@@ -39,7 +39,7 @@ h1{font-size:138.5%;}h2{font-size:123.1%;}h3{font-size:108%;}h1,h2,h3{margin:1em
 	<tr>
 	<td>{{ forloop.counter }}</td><td>{{ row.organismo__nombre }}</td><td>{{ row.dependencia }}</td><td>{{ row.descripcion|truncatewords:10 }}</td><td>{{ row.idusuario_creac__nombres }} {{row.idusuario_creac__apellidos}}</td><td>{{ row.fecha }}</td><td> <a href="{{ protocol }}://{{ domain }}{% url ogcs-descarga row.archivo %}">Descargar</a> </td>
 	</tr>{% empty %}
-        <tr><td colspan="3"> NO ENCONTRE NINGUN REGISTRO </td></tr>   
+        <tr><td colspan="7"> NO ENCONTRE NINGUN REGISTRO </td></tr>   
 	{% endfor %}<br><br>
   </tbody>  
 </table>
