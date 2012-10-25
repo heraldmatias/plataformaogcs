@@ -243,6 +243,10 @@ def mccaadd(request):
         #sectores_estado
         corg = request.POST.getlist('corg')
         cdep = request.POST.getlist('cdep')
+        #lugares
+        col_reg = request.POST.getlist('col_reg')
+        col_pro = request.POST.getlist('col_pro')
+        col_lug = request.POST.getlist('col_lug')
         #secores_privado
         cpri = request.POST.getlist('cpri')
         #indicadores
@@ -277,6 +281,9 @@ def mccaadd(request):
         #sectores_Estado_save
         for c in range(len(corg)):
             MccaEstado(nummcca=obj, item=c + 1, organismo=Organismo.objects.get(codigo=corg[c]), dependencia=cdep[c]).save()
+        #lugares_save
+        for c in range(len(col_reg)):
+            MccaLugar(nummcc=obj, item=c+1, region = Region.objects.get(codigo=col_reg[c]),provincia= Provincia.objects.get(codigo=col_pro[c]),lugar=col_lug[c],auditoria=1).save()
         #sectores_privado_save
         for c in range(len(cpri)):
             MccaPrivado(nummcca=obj, item=c + 1, privado=cpri[c], auditoria=1).save()
@@ -307,15 +314,23 @@ def mccaadd(request):
     tabla3 = MccaForm_MensajeTable(list())
     tabla4 = MccaForm_CanalTable(list())
     tabla5 = MccaForm_AccionTable(list())       
-    tabla6 = MccaForm_ObservacionTable(list())        
+    tabla6 = MccaForm_ObservacionTable(list())
+    tabla7 = MccaForm_LugarTable(list())        
     formmcca_estado = MccaForm_Estado()
     formmcca_privado = MccaForm_Privado()
     formmcca_indicador = MccaForm_Indicador()
     formmcca_mensaje = MccaForm_Mensaje()
     formmcca_canal = MccaForm_Canal()
     formmcca_accion = MccaForm_Accion()
+    formmcca_lugar = MccaForm_Lugar()
     formmcca_observacion = MccaForm_Observacion()
-    return render_to_response('comunicacion/mcca.html', {'form': formmcca, 'form_estado': formmcca_estado, 'form_privado': formmcca_privado, 'form_indicador': formmcca_indicador, 'form_mensaje': formmcca_mensaje, 'form_canal': formmcca_canal, 'form_accion': formmcca_accion, 'form_observacion': formmcca_observacion, 'tabla':tabla, 'tabla1':tabla1, 'tabla2':tabla2, 'tabla3':tabla3, 'tabla4':tabla4, 'tabla5':tabla5, 'tabla6':tabla6, 'mensaje':mensaje, 'accion': 'add'}, context_instance=RequestContext(request),)
+    return render_to_response('comunicacion/mcca.html', {'form': formmcca, 'form_lugar':formmcca_lugar,
+        'form_estado': formmcca_estado, 'form_privado': formmcca_privado,
+        'form_indicador': formmcca_indicador, 'form_mensaje': formmcca_mensaje,
+        'form_canal': formmcca_canal, 'form_accion': formmcca_accion,
+        'form_observacion': formmcca_observacion, 'tabla':tabla, 'tabla1':tabla1,
+        'tabla2':tabla2, 'tabla3':tabla3, 'tabla4':tabla4, 'tabla5':tabla5,
+        'tabla6':tabla6,'tabla7':tabla7, 'mensaje':mensaje, 'accion': 'add'}, context_instance=RequestContext(request),)
 
 @login_required()
 def mccaedit(request, nummcca):
@@ -324,6 +339,10 @@ def mccaedit(request, nummcca):
         #sectores_estado
         corg = request.POST.getlist('corg')
         cdep = request.POST.getlist('cdep')
+        #lugares
+        col_reg = request.POST.getlist('col_reg')
+        col_pro = request.POST.getlist('col_pro')
+        col_lug = request.POST.getlist('col_lug')
         #secores_privado
         cpri = request.POST.getlist('cpri')
         #indicadores
@@ -375,7 +394,27 @@ def mccaedit(request, nummcca):
             row = MccaEstado.objects.get(nummcca=obj,item=resto+1)
             row.delete()
             resto = resto + 1
-            
+        #lugares_save
+        query = MccaLugar.objects.filter(nummcc=obj)
+        for c in range(len(col_lug)):
+            try:
+                row = MccaLugar.objects.get(nummcc=obj,item=c+1)
+                row.region=Region.objects.get(codigo=col_reg[c])
+                row.provincia=Provincia.objects.get(codigo=col_pro[c])
+                row.lugar=col_lug[c]
+                row.save()
+            except MccaLugar.DoesNotExist:
+                ml = MccaLugar()
+                print ml.__dict__
+                #MccaLugar(nummcc=obj, item=c+1, region = Region.objects.get(codigo=col_reg[c]),
+                #    provincia= Provincia.objects.get(codigo=col_pro[c]),lugar=col_lug[c],auditoria=1).save()
+                MccaLugar(nummcc=obj, item=c+1, region_id=col_reg[c],
+                    provincia_id= col_pro[c],auditoria=1,lugar=col_lug[c]).save()
+        resto= len(col_lug)
+        while resto < len(query):
+            row = MccaLugar.objects.get(nummcc=obj,item=resto+1)
+            row.delete()
+            resto = resto + 1    
         #sectores_privado_save
         query = MccaPrivado.objects.filter(nummcca=obj)
         for c in range(len(cpri)):
@@ -470,9 +509,9 @@ def mccaedit(request, nummcca):
             row = MccaObservacion.objects.get(nummcca=obj,item=resto+1)
             row.delete()
             resto = resto + 1
-            
-        mensaje = "Registro modificado satisfactoriamente."
-   
+        from django.contrib.messages import add_message, SUCCESS
+        add_message(request,SUCCESS,"Registro modificado satisfactoriamente.") 
+        return redirect('ogcs-mantenimiento-mcca-query')
     mcca = get_object_or_404(Mcca, nummcca=int(nummcca))
     mcca.fechaini = mcca.fechaini.strftime("%d/%m/%Y")
     mcca.fechafin = mcca.fechafin.strftime("%d/%m/%Y")
@@ -502,9 +541,9 @@ def mccaedit(request, nummcca):
     tabla4 = MccaForm_CanalTable(query5)
 
     query6 = MccaAccion.objects.filter(nummcca=mcca).order_by("item",)
-    for row in query6:
-        row.fechainia = row.fechainia.strftime("%d/%m/%Y")
-        row.fechafina = row.fechafina.strftime("%d/%m/%Y")
+    #for row in query6:
+    #    row.fechainia = row.fechainia.strftime("%d/%m/%Y")
+    #    row.fechafina = row.fechafina.strftime("%d/%m/%Y")
     tabla5 = MccaForm_AccionTable(query6)
 
     query7 = MccaObservacion.objects.filter(nummcca=mcca).order_by("item",)
@@ -517,7 +556,16 @@ def mccaedit(request, nummcca):
     formmcca_canal = MccaForm_Canal()
     formmcca_accion = MccaForm_Accion()
     formmcca_observacion = MccaForm_Observacion()
-    return render_to_response('comunicacion/mcca.html', {'form': formmcca, 'form_estado': formmcca_estado, 'form_privado': formmcca_privado, 'form_indicador': formmcca_indicador, 'form_mensaje': formmcca_mensaje, 'form_canal': formmcca_canal, 'form_accion': formmcca_accion, 'form_observacion': formmcca_observacion, 'tabla':tabla, 'tabla1':tabla1, 'tabla2':tabla2, 'tabla3':tabla3, 'tabla4':tabla4, 'tabla5':tabla5, 'tabla6':tabla6, 'mensaje':mensaje, 'codigo':nummcca, 'accion': ''}, context_instance=RequestContext(request),)
+    formmcca_lugar = MccaForm_Lugar()
+    tabla7 = MccaForm_LugarTable(MccaLugar.objects.filter(nummcc=mcca).order_by("item",))    
+    return render_to_response('comunicacion/mcca.html', {'form': formmcca, 
+        'form_estado': formmcca_estado, 'form_privado': formmcca_privado, 
+        'form_indicador': formmcca_indicador, 'form_mensaje': formmcca_mensaje, 
+        'form_canal': formmcca_canal, 'form_accion': formmcca_accion, 
+        'form_observacion': formmcca_observacion, 'tabla':tabla, 'tabla1':tabla1, 
+        'tabla2':tabla2, 'tabla3':tabla3, 'tabla4':tabla4, 'tabla5':tabla5, 
+        'tabla6':tabla6, 'mensaje':mensaje, 'codigo':nummcca, 'tabla7':tabla7,
+        'form_lugar':formmcca_lugar,'accion': ''}, context_instance=RequestContext(request),)
 
 
 @login_required()

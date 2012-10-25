@@ -1,12 +1,17 @@
   {% extends 'base.html' %}
   {% load static %}
   {% block title %} Plataforma Intersectorial de Comunicaci&oacute;n OGCS {% endblock %}
-  {% block content %}
-  
+  {% block content %}  
   {% load render_table from django_tables2 %}
+  {% if messages %}
+  {% for message in messages %}
+<h4><div class="alert alert-success"><a class="close" data-dismiss="alert">×</a><strong>Mensaje:</strong>
+<p>{{ message }}</p></div></h4>
+  {% endfor %}
+  {% endif %}
 <ul class="nav nav-tabs">
-<li><a href="{% url ogcs-mantenimiento-mcca-add %}">Nuevo</a></li>
 <li class="active"><a href="{% url ogcs-mantenimiento-mcca-query %}" >Consultar</a></li>
+<li><a href="{% url ogcs-mantenimiento-mcca-add %}">Nuevo</a></li>
 </ul>
 <div class="tab-content" id="contenido_izq">
 
@@ -85,5 +90,10 @@ $('#dp5').datepicker().on('changeDate', function(ev){
 						}
 					}$('#dp5').datepicker('hide');
 				});
+
+$(document).ready(function() {
+   $("#id_fechaini").attr('readonly', 'readonly');
+   $("#id_fechafin").attr('readonly', 'readonly');
+});
 </script>
   {% endblock %}

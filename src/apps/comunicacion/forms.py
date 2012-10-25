@@ -3,6 +3,7 @@ import django_tables2 as tables
 from django_tables2.utils import A
 from models import *
 from django import forms
+import itertools
 
 class OacForm(forms.ModelForm):
     class Meta:
@@ -89,7 +90,28 @@ class MccaForm(forms.ModelForm):
             'fechafin': forms.TextInput(attrs={'size':'15', 'id':'id_fechafin_mcca'}),
         }
         exclude = ('idusuario_creac', 'idusuario_mod', )
-        
+############################### LUGARES EN ACCION NUEVO ##########################################
+class MccaForm_Lugar(forms.ModelForm):
+    class Meta:
+        model = MccaLugar
+        fields = ('region', 'provincia','lugar')
+        widgets = {
+            'region': forms.Select(attrs={'onChange':'provincias(0);', }),
+            'provincia': forms.Select(),
+            'lugar': forms.TextInput(attrs={'style':'width:500px;'}),
+        }
+
+class MccaForm_LugarTable(tables.Table):
+    item = tables.Column()
+    region = tables.TemplateColumn('<input type="hidden" name="col_reg" value="{{ record.region_id }}">{{ record.region }}')
+    provincia = tables.TemplateColumn('<input type="hidden" name="col_pro" value="{{ record.provincia_id }}">{{ record.provincia }}')
+    lugar = tables.TemplateColumn('<input type="hidden" name="col_lug" value="{{ record.lugar }}">{{ record.lugar }}')
+    eliminar = tables.TemplateColumn("{% if user.get_profile.nivel.codigo == 1 %}<a href='javascript: removedetalle(7,{{ record.item }})'><div id='delete'></div></a>{% endif %}")
+
+    class Meta:
+        attrs = {"class": "table table-bordered table-condensed table-striped", "name":"tabla_lugar", "id":"tabla_lugar"}
+        orderable = False
+############################### LUGARES EN ACCION NUEVO ##########################################
 class MccaForm_Estado(forms.ModelForm):
     class Meta:
         model = MccaEstado
@@ -196,8 +218,10 @@ class MccaForm_Accion(forms.ModelForm):
 class MccaForm_AccionTable(tables.Table):
     item = tables.Column()
     acciones = tables.TemplateColumn('<input type="hidden" name="cacc" value="{{ record.acciones }}">{{ record.acciones }}')
-    fechainia = tables.TemplateColumn('<input type="hidden" name="caccfini" value="{{ record.fechainia }}">{{ record.fechainia }}')
-    fechafina = tables.TemplateColumn('<input type="hidden" name="caccffin" value="{{ record.fechafina }}">{{ record.fechafina }}')
+    fechainia = tables.TemplateColumn("""<input type="hidden" name="caccfini"
+    value="{{ record.fechainia|date:"d/m/Y" }}">{{ record.fechainia|date:"d/m/Y" }}""")
+    fechafina = tables.TemplateColumn("""<input type="hidden" name="caccffin"
+     value="{{ record.fechafina|date:"d/m/Y" }}">{{ record.fechafina|date:"d/m/Y" }}""")
     eliminar = tables.TemplateColumn("{% if user.get_profile.nivel.codigo == 1 %}<a href='javascript: removedetalle(5,{{ record.item }})'><div id='delete'></div></a>{% endif %}")
 
     class Meta:
@@ -235,7 +259,7 @@ class ConsultaMccaForm(forms.ModelForm):
         
 
 class MccaTable(tables.Table):
-    item = tables.Column()
+    item = tables.Column(empty_values=())
     fechaini = tables.Column(orderable=True, verbose_name='Fecha')
     organismo = tables.Column(orderable=True, verbose_name='Organismo')
     dependencia = tables.Column(orderable=True, verbose_name='Dependecia')
@@ -248,10 +272,12 @@ class MccaTable(tables.Table):
     fec_modadm = tables.Column(orderable=True, verbose_name='Fecha Admin Mod')
     Modificar = tables.TemplateColumn('<a href=/comunicacion/mcca/edit/{{ record.nummcca }}/>modificar</a>')
 
+    def __init__(self, *args, **kwargs):
+        super(MccaTable, self).__init__(*args, **kwargs)
+        self.counter = itertools.count(1)        
+    
     def render_item(self):
-        value = getattr(self, '_counter', 1)
-        self._counter = value + 1
-        return '%d' % value
+        return '%d' % next(self.counter)
 
     class Meta:
         attrs = {"class": "table table-bordered table-condensed table-striped", "name":"tabla_consulta", "id":"tabla_consulta"}
@@ -292,7 +318,7 @@ class MccForm_LugarTable(tables.Table):
     item = tables.Column()
     region = tables.TemplateColumn('<input type="hidden" name="col_reg" value="{{ record.region_id }}">{{ record.region }}')
     provincia = tables.TemplateColumn('<input type="hidden" name="col_pro" value="{{ record.provincia_id }}">{{ record.provincia }}')
-    lugar = tables.TemplateColumn('<input type="hidden" name="col_lug" value="{{ record.lugar }}">{{ record.provincia }}')
+    lugar = tables.TemplateColumn('<input type="hidden" name="col_lug" value="{{ record.lugar }}">{{ record.lugar }}')
     eliminar = tables.TemplateColumn("{% if user.get_profile.nivel.codigo == 1 %}<a href='javascript: removedetalle(3,{{ record.item }})'><div id='delete'></div></a>{% endif %}")
 
     class Meta:
@@ -379,7 +405,7 @@ class ConsultaMccForm(forms.ModelForm):
         }
 
 class MccTable(tables.Table):
-    item = tables.Column()
+    item = tables.Column(empty_values=())
     fechaini = tables.Column(orderable=True, verbose_name='Fecha')
     organismo = tables.Column(orderable=True, verbose_name='Organismo')
     dependencia = tables.Column(orderable=True, verbose_name='Dependencia')
@@ -394,10 +420,12 @@ class MccTable(tables.Table):
     fec_modadm = tables.Column(orderable=True, verbose_name='Fecha Admin Mod')
     Modificar = tables.TemplateColumn('<a href=/comunicacion/mcc/edit/{{ record.nummcc }}/>modificar</a>')
 	
+    def __init__(self, *args, **kwargs):
+        super(MccTable, self).__init__(*args, **kwargs)
+        self.counter = itertools.count(1)        
+    
     def render_item(self):
-        value = getattr(self, '_counter', 1)
-        self._counter = value + 1
-        return '%d' % value
+        return '%d' % next(self.counter)
 
     class Meta:
         attrs = {"class": "table table-bordered table-condensed table-striped"}

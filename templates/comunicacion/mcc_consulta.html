@@ -89,5 +89,9 @@ $('#dp5').datepicker().on('changeDate', function(ev){
 						}
 					}$('#dp5').datepicker('hide');
 				});
+$(document).ready(function() {
+   $("#id_fechaini").attr('readonly', 'readonly');
+   $("#id_fechafin").attr('readonly', 'readonly');
+});
 </script>
   {% endblock %}

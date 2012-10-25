@@ -109,8 +109,23 @@ class Mcca(models.Model):
 
     def __unicode__(self):
         return self.nombremmca
+##################################NUEVO MODELO##############################################
+class MccaLugar(models.Model):
+    nummcc = models.ForeignKey(Mcca,verbose_name='Numero de la mcca',to_field='nummcca')
+    item = models.IntegerField(verbose_name='Items',)
+    region = models.ForeignKey(Region, verbose_name='Region')
+    provincia = models.ForeignKey(Provincia, verbose_name='Provincia')
+    lugar = models.CharField(verbose_name='Lugar',max_length=120)
+    auditoria = models.IntegerField(verbose_name='Auditoria',choices=AUDITORIA)
 
+    class Meta:
+        db_table = u'mcca_lugar'
+        verbose_name = u'Mcca Lugar'
+        verbose_name_plural = u'Mcca Lugarares'
 
+    def __unicode__(self):
+        return self.lugar
+##################################NUEVO MODELO##############################################
 class MccaEstado(models.Model):
     nummcca = models.ForeignKey(Mcca,verbose_name='Codigo mcca',to_field='nummcca')
     item = models.IntegerField(verbose_name='Items',)
@@ -307,7 +322,7 @@ class MccLugar(models.Model):
         verbose_name_plural = u'Mcc Lugarares'
 
     def __unicode__(self):
-        return self.descripcionmcc
+        return self.lugar
 
 class MccActor(models.Model):
     nummcc = models.ForeignKey(Mcc,verbose_name='Numero de la mcc',to_field='nummcc')

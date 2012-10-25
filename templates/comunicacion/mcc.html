@@ -178,17 +178,20 @@
  $("#id_nombremmc").attr('readonly', 'readonly'); //   Propuesta estrategica comunicacional.
 {% else %}
  $("#id_observacion").attr('readonly', 'readonly');	
-
+$("#id_fechaini").attr('readonly', 'readonly'); //   Fecha Inicial.
+ $("#id_fechafin").attr('readonly', 'readonly');
 {% endif %}
 
 comboelegir('id_nummcctipo');comboelegir('id_nummccestado');comboelegir('id_region');comboelegir('id_numtipovarios_ac');comboelegir('id_numtipovarios');
 
-
-$('#dp4').datepicker().on('changeDate', function(ev){
+$('#dp4').datepicker({
+    format: 'dd/mm/yyyy',
+    language: 'es'
+}).on('changeDate', function(ev){
 					var fechaini = $("#id_fechaini").val().split('/');
 					var fechafin = $("#id_fechafin").val().split('/');
-					 var stDate = new Date(fechaini[2],fechaini[1],fechaini[0]);
-            		 var endDate = new Date(fechafin[2],fechafin[1],fechafin[0]);
+					var stDate = new Date(fechaini[2],fechaini[1],fechaini[0]);
+          var endDate = new Date(fechafin[2],fechafin[1],fechafin[0]);
 					 
 					if($('#id_fechafin').val()!=""){
 						if (stDate.valueOf() > endDate.valueOf()){
@@ -197,10 +200,13 @@ $('#dp4').datepicker().on('changeDate', function(ev){
 						} else {
 							$('#alert').hide();
 						}
-					}$('#dp4').datepicker('hide')
+					}$('#dp4').datepicker('hide');
 				});
 
-$('#dp5').datepicker().on('changeDate', function(ev){
+$('#dp5').datepicker({
+    format: 'dd/mm/yyyy',
+    language: 'es' 
+}).on('changeDate', function(ev){
 					var fechaini = $("#id_fechaini").val().split('/');
 					var fechafin = $("#id_fechafin").val().split('/');
 					 var stDate = new Date(fechaini[2],fechaini[1],fechaini[0]);

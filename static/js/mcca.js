@@ -41,7 +41,59 @@ tablas[3]='#tabla_mensaje';
 tablas[4]='#tabla_canal';
 tablas[5]='#tabla_accion';
 tablas[6]='#tabla_observacion';
+tablas[7]='#tabla_lugar';
 /****************************************************************************************************************/
+function lugares(){
+    var region=$('#id_region');
+    var provincia=$("#id_provincia");
+    var lugar=$('#id_lugar');
+    var tabla= $(tablas[7]).find("tbody");
+    var n= tabla.find("tr").length;
+    var ok=true;
+    if ($.trim(region.val())==''){
+       $('#alert4').show().find('strong').text('Debe elegir la region.');
+        region.focus();
+        return false;
+    }else {
+        $('#alert4').hide();
+    }
+    
+    if ($.trim(provincia.val())==''){
+        $('#alert4').show().find('strong').text('Debe elegir la provincia.');
+        provincia.focus();
+        return false;
+    }else {
+        $('#alert4').hide();
+    }
+    /*if ($.trim(lugar.val())==''){
+        $('#alert4').show().find('strong').text('Debe ingresar el lugar de acción.')
+        lugar.focus();
+        return false;
+    }else {
+        $('#alert4').hide();
+    }*/
+    $.each(tabla.find("tr"),function(){   
+        if ($(this).find("td:eq(1) input:hidden").val()==region.val() & $(this).find("td:eq(2) input:hidden").val()==provincia.val() & $(this).find("td:eq(3) input:hidden").val()==lugar.val()){
+            ok=false;
+            return false;
+        }
+    });
+    if(ok==true){
+        n+=1;
+        fila="<tr class='"+n+"'><td>"+n+"</td><td><input type='hidden' name='col_reg' value='"+region.val()+"'>"+region.find('option:selected').text()+"</td><td><input type='hidden' name='col_pro' value='"+provincia.val()+"'>"+provincia.find('option:selected').text()+"</td><td><input type='hidden' name='col_lug' value='"+lugar.val()+"'>"+lugar.val()+"</td><td> <a href='javascript: removedetalle(7,"+n+")'><div id='delete'></div></a></td></tr>"
+        tabla.append(fila);
+        $('#alert4').hide();
+    }else{
+        $('#alert4').show().find('strong').text('El lugar ya ha sido agregado. Ingrese otro porfavor!')
+        lugar.select();
+        lugar.focus();
+        return false;
+    }
+    region.focus();
+    provincia.val('');
+    lugar.val('');
+}
+
 function sectores_estado(){
     var organismo=$('#id_organismo');
     var norganismo=$("#id_organismo option:selected").text();
