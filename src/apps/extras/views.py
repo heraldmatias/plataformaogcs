@@ -393,6 +393,7 @@ def documentos_add(request, codigo=None):
                 obj.idadministrador_mod = profile
                 obj.fec_modadm = datetime.today()
             messages.add_message(request, messages.SUCCESS, 'Documento grabado exitosamente!!!')
+            #print "AQUI"
             return redirect('ogcs-mantenimiento-doc-query')
     else:        
         formulario = DocumentoForm(instance=obj)
@@ -428,7 +429,7 @@ def documentos_query(request):
         if request.GET['tipo']:
             filtro.append(u"tipo ='%s'"%request.GET['tipo'])   
     query = Documento.objects.extra(where=filtro,select={'dependencia':"case documentos.organismo_id when 1 then (select ministerio from ministerio where nummin=documentos.dependencia) when 2 then (select odp from odp where numodp=documentos.dependencia) when 3 then (select gobernacion from gobernacion where numgob=documentos.dependencia) end"})
-#.filter(nombreari__icontains=request.GET['nombreari'] if 'nombreari' in request.GET else '')
+#.filter(nombreari__icontains=request.GET['nombreari'] if 'nombreari' in request.GET else '')    
     tabla = DocumentoTable(query.order_by(col))
     config.configure(tabla)
     tabla.paginate(page=request.GET.get('page', 1), per_page=6)

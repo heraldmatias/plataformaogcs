@@ -56,6 +56,10 @@ $('#frmdoc').submit(function() {{% if not doc %}
 if($('#id_archivo').val()==''){  
   alert('Debe adjuntar el archivo a subir');return false;  
 }{% endif %}
+if($("#id_descripcion").val()==''){
+  alert('Debe agregar una breve descripción sobre el archivo a subir');
+  $("#id_descripcion").focus(); return false;
+}
 return confirmar('¿Desea {% if doc %}Modificar{% else %}Guardar{% endif %} el registro?');
 });
 $(document).ready(function() {
