@@ -14,7 +14,7 @@ FCGI_OPTIONS = {
 }
 
 MANAGERS = ADMINS
-DEBUG=True
+DEBUG=False
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql', # Add 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
