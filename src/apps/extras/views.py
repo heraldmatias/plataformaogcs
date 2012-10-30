@@ -17,6 +17,7 @@ from usuario.models import Usuario
 from django.template.loader import render_to_string
 from pybb.models import Category, Topic, Forum
 from django.core.urlresolvers import reverse
+from django.contrib import messages
 @login_required()
 def mgadd(request):
     mensaje=""
@@ -357,28 +358,46 @@ def get_categoria(tipo):
    return categoria
 
 @login_required()
-def documentos_add(request):
-    mensaje = ''
+def documentos_add(request, codigo=None):
+    obj=None
+    if codigo:
+        obj= get_object_or_404(Documento,pk=codigo)
+        if not obj.fecha:
+            obj.fecha = datetime.today()
     if request.method == 'POST':
-        if 'archivo' in request.FILES:
-            profile = request.user.get_profile()
+        profile = request.user.get_profile()
+        if 'archivo' in request.FILES:            
             ini=profile.get_dependencia()            
             archivo = request.FILES['archivo']
             extension = archivo.name[archivo.name.rfind('.')+1:].upper()
             cat = get_categoria(extension)
-            filename= "%s%s.%s" % (ini.iniciales,datetime.today().strftime("%d%m%Y%S"),extension)
+            filename= "%s%s.%s" % (ini.iniciales,datetime.today().strftime("%d%m%Y%S"),extension)            
+            if not obj:
+                obj = Documento(organismo=profile.organismo, dependencia=profile.dependencia,
+                    tipo= cat == 'OTROS' and 'OTRO' or extension,categoria=cat,idusuario_creac=profile)
+            else:
+                obj.tipo= (cat == 'OTROS') and 'OTRO' or extension
+                obj.categoria = cat
             request.FILES['archivo'].name = filename
-            obj = Documento(organismo=profile.organismo, dependencia=profile.dependencia,tipo= cat == 'OTROS' and 'OTRO' or extension,categoria=cat,idusuario_creac=profile)
-            formulario = DocumentoForm(request.POST,request.FILES,instance=obj ) # A form bound to the POST data
-            if formulario.is_valid():
-                formulario.save()             
-                obj.url_archivo=obj.archivo.url 
-                obj.save()
-                mensaje="Registro grabado satisfactoriamente."
-        formulario = DocumentoForm()
+        filename = obj.archivo
+        formulario = DocumentoForm(request.POST,request.FILES,instance=obj ) # A form bound to the POST data
+        if formulario.is_valid():
+            if codigo and 'archivo' in request.FILES:
+                FileSystemStorage().delete(filename)
+            formulario.save()
+            obj.url_archivo= obj.archivo.url
+            if profile.nivel.codigo == 1:
+                obj.idusuario_mod = profile
+                obj.fec_mod = datetime.today()
+            else:
+                obj.idadministrador_mod = profile
+                obj.fec_modadm = datetime.today()
+            messages.add_message(request, messages.SUCCESS, 'Documento grabado exitosamente!!!')
+            return redirect('ogcs-mantenimiento-doc-query')
     else:        
-        formulario = DocumentoForm()
-    return render_to_response('extras/documento.html', {'formulario': formulario,'mensaje':mensaje,}, context_instance=RequestContext(request),)
+        formulario = DocumentoForm(instance=obj)
+    return render_to_response('extras/documento.html', {'doc':obj,
+        'formulario': formulario,},context_instance=RequestContext(request),)
 
 @login_required()
 def documentos_query(request):

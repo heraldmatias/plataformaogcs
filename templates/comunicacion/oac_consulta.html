@@ -3,8 +3,13 @@
   {% block title %} Plataforma Intersectorial de Comunicaci&oacute;n OGCS {% endblock %}
   {% block content %}  
   {% load render_table from django_tables2 %}
-<ul class="nav nav-tabs">{% if user.get_profile.nivel.codigo == 1 %}
-    <li><a href="{% url ogcs-mantenimiento-oac-add %}">Nuevo</a></li>{% endif %}
+  {% if messages %}
+{% for message in messages %}
+<h4><div class="alert alert-{{ message.tags }}"><a class="close" data-dismiss="alert">×</a><strong>Exito!!!</strong> <p>{{ message }}</p></div></h4>
+{% endfor %}
+{% endif %}
+<ul class="nav nav-tabs">
+    <li><a href="{% url ogcs-mantenimiento-oac-add %}">Nuevo</a></li>
     <li class="active"><a href="{% url ogcs-mantenimiento-oac-query %}" >Consultar</a></li>
 </ul>
 <div class="tab-content" id="contenido_izq">
@@ -16,17 +21,13 @@
       <h3>Consulta de OAC</h3>
     </div>
     <div class="modal-body">
-     {% if user.get_profile.nivel.codigo == 2 %}
+     
       <div class="row-fluid">      
       <div class="span2">{{ formulario.organismo.label_tag }}:</div><div class="span2">{{ formulario.organismo }}</div></div><p></p>
       <div class="row-fluid">
       <div class="span2">{{ formulario.dependencia.label_tag }}:</div><div class="span5">{{ formulario.dependencia }}</div>
  <div class="span2"><input  class="btn-primary" name="grabar" value="Consultar" type="submit"></div><div class="span2"><a class="btn btn-primary" href="javascript: imprimir();">Imprimir</a> </div></div>
-     {% else %}
-     <div class="row-fluid">      
-     <center><a class="btn btn-primary" href="javascript: imprimir();">Imprimir</a> </center>
-     </div>
-     {% endif %}
+     
       <br><input type="hidden" value="{{ dependencia }}" id="id_dep" name="id_dep">
       <fieldset>
 	<legend><h4>Lista de OAC</h4></legend>
@@ -42,10 +43,10 @@
   {% endblock %}
   {% block scriptjs %}    
 <script>
-{% if user.get_profile.nivel.codigo == 2 %}
+
 $(document).ready(function() {
   dependencias(0); combotodos('id_organismo');
-});  {% endif %}
+});
 function imprimir(){
 var org=$('#id_organismo').val();var dep=$('#id_dependencia').val();
 var url="{% url ogcs-mantenimiento-oac-print %}?organismo="+org+'&dependencia='+dep;

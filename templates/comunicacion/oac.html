@@ -2,18 +2,23 @@
   {% load static %}
   {% block title %} Plataforma Intersectorial de Comunicaci&oacute;n OGCS {% endblock %}
   {% block content %}
-  
-{% if mensaje %}
-<h4><div class="alert alert-success"><a class="close" data-dismiss="alert">×</a><strong>Mensaje:</strong>
-<p>{{ mensaje }}</p></div></h4>
+{% if messages %}
+{% for message in messages %}
+<h4><div class="alert alert-{{ message.tags }}"><a class="close" data-dismiss="alert">×</a><strong>Exito!!!</strong> <p>{{ message }}</p></div></h4>
+{% endfor %}
 {% endif %}
 <ul class="nav nav-tabs">
-<li class="active"><a href="{% url ogcs-mantenimiento-oac-add %}">Nuevo</a></li>
+  {% if oac %}
+<li class="active"><a href="{% url ogcs-mantenimiento-oac-edit oac.codigo %}">Modificar</a></li>{% else %}
+<li class="active"><a href="{% url ogcs-mantenimiento-oac-add %}">Nuevo</a></li>{% endif %}
 <li><a href="{% url ogcs-mantenimiento-oac-query %}" >Consultar</a></li>
 </ul>
 <div class="tab-content" id="contenido_izq">
 <div id="nuevo" class="tab-pane fade in active">
-<form enctype="multipart/form-data" class="form-inline" id="frmoac" name="frmoac" method="post" action="{% url ogcs-mantenimiento-oac-add %}" ><!--data-toggle="modal"-->
+<form enctype="multipart/form-data" class="form-inline" id="frmoac" name="frmoac" method="post" 
+{% if oac %}
+action="{% url ogcs-mantenimiento-oac-edit oac.codigo %}" {% else %}
+action="{% url ogcs-mantenimiento-oac-add %}" {% endif %}>
 <div id="frmprovincia" class="modal" style="position: relative; top: auto; left: auto; margin: 0 auto auto 20px; z-index: 1;width:720px;height:auto"><!--class="modal hide fade">-->
     <div class="modal-header">
       <a class="close" data-dismiss="modal" >&times;</a>
@@ -22,11 +27,14 @@
     <div class="modal-body">
       {% csrf_token %}
       <div class="row-fluid">
-      {{ formulario.as_p }}
-    </div>
+        <div class="span3">{{ formulario.archivo.label_tag }}</div><div class="span6">{{ formulario.archivo }}</div>
+      </div><br >
+      <div class="row-fluid">
+        <div class="span3">{{ formulario.estado.label_tag }}</div><div class="span6">{{ formulario.estado }}</div>      
+      </div>
     </div>
     <div class="modal-footer">
-     <input class="btn-primary" name="grabar" value="Guardar" type="submit">
+     <input class="btn-primary" name="grabar" value="{% if oac %}Modificar{% else %}Guardar{% endif %}" type="submit">
      <input class="btn" name="grabar" value="Cerrar" type="button" onclick="cerrarformulario('contenido');">
     </div>
 </div>
@@ -36,11 +44,20 @@
   {% block scriptjs %}    
 <script>
 $('#frmoac').submit(function() {
-var ext = $('#id_archivo').val().split('.').pop().toLowerCase();
-if($.inArray(ext, ['pdf']) == -1) {
-    alert('Solo se acepta archivos en formato PDF!');return false;
-}else{
-return confirmar('¿Desea grabar el registro?');}
+{% if not oac %}
+  if($("#id_archivo").val()==''){
+    alert("Debe seleccionar el archivo del Organigrama");$("#id_archivo").focus();return false;
+  }
+{% endif %}
+return confirmar('¿Desea {% if oac %}Modificar{% else %}Grabar{% endif %} el registro?');
 });
+$("#id_archivo").change(function() {
+  var ext = $('#id_archivo').val().split('.').pop().toLowerCase();
+  if($.inArray(ext, ['pdf']) == -1) {
+      alert('Solo se acepta archivos en formato PDF!');
+      $(this).val('');$(this).focus();ok=false;return false;
+  }
+});
+
 </script>
   {% endblock %}

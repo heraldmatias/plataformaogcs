@@ -80,9 +80,9 @@ table tr td{padding-left:10px;}
             {% endif %}<!--data-content="Los OAC se utilizan para..." rel="popover" data-original-title="Organigrama del Área de Comunicaciones"  rel="tooltip" data-original-title="first tooltip"  <div class="popover-content"><p></p></div>--> 
             <li class="dropdown principal"><a class="dropdown-toggle menublanco" data-toggle="dropdown" data-content="Los OAC se utilizan para..." rel="popover" data-original-title="Organigrama del Área de Comunicaciones" href="">OAC<b class="caret"></b></a>
                 <ul class="dropdown-menu">
-                  {% if user.get_profile.nivel.codigo == 1 %}                    
+                                     
                   <li><a href="{% url ogcs-mantenimiento-oac-add %}" data-toggle="modal">Nuevo Organigrama del Área de Comunicaciones</a></li> 
-                  {% endif %}     
+                  
 		  <li><a href="{% url ogcs-mantenimiento-oac-query %}" data-toggle="modal">Consultar Organigrama del Área de Comunicaciones</a></li>		  
 		</ul></li>
             <li class="dropdown principal"><a class="dropdown-toggle menublanco" data-toggle="dropdown" data-content="Los OAC se utilizan para..." rel="popover" data-original-title="Plan General de Comunicacion del Sector" href="">PGCS<b class="caret"></b></a>
@@ -109,11 +109,7 @@ table tr td{padding-left:10px;}
                   {% if user.get_profile.nivel.codigo == 1 %}<li><a href="{% url ogcs-mantenimiento-mg-add %}" data-toggle="modal">Nuevo Material Gráfico</a></li>  {% endif %}              
 		  <li><a href="{% url ogcs-mantenimiento-mg-query %}" data-toggle="modal">Consultar Material Gráfico</a></li>		  
 		</ul></li>
-            <li class="dropdown principal"><a class="dropdown-toggle menublanco" data-toggle="dropdown" rel="popover" data-original-title="Documentos de Interes General" href="">DIG<b class="caret"></b></a>
-                <ul class="dropdown-menu">                  
-                  {% if user.get_profile.nivel.codigo == 1 %}<li><a href="{% url ogcs-mantenimiento-dig-add %}" data-toggle="modal">Nuevo Documento de Interes General</a></li>       {% endif %}         
-		  <li><a href="{% url ogcs-mantenimiento-dig-query %}" data-toggle="modal">Consultar Documento de Interes General</a></li>		  
-		</ul></li>
+           
             <li class="dropdown principal"><a class="dropdown-toggle menublanco" data-toggle="dropdown" rel="popover" data-original-title="Acta de Reunión Intersectorial" href="">ARI<b class="caret"></b></a>
                 <ul class="dropdown-menu">                  
                   {% if user.get_profile.nivel.codigo == 2 %}<li><a href="{% url ogcs-mantenimiento-ari-add %}" data-toggle="modal">Nuevo Acta de Reunión Intersectorial</a></li>      {% endif %}          
@@ -140,6 +136,7 @@ table tr td{padding-left:10px;}
 {% if not login %} <div id="contenido"> {% endif %}
   {% block content %}
   {% endblock %}
+  
 {% if not login %}<div id="contenido_der">
             <div id="foros">
            	<div class="links"><a href="/foro/">Foro OGCS</a> </div>

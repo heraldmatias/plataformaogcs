@@ -8,7 +8,7 @@ import itertools
 class OacForm(forms.ModelForm):
     class Meta:
         model = Oac
-        fields = ('archivo',)
+        fields = ('archivo','estado')
 
 class ConsultaOacForm(forms.ModelForm):
     class Meta:
@@ -20,17 +20,23 @@ class ConsultaOacForm(forms.ModelForm):
         } 
 
 class OacTable(tables.Table):
-    item = tables.Column()
+    item = tables.Column(empty_values=())
     organismo = tables.Column(orderable=True)
     dependencia = tables.Column(orderable=True)
     fec_creac = tables.Column(verbose_name='Fecha de Creación')
-    usuario = tables.Column(verbose_name='Usuario')
-    Descargar = tables.TemplateColumn('<a href={{ record.urloac }}>Descargar</a>')
+    idusuario_creac = tables.Column(verbose_name='Usuario')
+    descargar = tables.TemplateColumn("""{% if record.estado_id == 1 %}
+     <a href={{ record.urloac }}>Descargar</a>{% endif %}""",verbose_name="Descargar")
+    modificar = tables.TemplateColumn("""{% if record.idusuario_creac_id == user.get_profile.numero or user.is_superuser %}
+        <a href={% url ogcs-mantenimiento-oac-edit record.codigo %}>Modificar</a>{% endif %}
+        """,verbose_name="Modificar")
 
+    def __init__(self, *args, **kwargs):
+        super(OacTable, self).__init__(*args, **kwargs)
+        self.counter = itertools.count(1)        
+    
     def render_item(self):
-        value = getattr(self, '_counter', 1)
-        self._counter = value + 1
-        return '%d' % value
+        return '%d' % next(self.counter)
 
     class Meta:
         attrs = {"class": "table table-bordered table-condensed table-striped"}

@@ -3,6 +3,7 @@ from django.conf.urls.defaults import patterns, url
 
 urlpatterns = patterns('comunicacion.views',
     url(r'^oac/add/$','oacadd', name='ogcs-mantenimiento-oac-add'),
+    url(r'^oac/edit/(?P<numoac>\d+)/$','oacadd', name='ogcs-mantenimiento-oac-edit'),
     url(r'^oac/consulta/$','oacquery', name='ogcs-mantenimiento-oac-query'),
     url(r'^oac/print/$','oacprint', name='ogcs-mantenimiento-oac-print'),
     url(r'^pgcs/add/$','pgcsadd', name='ogcs-mantenimiento-pgcs-add'),

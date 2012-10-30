@@ -28,7 +28,7 @@ DATABASES = {
 	}
     }
 }
-
+INTERNAL_IPS = ('127.0.0.1',)
 DEFAULT_FROM_EMAIL = 'prensa@presidencia.gob.pe'
 
 # Local time zone for this installation. Choices can be found here:

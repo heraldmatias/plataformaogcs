@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from django.db import models
-from usuario.models import Organismo, Usuario
-
+from usuario.models import Organismo, Usuario,  Estado
+from datetime import datetime
 CATEGORIAS = (
     ('OTROS','OTROS'),
     ('IMAGENES','IMAGENES'),
@@ -139,12 +139,20 @@ class Documento(models.Model):
     organismo = models.ForeignKey(Organismo, verbose_name='Organismo')
     dependencia = models.IntegerField(verbose_name='Dependencia',)
     archivo = models.FileField(verbose_name ='Adjuntar Archivo', upload_to='documentos')
+    fecha = models.DateField(verbose_name='Fecha del documento',default=datetime.today())#NEW
+    descripcion = models.TextField(verbose_name='Descripción',)#NEW
+    estado = models.ForeignKey(Estado, verbose_name='Estado', default=1)
     url_archivo = models.URLField(verbose_name='URL del Archivo',null=True, blank=True)
     tipo = models.CharField(verbose_name = 'Tipo',max_length=5,choices=EXTENSIONES)
     categoria = models.CharField(verbose_name = 'Categoria',choices=CATEGORIAS,max_length=50)
     idusuario_creac = models.ForeignKey(Usuario, verbose_name='Usuario',)
     fec_creac = models.DateTimeField(verbose_name='Fecha de creación del registro',auto_now_add=True)
-
+    idusuario_mod = models.ForeignKey(Usuario,verbose_name='Usuario modifico',
+    related_name='modificador_documentos', null=True, blank=True)
+    fec_mod = models.DateTimeField(verbose_name='Fecha modifico', null=True, blank=True)
+    idadministrador_mod = models.ForeignKey(Usuario,verbose_name='Usuario modifico',
+    related_name='adminmod_documentos', null=True, blank=True)
+    fec_modadm = models.DateTimeField(verbose_name='Fecha modifico', null=True, blank=True)
     class Meta:
         db_table = u'documentos'
         verbose_name = u'Documento'

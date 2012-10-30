@@ -6,6 +6,7 @@ from usuario.models import Organismo, Usuario
 from pybb.models import Category, Forum, Topic
 from django import forms
 from django.utils.safestring import mark_safe
+import itertools
 
 class MGForm(forms.ModelForm):
     class Meta:
@@ -111,7 +112,10 @@ class AriTable(tables.Table):
 class DocumentoForm(forms.ModelForm):
     class Meta:
         model = Documento
-        fields = ('archivo',)        
+        fields = ('archivo','descripcion','estado','fecha')
+        widgets = {
+            'descripcion': forms.Textarea(attrs={'style':'width:90%','rows':'6'}),            
+        }
 
 class ConsultaDocumentoForm(forms.ModelForm):    
     class Meta:
@@ -125,19 +129,27 @@ class ConsultaDocumentoForm(forms.ModelForm):
         }
 
 class DocumentoTable(tables.Table):
-    item = tables.Column()
+    item = tables.Column(empty_values=())
     organismo = tables.Column(orderable=True)
-    dependencia = tables.Column(orderable=True)    
+    dependencia = tables.Column(orderable=True)
     tipo = tables.Column(orderable=True)
-    categoria = tables.Column(orderable=True)        
+    categoria = tables.Column(orderable=True)
+    descripcion = tables.TemplateColumn("{{ record.descripcion|truncatewords:8 }}") 
     fec_creac = tables.Column(verbose_name='Fecha de Creación',orderable=True)
     idusuario_creac = tables.Column(verbose_name='Usuario',accessor='idusuario_creac.usuario',orderable=True)
-    Descargar = tables.TemplateColumn('<a href={% url ogcs-descarga record.archivo.name %}>Descargar</a>')
+    descargar = tables.TemplateColumn("""{% if record.estado_id == 1 %}
+     <a href={% url ogcs-descarga record.archivo.name %}>Descargar</a>
+     {% endif %}""",verbose_name="Descargar")
+    modificar = tables.TemplateColumn("""{% if record.idusuario_creac_id == user.get_profile.numero or user.is_superuser %}
+        <a href={% url ogcs-mantenimiento-doc-edit record.codigo %}>Modificar</a>{% endif %}
+        """,verbose_name="Modificar")
 
+    def __init__(self, *args, **kwargs):
+        super(DocumentoTable, self).__init__(*args, **kwargs)
+        self.counter = itertools.count(1)        
+    
     def render_item(self):
-        value = getattr(self, '_counter', 1)
-        self._counter = value + 1
-        return '%d' % value
+        return '%d' % next(self.counter)
 
     class Meta:
         attrs = {"class": "table table-bordered table-condensed table-striped"}

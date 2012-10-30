@@ -3,6 +3,11 @@
   {% block title %} Plataforma Intersectorial de Comunicaci&oacute;n OGCS {% endblock %}
   {% block content %}  
   {% load render_table from django_tables2 %}
+  {% if messages %}
+{% for message in messages %}
+<h4><div class="alert alert-{{ message.tags }}"><a class="close" data-dismiss="alert">×</a><strong>Exito!!!</strong> <p>{{ message }}</p></div></h4>
+{% endfor %}
+{% endif %}
 <ul class="nav nav-tabs">
     <li><a href="{% url ogcs-mantenimiento-doc-add %}">Nuevo</a></li>
     <li class="active"><a href="{% url ogcs-mantenimiento-doc-query %}" >Consultar</a></li>

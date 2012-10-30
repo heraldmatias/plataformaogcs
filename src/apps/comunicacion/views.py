@@ -16,33 +16,45 @@ from scripts.scripts import imprimirToExcel,imprimirToPDF
 from django.http import HttpResponse
 from ubigeo.models import Region, Provincia
 from django.core.files.storage import  FileSystemStorage
-
+from django.contrib import messages
 @login_required()
-def oacadd(request):
-    mensaje=""
-    if request.method == 'POST':               
-        if 'archivo' in request.FILES:
-            profile = request.user.get_profile()
+def oacadd(request,numoac=None):    
+    obj = None
+    if numoac:
+        obj = get_object_or_404(Oac,pk=numoac)
+    if request.method == 'POST':
+        profile = request.user.get_profile()         
+        if 'archivo' in request.FILES:            
             ini=request.session['dependencia']      
             filename= "OAC%s%s.pdf" % (ini.iniciales,datetime.today().strftime("%d%m%Y"))
-            try:
-                obj=Oac.objects.get(archivo='oac/'+filename)
-            except:
+            if not obj:
                 num = Oac.objects.values("numoac").order_by("-numoac",)[:1]
                 num = 1 if len(num)==0 else int(num[0]["numoac"])+1
-                obj = Oac(numoac=num,organismo=profile.organismo,dependencia=profile.dependencia,idusuario_creac=profile.numero,)
-            FileSystemStorage().delete('oac/'+filename)
+                obj = Oac(numoac=num,organismo=profile.organismo,dependencia=profile.dependencia,
+                    idusuario_creac_id=profile.numero,)
+            #FileSystemStorage().delete('oac/'+filename)                
             request.FILES['archivo'].name = filename
-        formulario = OacForm(request.POST,request.FILES,instance=obj ) # A form bound to the POST data
+        filename = obj.archivo
+        formulario = OacForm(request.POST,request.FILES,instance=obj,) # A form bound to the POST data
         if formulario.is_valid():
+            if numoac and 'archivo' in request.FILES:
+                FileSystemStorage().delete(filename)
             formulario.save()
             obj.urloac= obj.archivo.url
+            if profile.nivel.codigo == 1:
+                obj.idusuario_mod = profile
+                obj.fec_mod = datetime.today()
+            else:
+                obj.idadministrador_mod = profile
+                obj.fec_modadm = datetime.today()
             obj.save()
-            formulario = OacForm() # Crear un parametro en home para mostrar los mensajes de exito.
-            mensaje="Registro grabado satisfactoriamente."
+            messages.add_message(request, messages.SUCCESS,
+               'Registro %s exitosamente!' % ((numoac)and'Modificado'or'Grabado') )
+            return redirect('ogcs-mantenimiento-oac-query')
     else:        
-        formulario = OacForm()
-    return render_to_response('comunicacion/oac.html', {'formulario': formulario,'mensaje':mensaje,}, context_instance=RequestContext(request),)
+        formulario = OacForm(instance=obj)
+    return render_to_response('comunicacion/oac.html', {'formulario': formulario,
+        'oac':obj,}, context_instance=RequestContext(request),)
 
 @login_required()
 def oacquery(request):
@@ -54,21 +66,24 @@ def oacquery(request):
         col = request.GET['2-sort']
     config = RequestConfig(request)
     formulario = ConsultaOacForm(request.GET)
-    if request.user.get_profile().nivel.codigo == 2:
-        if 'organismo' in request.GET:
-            if request.GET['organismo']:
-                filtro.append(u"oac.organismo_id =%s"%request.GET['organismo'])
-        if 'dependencia' in request.GET:
-            if request.GET['dependencia']:
-                filtro.append(u"oac.dependencia =%s"%request.GET['dependencia'])
-                dependencia=request.GET['dependencia']
-    else:
-        filtro.append(u"oac.organismo_id =%s"%request.user.get_profile().organismo.codigo)
-        filtro.append(u"oac.dependencia =%s"%request.user.get_profile().dependencia) 
-        filtro.append(u"idusuario_creac="+str(request.user.get_profile().numero))
-    filtro.append(u"idusuario_creac=usuario.numero")
-    query = Oac.objects.extra(tables=['usuario',],where=filtro,select={'usuario':'usuario.usuario','dependencia':"case oac.organismo_id when 1 then (select ministerio from ministerio where nummin=oac.dependencia) when 2 then (select odp from odp where numodp=oac.dependencia) when 3 then (select gobernacion from gobernacion where numgob=oac.dependencia) end"})
-    tabla = OacTable(query.order_by(col))
+    #if request.user.get_profile().nivel.codigo == 2:
+    if 'organismo' in request.GET:
+        if request.GET['organismo']:
+            filtro.append(u"oac.organismo_id =%s"%request.GET['organismo'])
+    if 'dependencia' in request.GET:
+        if request.GET['dependencia']:
+            filtro.append(u"oac.dependencia =%s"%request.GET['dependencia'])
+            dependencia=request.GET['dependencia']
+    #else:
+        #filtro.append(u"oac.organismo_id =%s"%request.user.get_profile().organismo.codigo)
+        #filtro.append(u"oac.dependencia =%s"%request.user.get_profile().dependencia) 
+        #filtro.append(u"idusuario_creac_id="+str(request.user.get_profile().numero))    
+    query = Oac.objects.extra(where=filtro,
+        select={'dependencia':"""case oac.organismo_id when 1 then (select ministerio 
+            from ministerio where nummin=oac.dependencia) when 2 then 
+        (select odp from odp where numodp=oac.dependencia) when 3 then (select gobernacion 
+        from gobernacion where numgob=oac.dependencia) end"""})
+    tabla = OacTable(query.order_by(col))    
     config.configure(tabla)
     tabla.paginate(page=request.GET.get('page', 1), per_page=6)
     return render_to_response('comunicacion/oac_consulta.html', {'formulario':formulario,'tabla':tabla,'dependencia':dependencia,}, context_instance=RequestContext(request),)
@@ -76,20 +91,24 @@ def oacquery(request):
 @login_required()
 def oacprint(request):
     filtro = list()
-    if request.user.get_profile().nivel.codigo == 2:
-        if 'organismo' in request.GET:
-            if request.GET['organismo']:
-                filtro.append(u"oac.organismo_id =%s"%request.GET['organismo'])
-        if 'dependencia' in request.GET:
-            if request.GET['dependencia']:
-                filtro.append(u"oac.dependencia =%s"%request.GET['dependencia'])
-                dependencia=request.GET['dependencia']
-    else:
-        filtro.append(u"oac.organismo_id =%s"%request.user.get_profile().organismo.codigo)
-        filtro.append(u"oac.dependencia =%s"%request.user.get_profile().dependencia)
-        filtro.append(u"idusuario_creac="+str(request.user.get_profile().numero))
-    filtro.append(u"idusuario_creac=usuario.numero")    
-    query = Oac.objects.extra(tables=['usuario',],where=filtro,select={'usuario':'usuario.usuario','dependencia':"case oac.organismo_id when 1 then (select ministerio from ministerio where nummin=oac.dependencia) when 2 then (select odp from odp where numodp=oac.dependencia) when 3 then (select gobernacion from gobernacion where numgob=oac.dependencia) end"})
+    #if request.user.get_profile().nivel.codigo == 2:
+    if 'organismo' in request.GET:
+        if request.GET['organismo']:
+            filtro.append(u"oac.organismo_id =%s"%request.GET['organismo'])
+    if 'dependencia' in request.GET:
+        if request.GET['dependencia']:
+            filtro.append(u"oac.dependencia =%s"%request.GET['dependencia'])
+            dependencia=request.GET['dependencia']
+    #else:
+    #    filtro.append(u"oac.organismo_id =%s"%request.user.get_profile().organismo.codigo)
+    #    filtro.append(u"oac.dependencia =%s"%request.user.get_profile().dependencia)
+    #    filtro.append(u"idusuario_creac="+str(request.user.get_profile().numero))
+    #filtro.append(u"idusuario_creac=usuario.numero")    
+    query = Oac.objects.extra(where=filtro,select={'dependencia':"""case
+     oac.organismo_id when 1 then 
+     (select ministerio from ministerio where nummin=oac.dependencia)
+      when 2 then (select odp from odp where numodp=oac.dependencia) 
+      when 3 then (select gobernacion from gobernacion where numgob=oac.dependencia) end"""})
     html = render_to_string('comunicacion/reporteoac.html',{'data': query,'pagesize':'A4','usuario':request.user.get_profile()},context_instance=RequestContext(request))
     filename= "oac_%s.pdf" % datetime.today().strftime("%Y%m%d")        
     return imprimirToPDF(html,filename)    

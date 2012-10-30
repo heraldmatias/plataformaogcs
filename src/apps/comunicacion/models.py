@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from django.db import models
-from usuario.models import Organismo
+from usuario.models import Organismo, Estado, Usuario
 from ubigeo.models import Region, Provincia
 
 AUDITORIA = (
@@ -12,12 +12,18 @@ class Oac(models.Model):
     codigo = models.AutoField(verbose_name='Codigo Autoincrementado',primary_key=True)
     numoac = models.IntegerField(verbose_name='Numero de la oac', unique=True)
     organismo = models.ForeignKey(Organismo, verbose_name='Organismo')
-    dependencia = models.IntegerField(verbose_name='Dependencia',)
+    dependencia = models.IntegerField(verbose_name='Dependencia',)    
     archivo = models.FileField(upload_to='oac/',verbose_name='Adjuntar Archivo',)
     urloac = models.URLField(verbose_name='Url de la oac',max_length=100,null=True,blank=True)
-    idusuario_creac = models.IntegerField(verbose_name='Usuario creador',)
+    estado = models.ForeignKey(Estado, verbose_name='Estado', default=1)
+    idusuario_creac = models.ForeignKey(Usuario,verbose_name='Usuario creador',to_field='numero')    
     fec_creac = models.DateTimeField(verbose_name='Fecha de creación del registro',auto_now_add=True)
-
+    idusuario_mod = models.ForeignKey(Usuario,verbose_name='Usuario modifico',
+    related_name='modificador_oac', null=True, blank=True)
+    fec_mod = models.DateTimeField(verbose_name='Fecha modifico', null=True, blank=True)
+    idadministrador_mod = models.ForeignKey(Usuario,verbose_name='Usuario modifico',
+    related_name='adminmod_oac', null=True, blank=True)
+    fec_modadm = models.DateTimeField(verbose_name='Fecha modifico', null=True, blank=True)
     class Meta:
         db_table = u'oac'
         verbose_name = u'OAC'
