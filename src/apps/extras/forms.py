@@ -140,7 +140,7 @@ class DocumentoTable(tables.Table):
     descargar = tables.TemplateColumn("""{% if record.estado_id == 1 %}
      <a href={% url ogcs-descarga record.archivo.name %}>Descargar</a>
      {% endif %}""",verbose_name="Descargar")
-    modificar = tables.TemplateColumn("""{% if record.idusuario_creac_id == user.get_profile.numero or user.is_superuser %}
+    modificar = tables.TemplateColumn("""{% if record.idusuario_creac_id == user.get_profile.codigo %}
         <a href={% url ogcs-mantenimiento-doc-edit record.codigo %}>Modificar</a>{% endif %}
         """,verbose_name="Modificar")
 
