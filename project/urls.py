@@ -29,4 +29,4 @@ urlpatterns += patterns('',
         'django.views.generic.simple.redirect_to', 
         {'url': '/static/images/favicon.ico'}),
 )
-
+handler500 = 'home.views.internal_error_view'

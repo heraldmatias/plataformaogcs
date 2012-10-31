@@ -11,7 +11,8 @@ from usuario.models import Usuario
 from dependencia.models import Odp, Ministerio, Gobernacion
 from datetime import datetime
 from django.conf import settings
-
+def internal_error_view(request):
+    return render_to_response('500.html',{},context_instance=RequestContext(request))
 def index(request):
     form = LoginForm()
     if 'next' in request.GET:

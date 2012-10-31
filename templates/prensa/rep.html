@@ -75,8 +75,8 @@ if(ok){return confirmar('¿Desea {% if resumen %}Modificar{% else %}Grabar{% end
 
 $("#id_archivo").change(function() {
 var ext = $(this).val().split('.').pop().toLowerCase();
-if($.inArray(ext, ['pdf', 'doc', 'ppt', 'jpg', 'gif', 'png','docx']) == -1) {
-    alert('Solo se acepta archivos en formato PDF, DOC(X), PPT, JPG, GIF y PNG!');
+if($.inArray(ext, ['pdf', 'doc', 'ppt','pptx', 'jpg', 'gif', 'png','docx']) == -1) {
+    alert('Solo se acepta archivos en formato PDF, DOC(X), PPT(X), JPG, GIF y PNG!');
     $(this).val('');$(this).focus();ok=false;return false;
 }});
 
