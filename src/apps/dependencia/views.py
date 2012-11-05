@@ -230,13 +230,14 @@ def gobernacionprint(request):
 
 @login_required()
 def jsondependencia(request):
-    if not request.GET['r']:
+    dependencia ={}
+    if not 'r' in request.GET:
         dependencia ={}
-    elif int(request.GET['r'])==1:
+    elif request.GET.get('r')=='1':
         dependencia = Ministerio.objects.all().order_by('ministerio')
-    elif int(request.GET['r'])==2:
+    elif request.GET.get('r')=='2':
         dependencia = Odp.objects.all().order_by('odp')
-    elif int(request.GET['r'])==3:
+    elif request.GET.get('r')=='3':
         dependencia = Gobernacion.objects.all().order_by('gobernacion')
     return HttpResponse(serializers.serialize("json", dependencia, ensure_ascii=False),mimetype='application/json')
 
