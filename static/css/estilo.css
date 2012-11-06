@@ -186,5 +186,12 @@ body{
 }
 
 .clear{
-clear:both	
+clear:both;
+}
+
+#logo-peru{
+	float:left;
+	background: url(../images/logo_peru.png) repeat-x 0 0;
+	width: 342px;
+	height: 170px;
 }
