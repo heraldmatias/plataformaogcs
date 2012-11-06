@@ -65,7 +65,7 @@
     </div><input type="hidden" value="{{ dependencia }}" id="id_dep" name="id_dep">
     <div class="modal-footer">
      <input class="btn-primary" name="grabar" value="{% if opcion == 'add' %}Guardar {% else %} Modificar {% endif %}" type="submit">
-     <input class="btn" name="grabar" value="Cerrar" type="button" onclick="javascript: $('#frmregion').modal('hide')">
+     <input class="btn" name="grabar" value="Cerrar" type="button" onclick="javascript: cerrarformulario('contenido');">
     </div>
 </div>
 </form></div></div>
