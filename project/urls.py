@@ -17,6 +17,7 @@ urlpatterns = patterns('',
     (r'^extras/', include('extras.urls')),
 	(r'^foro/', include('pybb.urls', namespace='pybb')),
     (r'^prensa/', include('prensa.urls')),
+    (r'^calendar/', include('calendario.urls')),
 )
 
 from django.views.static import serve

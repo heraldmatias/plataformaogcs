@@ -11,17 +11,43 @@ from usuario.models import Usuario
 from dependencia.models import Odp, Ministerio, Gobernacion
 from datetime import datetime
 from django.conf import settings
+from calendario import calendar
+from calendario.forms import CalendarConsultaForm
+
+def _get_dependencia(organismo_id, dependencia_id):
+    ini = None
+    try:
+        if organismo_id == '1':
+            ini = Ministerio.objects.get(nummin=dependencia_id)
+        elif organismo_id == '2':
+            ini = Odp.objects.get(numodp=dependencia_id)
+        elif organismo_id == '3':
+            ini = Gobernacion.objects.get(numgob=dependencia_id)
+    except:
+        pass
+    return ini
+
 def internal_error_view(request):
     return render_to_response('500.html',{},context_instance=RequestContext(request))
 def index(request):
     form = LoginForm()
     if 'next' in request.GET:
-        return render_to_response('home/index.html', {'form': form,'login':'login','permission':False}, context_instance=RequestContext(request),)
-    return render_to_response('home/index.html', {'form': form,'login':'login'}, context_instance=RequestContext(request),)
+        return render_to_response('home/index.html', {'form': form,
+            'login':'login','permission':False}, 
+            context_instance=RequestContext(request),)
+    return render_to_response('home/index.html', {'form': form,
+        'login':'login'}, context_instance=RequestContext(request),)
 
 @login_required()
 def view_calendar(request):
-    return render_to_response('home/calendario.html', context_instance=RequestContext(request),)
+    form = CalendarConsultaForm(request.GET)
+    dependencia_id = request.GET.get('dependencia')
+    organismo_id = request.GET.get('organismo')    
+    return render_to_response('home/calendario.html',
+    {'calendar_id':calendar.get_or_create(request.user.get_profile(),
+        dependencia=_get_dependencia(organismo_id,dependencia_id)),
+    'form':form,'dependencia':dependencia_id,},
+     context_instance=RequestContext(request),)
 
 @login_required()
 def permission_denied(request):

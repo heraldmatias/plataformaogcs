@@ -2,16 +2,34 @@
   {% load static %}
   {% block title %} Plataforma Intersectorial de Comunicaci&oacute;n OGCS {% endblock %}
   {% block content %}
-    	<div id="contenido_izq">
-             <form class="form-inline fondo" name="login" method="post" action="{% url ogcs-reset-pass %}">                   
+  {% if mensaje %}
+<h4><div class="alert alert-success"><a class="close" data-dismiss="alert">×</a><strong>Mensaje:</strong>
+<p>{{ mensaje }}</p></div></h4>
+{% endif %}
+<ul class="nav nav-tabs">
+    
+    <li ><a href="{% url ogcs-mantenimiento-evento-add %}">Nuevo</a></li>
+    <li ><a href="{% url ogcs-mantenimiento-evento-query %}" >Consultar</a></li>
+    <li class="active"><a href="{% url ogcs-calendar %}" >Calendario</a></li>
+</ul>
+<div class="tab-content" id="contenido_izq">
+
+  
+             <form class="form-inline fondo" name="login" method="get" action="{% url ogcs-calendar %}">                   
                  <div id="frmprovincia" class="modal" style="position: relative; top: auto; left: auto; margin: 0 auto auto 20px; z-index: 1;width:720px;height:auto">
 		    <div class="modal-header">             
 			<a class="close" data-dismiss="modal" >&times;</a>
 			<h3>Calendario de Actividades</h3>         
                    </div>
 		   <div class="modal-body">
-                      <iframe width="690" scrolling="no" height="400" frameborder="0" style=" border-width:0 " src="https://www.google.com/calendar/embed?showTitle=0&amp;showPrint=0&amp;showTabs=0&amp;showTz=0&amp;height=400&amp;wkst=1&amp;bgcolor=%23ffffff&amp;src=
-plataformaintersectorial%40gmail.com&amp;color=%23A32929&amp;ctz=America%2FLima"></iframe>
+        <input type="hidden" value="{{ dependencia }}" id="id_dep" name="id_dep"> 
+         <div class="row-fluid">
+        <div class="span2" >{{ form.organismo.label_tag }}:</div><div class="span4">{{ form.organismo }}</div>
+        <div class="span2" >{{ form.dependencia.label_tag }}:</div><div class="span4">{{ form.dependencia }}</div></div><br /> 
+         <div class="row-fluid">
+         <div style="float:right;"> <input  class="btn-primary" name="grabar" value="Consultar" type="submit"> </div></div>
+         <br /><br />
+                      <iframe width="690" scrolling="no" height="400" frameborder="0" style=" border-width:0 " src="https://www.google.com/calendar/embed?showTitle=0&amp;showPrint=0&amp;showTabs=0&amp;showTz=0&amp;height=400&amp;wkst=1&amp;bgcolor=%23ffffff&amp;src={{ calendar_id }}&amp;color=%23A32929&amp;ctz=America%2FLima"></iframe>
 
                   </div>
                     <div class="modal-footer">
@@ -21,5 +39,10 @@ plataformaintersectorial%40gmail.com&amp;color=%23A32929&amp;ctz=America%2FLima"
              </form>
        </div>  
 {% endblock %}
- {% block scriptjs %}    
+ {% block scriptjs %}  
+ <script type="text/javascript">
+$(document).ready(function() {
+  dependencias(0); combotodos('id_organismo');
+});
+ </script> 
   {% endblock %}

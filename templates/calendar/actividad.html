@@ -1,0 +1,82 @@
+  {% extends 'base.html' %}
+  {% load static %}
+  {% block title %} Plataforma Intersectorial de Comunicaci&oacute;n OGCS {% endblock %}
+  {% block csspage %}
+    <link href="{{ STATIC_URL }}bootstrap/datepicker/css/timepicker.css" type="text/css" media="screen" rel="stylesheet" />
+  {% endblock %}
+  {% block content %}
+{% if messages %}
+{% for message in messages %}
+<h4><div class="alert alert-{{ message.tags }}"><a class="close" data-dismiss="alert">×</a><strong>Exito!!!</strong> <p>{{ message }}</p></div></h4>
+{% endfor %}
+{% endif %}
+    <ul class="nav nav-tabs">    
+    <li class="active"><a href="{% url ogcs-mantenimiento-evento-add %}">Nuevo</a></li>
+    <li><a href="{% url ogcs-mantenimiento-evento-query %}" >Consultar</a></li>
+    <li><a href="{% url ogcs-calendar %}" >Calendario</a></li>
+    </ul>
+<div class="tab-content" id="contenido_izq">
+<div id="nuevo" class="tab-pane fade in active">
+{% if not codigo %}
+<form class="form-inline" name="frmreg" method="post" action="{% url ogcs-mantenimiento-evento-add %}" onSubmit="return confirmar('¿Desea grabar el registro?'); ">{% else %}
+<form class="form-inline" name="frmreg" method="post" action="{% url ogcs-mantenimiento-evento-edit codigo %}" onSubmit="return confirmar('¿Desea modificar el registro?'); ">
+{% endif %}
+<div id="frm_calendar" class="modal" style="position: relative; top: auto; left: auto; margin: 0 auto auto 20px; z-index: 1;width:720px;height:auto"><!--class="modal hide fade">-->
+    <div class="modal-header">
+      <a class="close" data-dismiss="modal" href="javascript: cerrarform('contenido');" >&times;</a>
+      <h3>Agregar nueva Actividad</h3>
+    </div>
+    <div class="modal-body">
+      {% csrf_token %}
+      <input type="hidden" value="{{ codigo }}" name="codigo" id="id_codigo">
+      <div class="row-fluid">
+      {{ form.titulo.errors }}
+      <div class="row-fluid">        
+      <div class="span2">{{ form.titulo.label_tag }}:</div><div class="span9">{{ form.titulo }}</div></div><br>
+      <div class="row-fluid">
+        {{ form.fec_inicio.errors }}
+      <div class="span2"><label>Fecha Inicio:</label></div> <div class="span2"><label class="input-append date" style="display:inline" id="dp1" data-date-format="dd/mm/yyyy" > {{ form.fec_inicio }}</label> </div>
+      <div class="span2"> {{ form.hor_inicio }} </div>
+        {{ form.fec_termin.errors }}
+      <div class="span2" style="margin-left:30px;"><label >Fecha Final:</label></div> <div class="span2"><label class="input-append date" style="display:inline" id="dp2" data-date-format="dd/mm/yyyy" > {{ form.fec_termin }}</label> </div>
+      <div class="span2"> {{ form.hor_termin }} </div> </div><br>
+      {{ form.lugar.errors }}
+      <div class="row-fluid">        
+      <div class="span2">{{ form.lugar.label_tag }}:</div><div class="span9">{{ form.lugar }}</div></div><br>
+      {{ form.descripcion.errors }}
+      <div class="row-fluid">        
+      <div class="span2">{{ form.descripcion.label_tag }}:</div><div class="span9">{{ form.descripcion }}</div></div><br>
+    </div></div>
+    <div class="modal-footer">
+     <input class="btn-primary" name="grabar" value="{% if opcion == 'add' %}Guardar {% else %} Modificar {% endif %}" type="submit">
+     <input class="btn" name="grabar" value="Cerrar" type="button" onclick="cerrarform('contenido');">     
+    </div>
+</div>
+</form>
+</div></div>
+  {% endblock %}
+ {% block scriptjs %}
+  <script src="{{ STATIC_URL }}bootstrap/datepicker/js/bootstrap-timepicker.js" type="text/javascript"></script>
+  <script type="text/javascript">
+  $(document).ready(function() {
+    $('#id_fec_inicio').datepicker({
+        format: 'dd/mm/yyyy',
+        autoclose: true,
+        language: 'es'
+    }).on('changeDate', function(ev){
+    $('#id_fec_inicio').datepicker('hide');});
+    
+    $('#id_fec_termin').datepicker({
+        format: 'dd/mm/yyyy',
+        autoclose: true,
+        language: 'es'
+    }).on('changeDate', function(ev){
+    $('#id_fec_termin').datepicker('hide');});
+
+    $('.vTimeField').timepicker({
+      showMeridian: false,
+      defaultTime: 'value'
+    });   
+   }); 
+  </script>
+{% endblock %}
