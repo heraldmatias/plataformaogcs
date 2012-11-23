@@ -22,8 +22,12 @@ def get_or_create(user, embed=True,dependencia = None):
         calendar_id = _get_or_create_calendar(user.get_dependencia().iniciales,embed)
     if not calendar_id:
         calendar = gdata.calendar.data.CalendarEntry()
-        calendar.title = atom.data.Title(text=user.get_dependencia().iniciales)
-        calendar.summary = atom.data.Summary(text=user.get_dependencia().__unicode__())
+        if dependencia:
+            calendar.title = atom.data.Title(text=dependencia.iniciales)
+            calendar.summary = atom.data.Summary(text=dependencia.__unicode__())
+        else:
+            calendar.title = atom.data.Title(text=user.get_dependencia().iniciales)
+            calendar.summary = atom.data.Summary(text=user.get_dependencia().__unicode__())
         calendar.where.append(gdata.calendar.data.CalendarWhere(value='Lima'))    
         calendar.timezone = gdata.calendar.data.TimeZoneProperty(value='America/Los_Angeles')
         calendar.hidden = gdata.calendar.data.HiddenProperty(value='false')
