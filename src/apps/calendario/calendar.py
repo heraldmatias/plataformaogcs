@@ -35,7 +35,7 @@ def get_or_create(user, embed=True,dependencia = None):
         rule.role = gdata.acl.data.AclRole(value=roleValue)
         aclUrl = new_calendar.get_acl_link().href 
         returned_rule = calendar_client.InsertAclEntry(rule, aclUrl)
-        calendar_id = (embed and a_calendar.content.src.split('/')[5].replace('%40','@')
+        calendar_id = (embed and new_calendar.content.src.split('/')[5].replace('%40','@')
             or a_calendar.content.src )
     return calendar_id
 
