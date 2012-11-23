@@ -11,7 +11,7 @@ class Evento(models.Model):
     organismo = models.ForeignKey(Organismo, verbose_name='Organismo')
     dependencia = models.IntegerField(verbose_name='Dependencia',)
     titulo = models.CharField(verbose_name='Titulo', max_length=200)
-    descripcion = models.CharField(max_length=200)
+    descripcion = models.TextField()
     lugar = models.CharField(max_length=200)
     fec_inicio = models.DateField(default=datetime.today())
     hor_inicio = models.TimeField()
