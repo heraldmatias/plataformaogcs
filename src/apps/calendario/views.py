@@ -1,7 +1,7 @@
 # Create your views here.
 # -*- coding: utf-8 -*-
 from django.contrib import messages
-from calendar import insert_or_update_event
+from calendar import insert_or_update_event, delete_calendar
 from models import Evento
 from forms import EventoForm, EventoTable, EventoConsultaForm
 from django.shortcuts import render_to_response, redirect
@@ -9,6 +9,8 @@ from django.template import RequestContext
 from datetime import datetime
 from django_tables2.config import RequestConfig
 from scripts.scripts import DivErrorList
+from django.utils import simplejson
+from django.http import HttpResponse
 def eventoadd(request, codigo=None):
     evento = None
     url_edit = None
@@ -69,3 +71,15 @@ def eventoquery(request):
     config.configure(table_eventos)
     return render_to_response('calendar/consulta_actividad.html',
     	{'form':form,'table_eventos':table_eventos},context_instance=RequestContext(request))	
+
+def eventodelete(request):
+    results = {'success':False}
+    if request.POST:        
+        evento = Evento.objects.filter(pk=
+            request.POST.get('codigo')).values_list('url_edit')
+        if len(evento)>0:
+            delete_calendar(evento[0][0])
+            Evento.objects.filter(pk=request.POST.get('codigo')).delete()
+            results = {'success':True}    
+    json = simplejson.dumps(results)
+    return HttpResponse(json, mimetype='application/json')

@@ -59,5 +59,15 @@ $('#id_fechafin').datepicker({
     autoclose: true    
 }).on('changeDate', function(ev){
 $('#id_fechafin').datepicker('hide');});
+
+function deleteEvent(evento,fila){    
+    if(confirm("¿Esta seguro que desea eliminar este evento")){        
+        var url= '{% url ogcs-mantenimiento-evento-delete %}';       
+        $.post(url,{csrfmiddlewaretoken:"{{ csrf_token }}",codigo:evento,}, function(data) {
+          $("#tbl_eventos tr[id='trow_"+fila+"']").remove();
+          alert("El evento ha sido eliminado con éxito!") ;          
+        });        
+  }
+}
 </script>
   {% endblock %}

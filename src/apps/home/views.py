@@ -42,10 +42,11 @@ def index(request):
 def view_calendar(request):
     form = CalendarConsultaForm(request.GET)
     dependencia_id = request.GET.get('dependencia')
-    organismo_id = request.GET.get('organismo')    
+    organismo_id = request.GET.get('organismo')
+    dependencia = _get_dependencia(organismo_id,dependencia_id)
+    frame = (dependencia is None) and calendar.getinframe() or calendar.getinframe(dependencia)
     return render_to_response('home/calendario.html',
-    {'calendar_id':calendar.get_or_create(request.user.get_profile(),
-        dependencia=_get_dependencia(organismo_id,dependencia_id)),
+    {'frame':frame,    
     'form':form,'dependencia':dependencia_id,},
      context_instance=RequestContext(request),)
 

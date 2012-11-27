@@ -23,7 +23,7 @@
     <tbody>
         {% for row in table.page.object_list|default:table.rows %} {# support pagination #}
         {% block table.tbody.row %}
-        <tr>
+        <tr id="trow_{{forloop.counter}}">
             {% for column, cell in row.items %}
                 <td {{ column.attrs.td.as_html }}>{% if cell %}{{ cell }}{% else %} {% endif %}</td>
             {% endfor %}

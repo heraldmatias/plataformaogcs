@@ -9,13 +9,29 @@ import atom
 import random 
 from models import Evento
 from datetime import datetime
+from django.utils.safestring import mark_safe
 email = "plataformaintersectorial@gmail.com"
 password="cubilfelino!!"
 #calendar_client = None
 calendar_client = gdata.calendar.client.CalendarClient(source='Google-Calendar_Python_Sample-1.0')
 calendar_client.ClientLogin(email, password, calendar_client.source)
 
-def get_or_create(user, embed=True,dependencia = None):
+color=['%23A32929','%23B1365F','%237A367A','%235229A3','%2329527A','%232952A3','%231B887A',
+    '%2328754E','%230D7813','%23528800','%2388880E','%23AB8B00','%23BE6D00','%23B1440E','%23865A5A',
+    '%23705770','%234E5D6C','%235A6986','%234A716C','%236E6E41','%238D6F47','%23853104','%23691426',
+    '%235C1158','%2323164E','%23182C57','%23060D5E','%23125A12','%232F6213','%232F6309','%235F6B02',
+    '%23875509','%238C500B','%23754916','%236B3304','%235B123B','%2342104A','%23113F47','%23333333',
+    '%230F4B38','%23856508','%23711616']
+def delete_calendar(url_edit):
+    if url_edit:
+        try:
+            calendar_client.Delete(url_edit, None, True)
+        except:
+            pass
+        return True
+    return False
+
+def get_or_create(user=None, embed=True,dependencia = None):
     if dependencia:
         calendar_id = _get_or_create_calendar(dependencia.iniciales,embed)
     else:
@@ -31,22 +47,23 @@ def get_or_create(user, embed=True,dependencia = None):
         calendar.where.append(gdata.calendar.data.CalendarWhere(value='Lima'))    
         calendar.timezone = gdata.calendar.data.TimeZoneProperty(value='America/Los_Angeles')
         calendar.hidden = gdata.calendar.data.HiddenProperty(value='false')
-        #calendar.color = gdata.calendar.data.ColorProperty(value='#a07ea3')#RGBToHTMLColor())
+        calendar.color = gdata.calendar.data.ColorProperty(value='#2952A3')#RGBToHTMLColor())
         new_calendar = calendar_client.InsertCalendar(new_calendar=calendar)      
         rule = gdata.calendar.data.CalendarAclEntry()
         rule.scope = gdata.acl.data.AclScope(type="default")
         roleValue = 'http://schemas.google.com/gCal/2005#%s' % ('read')
         rule.role = gdata.acl.data.AclRole(value=roleValue)
         aclUrl = new_calendar.get_acl_link().href 
-        returned_rule = calendar_client.InsertAclEntry(rule, aclUrl)
+        returned_rule = calendar_client.InsertAclEntry(rule, aclUrl)        
         calendar_id = (embed and new_calendar.content.src.split('/')[5].replace('%40','@')
             or a_calendar.content.src )
     return calendar_id
 
 def _get_or_create_calendar(calendar_name, embed=True):
+    print calendar_name
     feed = calendar_client.GetOwnCalendarsFeed()#GetAllCalendarsFeed()
     calendar_id = None
-    for a_calendar in feed.entry:
+    for a_calendar in feed.entry:        
         if a_calendar.title.text == calendar_name:
             calendar_id = (embed and a_calendar.content.src.split('/')[5].replace('%40','@')
             or a_calendar.content.src)
@@ -134,8 +151,30 @@ def _InsertEvent(cal_client, title='Tennis with Beth',
             end_time = time.strftime('%Y-%m-%dT%H:%M:%S.000Z',
                                      time.gmtime(time.time() + 3600))
         event.when.append(gdata.data.When(start=start_time,
-                                          end=end_time))
-
-    #new_event = cal_client.InsertEvent(event, insert_uri="https://www.google.com/calendar/feeds/uu0ihkg8mueqkpoju2kqkqof1s@group.calendar.google.com/private/full") This is for english calendar
+                                          end=end_time))    
     new_event = cal_client.InsertEvent(event)
     return new_event
+
+def getinframe(calendar_name = None):
+    feed = calendar_client.GetOwnCalendarsFeed()
+    begin="""<iframe src="https://www.google.com/calendar/embed?showTitle=0&amp;ctz=America%2FLima&amp;
+    showPrint=0&amp;showTabs=0&amp;showTz=0&amp;height=400&amp;wkst=1&amp;bgcolor=%23ffffff&amp;"""
+    end='style=" border-width:0 " width="690" height="400" frameborder="0" scrolling="no"></iframe>';
+    result=''
+    result+=begin
+    i=0
+    l=len(color)
+    if calendar_name:
+        result+='src='+get_or_create(dependencia=calendar_name)+"&amp;color="+color[i]+'&amp;'+end
+    else:        
+        for co, entry in enumerate(feed.entry):
+            if co == 0:
+                continue
+            entry=entry.content.src.split('/')[5].replace('%40','@')
+            result+='src='+entry+"&amp;color="+color[i]+'&amp;'
+            if i<l:
+                i=i+1
+            else:
+                i=0
+        result+=end    
+    return mark_safe(result)

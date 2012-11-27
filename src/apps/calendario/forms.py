@@ -36,7 +36,8 @@ class CalendarConsultaForm(forms.ModelForm):
         }
 
 class EventoTable(tables.Table):
-    item = tables.Column(empty_values=())
+    item = tables.TemplateColumn(""" <input type="hidden" 
+        name="fila" id="id_fila" value="{{forloop.counter}}">{{forloop.counter}} """)
     titulo = tables.TemplateColumn(""" {{ record.titulo|truncatewords:8 }}  """,
     	verbose_name=u'Título',orderable=True)
     fec_inicio = tables.DateTimeColumn(format='d/m/Y',
@@ -52,13 +53,7 @@ class EventoTable(tables.Table):
         <a href='javascript:deleteEvent({{record.codigo}}, {{forloop.counter}})'>
         <img src='{{ STATIC_URL }}images/icon_trash.png' width='15' 
         height='15' alt='Eliminar' title='Eliminar' /></a></div>""", attrs={"td":{"width":"65px"}})
-    def __init__(self, *args, **kwargs):
-        super(EventoTable, self).__init__(*args, **kwargs)
-        self.counter = itertools.count(1)
-
-    def render_item(self):
-        return '%d' % next(self.counter)
 
     class Meta:
-        attrs = {"class": "table table-bordered table-condensed table-striped"}
+        attrs = {"class": "table table-bordered table-condensed table-striped",'id':'tbl_eventos'}
         orderable = False
