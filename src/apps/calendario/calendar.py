@@ -75,7 +75,8 @@ def insert_or_update_event(evento, url_edit=None):
     if url_edit:
         calendar_client.Delete(url_edit, None, True) #borrar de google calendar        
     event = gdata.calendar.data.CalendarEventEntry()
-    event.title = atom.data.Title(text=evento.titulo)
+    event.title = atom.data.Title(text=u'%s: %s' %
+        (evento.idusuario_creac.get_dependencia().iniciales, evento.titulo))
     event.content = atom.data.Content(text=evento.descripcion)
     event.where.append(gdata.calendar.data.CalendarWhere(value=evento.lugar))
     event.color = gdata.calendar.data.ColorProperty(value='#000000')
