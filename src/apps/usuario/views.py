@@ -395,6 +395,7 @@ def auditoria_query(request):
     query = query.filter(**filtro)    
     tabla = AuditoriaTable(query)
     RequestConfig(request).configure(tabla)
+    tabla.paginate(page=request.GET.get('page', 1), per_page=6)
     return render_to_response('usuario/auditoria.html',
         {'form':form,'tabla':tabla,},
         context_instance=RequestContext(request),)
