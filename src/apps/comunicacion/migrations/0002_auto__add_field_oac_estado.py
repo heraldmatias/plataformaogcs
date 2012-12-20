@@ -20,6 +20,10 @@ class Migration(SchemaMigration):
         db.add_column(u'oac', 'idadministrador_mod', models.ForeignKey(Usuario,
         	related_name='adminmod_oac', to_field='numero',null=True,blank=True), keep_default=False)
         db.add_column(u'oac', 'fec_modadm', models.DateTimeField(null=True,blank=True), keep_default=False)
+        db.rename_column('pgcs', 'idusuario_creac', 'idusuario_creac_id')
+        db.alter_column('pgcs', 'idusuario_creac_id', models.ForeignKey(Usuario,
+            to_field='numero',
+            related_name='upgcs',null=True,blank=True))
         
     def backwards(self, orm):
         

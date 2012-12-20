@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from django.db import models
-from usuario.models import Estado
+from usuario.models import Estado, Usuario
 from ubigeo.models import Region, Provincia
 
 class Ministerio(models.Model):
@@ -10,9 +10,14 @@ class Ministerio(models.Model):
     ministerio = models.CharField(verbose_name='Ministerio', max_length=70,unique=True)
     iniciales = models.CharField(verbose_name='Iniciales', max_length=15,unique=True) 
     estado = models.ForeignKey(Estado, verbose_name='Estado')
-    idusuario_creac = models.IntegerField(verbose_name='Numero del Usuario de creación', blank=True, null=True)
-    fec_creac = models.DateTimeField(verbose_name='Fecha de creación del registro', auto_now_add=True, blank=True, null=True)
-    idusuario_mod = models.IntegerField(verbose_name='Numero del Usuario de modificación', blank=True, null=True)
+    idusuario_creac = models.ForeignKey(Usuario,related_name='cministerio',
+        verbose_name='Usuario creador',to_field='numero',
+        blank=True, null=True)
+    fec_creac = models.DateTimeField(verbose_name='Fecha de creación del registro',
+        auto_now_add=True, blank=True, null=True)
+    idusuario_mod = models.ForeignKey(Usuario,related_name='eministerio',
+        verbose_name='Usuario modificador',to_field='numero',
+        blank=True, null=True)
     fec_mod = models.DateTimeField(verbose_name='Fecha de modificación del registro', auto_now=True, blank=True, null=True)
 
     class Meta:
@@ -33,9 +38,13 @@ class Odp(models.Model):
     odp = models.CharField(verbose_name='ODP', max_length=70, unique=True)
     iniciales = models.CharField(verbose_name='Iniciales', max_length=15, unique=True) 
     estado = models.ForeignKey(Estado, verbose_name='Estado')
-    idusuario_creac = models.IntegerField(verbose_name='Numero del Usuario de creación', blank=True, null=True)
+    idusuario_creac = models.ForeignKey(Usuario,related_name='codp',
+        verbose_name='Usuario creador',to_field='numero',
+        blank=True, null=True)
     fec_creac = models.DateTimeField(verbose_name='Fecha de creación del registro', auto_now_add=True, blank=True, null=True)
-    idusuario_mod = models.IntegerField(verbose_name='Numero del Usuario de modificación', blank=True, null=True)
+    idusuario_mod = models.ForeignKey(Usuario,related_name='eodp',
+        verbose_name='Usuario modificador',to_field='numero',
+        blank=True, null=True)
     fec_mod = models.DateTimeField(verbose_name='Fecha de modificación del registro', auto_now=True, blank=True, null=True)
 
     class Meta:
@@ -57,10 +66,16 @@ class Gobernacion(models.Model):
     gobernacion = models.CharField(verbose_name='Gobernación', max_length=70,unique=True)
     iniciales = models.CharField(verbose_name='Iniciales', max_length=15,unique=True) 
     estado = models.ForeignKey(Estado, verbose_name='Estado')
-    idusuario_creac = models.IntegerField(verbose_name='Numero del Usuario de creación', blank=True, null=True)
-    fec_creac = models.DateTimeField(verbose_name='Fecha de creación del registro', auto_now_add=True, blank=True, null=True)
-    idusuario_mod = models.IntegerField(verbose_name='Numero del Usuario de modificación', blank=True, null=True)
-    fec_mod = models.DateTimeField(verbose_name='Fecha de modificación del registro', auto_now=True, blank=True, null=True)
+    idusuario_creac = models.ForeignKey(Usuario,related_name='cgobernacion',
+        verbose_name='Usuario modificador',to_field='numero',
+        blank=True, null=True)
+    fec_creac = models.DateTimeField(verbose_name='Fecha de creación',
+        auto_now_add=True, blank=True, null=True)
+    idusuario_mod = models.ForeignKey(Usuario,related_name='egobernacion',
+        verbose_name='Usuario modificador',to_field='numero',
+        blank=True, null=True)
+    fec_mod = models.DateTimeField(verbose_name='Fecha de modificación',
+        auto_now=True, blank=True, null=True)
 
     class Meta:
         db_table = u'gobernacion'

@@ -55,7 +55,10 @@ class Pgcs(models.Model):
     archivo = models.FileField(upload_to='pgcs/',verbose_name='Adjuntar Archivo',)
     urlpgcs = models.URLField(verbose_name='Url de la pgcs', max_length=70)
     tipopgcs = models.ForeignKey(TipoOgcs,verbose_name='Estado del tipo de pgcs')
-    idusuario_creac = models.IntegerField(verbose_name='Usuario creador',)
+    idusuario_creac = models.ForeignKey(Usuario,to_field='numero',
+        verbose_name='Usuario creador',
+        related_name = 'upgcs',
+        null=True,blank=True)
     fec_creac = models.DateTimeField(verbose_name='Fecha de creación del registro',auto_now_add=True)
     
     class Meta:

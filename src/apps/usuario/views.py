@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from django.shortcuts import render_to_response, redirect
-from forms import UsuarioForm, UsuarioTable, ConsultaUsuarioForm,EditUsuarioForm 
+from forms import (UsuarioForm, UsuarioTable, ConsultaUsuarioForm,
+    EditUsuarioForm ,AuditoriaConsultaForm, AuditoriaTable)
 from django.template import RequestContext, Context, loader
 from usuario.models import Usuario, Estado, Organismo, Nivel
 from dependencia.models import Ministerio, Odp, Gobernacion
@@ -17,6 +18,8 @@ from django.conf import settings
 from django.contrib.sites.models import get_current_site
 from django.db.models import Q
 from django.http import HttpResponse
+from django.contrib.contenttypes.models import ContentType
+from django.db import transaction
 serie = 3
 
 @login_required()
@@ -120,6 +123,7 @@ def get_user_permissions():
     return perms
 
 @login_required()
+@transaction.commit_on_success
 @permission_required('usuario.add_usuario')
 def useradd(request,nivel):
     existe = -1
@@ -132,7 +136,10 @@ def useradd(request,nivel):
         if frmusuario.is_valid():
             if request.POST['nivel'] == "1":
                 try:
-                    obj = Usuario.objects.get(organismo = Organismo.objects.get(codigo=request.POST['organismo']), dependencia=request.POST['dependencia'])
+                    obj = Usuario.objects.get(
+                        organismo = Organismo.objects.get(
+                            codigo=request.POST['organismo']), 
+                        dependencia=request.POST['dependencia'])
                     existe = 0
                 except:
                     existe = 1
@@ -157,8 +164,11 @@ def useradd(request,nivel):
                 user.last_name = request.POST['apellidos']
                 user.user_permissions = get_admin_permissions() if nivel == "2" else get_user_permissions()
                 user.save()
-                usuario = Usuario(user=user,numero=num,usuario=usernamee,nivel=Nivel.objects.get(codigo=request.POST['nivel']))
-                frmusuario = UsuarioForm(request.POST,request.FILES, instance=usuario,error_class=DivErrorList)
+                usuario = Usuario(user=user,numero=num,usuario=usernamee,
+                    nivel=Nivel.objects.get(codigo=request.POST['nivel']),
+                    idusuario_creac=request.user.get_profile(),fec_creac=datetime.today())
+                frmusuario = UsuarioForm(request.POST,request.FILES,
+                    instance=usuario,error_class=DivErrorList)
                 frmusuario.save()
                 usuario.contrasena = user.password
                 usuario.save() 
@@ -187,7 +197,12 @@ def useradd(request,nivel):
                 frmusuario = UsuarioForm()
     else:        
         frmusuario = UsuarioForm()
-    return render_to_response('usuario/usuario.html', {'frmusuario': frmusuario,'opcion':'add','existe':existe,'nivel':nivel,'dependencia': request.POST['dependencia'] if 'dependencia' in request.POST else 0,'mensaje':mensaje,'tipo':tipo}, context_instance=RequestContext(request),)
+    return render_to_response('usuario/usuario.html',
+        {'frmusuario': frmusuario,'opcion':'add','existe':existe,
+        'nivel':nivel,
+        'dependencia': request.POST['dependencia'] if 'dependencia' in request.POST else 0,
+        'mensaje':mensaje,'tipo':tipo},
+        context_instance=RequestContext(request),)
 
 @login_required()
 @permission_required('usuario.change_usuario')
@@ -195,8 +210,9 @@ def useredit(request,nivel, codigo):
     if request.method == 'POST':
         profile = Usuario.objects.get(user = request.user)
         usuario = Usuario.objects.get(numero=int(codigo))
-        usuario.idusuario_mod=profile.numero
-        frmusuario = EditUsuarioForm(request.POST,request.FILES, instance=usuario,error_class=DivErrorList) 
+        usuario.idusuario_mod_id=profile.numero
+        frmusuario = EditUsuarioForm(request.POST,request.FILES,
+            instance=usuario,error_class=DivErrorList) 
         dependencia = request.POST['dependencia']
         if frmusuario.is_valid():
             usuario.user.is_active= 0 if request.POST['estado']=="2" else 1
@@ -205,12 +221,16 @@ def useredit(request,nivel, codigo):
             #usuario.user.set_password = request.POST['contrasena']
             usuario.user.save()
             frmusuario.save()
-            return redirect(reverse('ogcs-mantenimiento-usuario-consulta',kwargs={'nivel':nivel})+'?m=edit')
+            return redirect(reverse('ogcs-mantenimiento-usuario-consulta',
+                kwargs={'nivel':nivel})+'?m=edit')
     else:
         usuario = get_object_or_404(Usuario, numero=int(codigo))
         dependencia = usuario.dependencia
         frmusuario = EditUsuarioForm(instance=usuario)
-    return render_to_response('usuario/usuario.html', {'frmusuario': frmusuario,'opcion':'edit','codigo':codigo,'dependencia':dependencia,'nivel':nivel,'foto':usuario.foto}, context_instance=RequestContext(request),)
+    return render_to_response('usuario/usuario.html',
+        {'frmusuario': frmusuario,'opcion':'edit','codigo':codigo,
+        'dependencia':dependencia,'nivel':nivel,'foto':usuario.foto},
+        context_instance=RequestContext(request),)
 
 @login_required()
 @permission_required('usuario.query_usuario')
@@ -262,18 +282,23 @@ def userprint(request, nivel):
     col = "-nombres"
     if "sort" in request.GET:
         col = request.GET['sort']
-    if ('nombres' in request.GET and 'organismo' in request.GET and 'estado' in request.GET and 'apellidos' in request.GET) or 'dependencia' in request.GET:
+    if ('nombres' in request.GET and 'organismo' in request.GET 
+        and 'estado' in request.GET 
+        and 'apellidos' in request.GET) or 'dependencia' in request.GET:
         if request.GET['nombres']:
-            usuarios = Usuario.objects.filter(nombres__icontains=request.GET['nombres'])
+            usuarios = Usuario.objects.filter(
+                nombres__icontains=request.GET['nombres'])
         if request.GET['organismo']:
             filtro.append(u"organismo_id =%s"%request.GET['organismo'])
         if request.GET['estado']:
             filtro.append(u"estado_id =%s"%request.GET['estado'])
         if request.GET['apellidos']:
             if usuarios:
-                usuarios = usuarios.filter(apellidos__icontains=request.GET['apellidos'])
+                usuarios = usuarios.filter(
+                    apellidos__icontains=request.GET['apellidos'])
             else:
-                usuarios = Usuario.objects.filter(apellidos__icontains=request.GET['apellidos'])
+                usuarios = Usuario.objects.filter(
+                    apellidos__icontains=request.GET['apellidos'])
         if 'dependencia' in request.GET:
             if request.GET['dependencia']:
                 filtro.append(u"dependencia =%s"%request.GET['dependencia'])
@@ -286,8 +311,19 @@ def userprint(request, nivel):
         usuarios = Usuario.objects.extra(where=filtro)
     else:
         usuarios = usuarios.extra(where=filtro)
-    usuarios = usuarios.extra(select={'dependencia':"case organismo_id when 1 then (select ministerio from ministerio where nummin=dependencia) when 2 then (select odp from odp where numodp=dependencia) when 3 then (select gobernacion from gobernacion where numgob=dependencia) end"})
-    html = loader.render_to_string(nivel == "1" and 'usuario/reporteusu.html' or 'usuario/reporteadmin.html',{'data': usuarios.order_by(col),'pagesize':'A4','usuario':request.user.get_profile()},context_instance=RequestContext(request))
+    usuarios = usuarios.extra(select=
+        {'dependencia':"""case organismo_id 
+        when 1 then (select ministerio from ministerio
+            where nummin=dependencia)
+        when 2 then (select odp from odp where numodp=dependencia)
+        when 3 then (select gobernacion 
+            from gobernacion where numgob=dependencia) end"""})
+    html = loader.render_to_string(nivel == "1" and 'usuario/reporteusu.html'\
+        or 'usuario/reporteadmin.html',
+        {'data': usuarios.order_by(col),
+        'pagesize':'A4',
+        'usuario':request.user.get_profile()},
+        context_instance=RequestContext(request))
     filename= ("usuario" if nivel == "1" else "administrador")+"_%s.pdf" % datetime.today().strftime("%Y%m%d")    
     return imprimirToPDF(html,filename)    
 
@@ -300,4 +336,65 @@ def jsonusuario(request):
     if request.GET['dependencia']:
         filtro.append(u'dependencia=%s' % request.GET['dependencia'])
     query = Usuario.objects.extra(where=filtro).order_by('usuario')
-    return HttpResponse(serializers.serialize("json", query, ensure_ascii=False),mimetype='application/json')
+    return HttpResponse(serializers.serialize("json", query,
+        ensure_ascii=False),mimetype='application/json')
+
+@login_required()
+def auditoria_query(request):
+    form = AuditoriaConsultaForm(request.GET)    
+    id_tabla = int(request.GET.get('tabla',41))
+    tfecha = int(request.GET.get('tipofecha',1))
+    id_usuario = request.GET.get('usuario',-1)
+    titulo = request.GET.get('titulo')
+    col = 'nombreari'
+    filtro = dict()
+    query = ContentType.objects.get_for_id(id_tabla).model_class().objects
+    where_col = [(41,'nombreari'),(55,'descripcion'),(46,'name'),
+    (42,'descripcion'),(57,'titulo'),(47,'name'),(34,'nombremmc'),
+    (23,'nombremmca'),(39,'nummg'),(16,'ministerio'),(19,'archivo'),
+    (17,'odp'),(21,'archivo'),
+    (11,'provincia'),(10,'region'),(54,'descripcion'),
+    (48,'name'),(15,'nombres'),]
+    for where in where_col:
+        if where[0] == id_tabla:
+            col = where[1]
+            if titulo:
+                filtro['%s'%(col+'__icontains')] = titulo
+                break
+    if 'fechaini' in request.GET and 'fechafin' in request.GET:
+        start_date = None
+        end_date = None
+        try:
+            start_date = ((request.GET['fechaini']) and
+                datetime.strptime(request.GET['fechaini'],"%d/%m/%Y") or None)
+            end_date = ((request.GET['fechafin']) and
+                datetime.strptime(request.GET['fechafin'],"%d/%m/%Y") or None)
+        except:
+            pass
+        if start_date and end_date:
+            if tfecha==0:
+                filtro['fec_mod__range'] = (start_date, end_date)
+            else:
+                filtro['fec_creac__range'] = (start_date, end_date)
+        elif start_date:
+            if tfecha==0:
+                filtro['fec_mod__gte']=start_date
+            else:
+                filtro['fec_creac__gte']=start_date
+        elif end_date:
+            if tfecha==0:
+                filtro['fec_mod__lte']=end_date
+            else:
+                filtro['fec_creac__lte']=end_date
+    if id_usuario>=0:
+        filtro['idusuario_creac'] = id_usuario
+    query = query.extra(select={
+        'descripcion': col,
+    })
+    #FILTRAMOS
+    query = query.filter(**filtro)    
+    tabla = AuditoriaTable(query)
+    RequestConfig(request).configure(tabla)
+    return render_to_response('usuario/auditoria.html',
+        {'form':form,'tabla':tabla,},
+        context_instance=RequestContext(request),)

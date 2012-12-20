@@ -39,7 +39,8 @@ def ministerioadd(request):
     if request.method == 'POST':
         num = Ministerio.objects.values("nummin").order_by("-nummin",)[:1]
         num = 1 if len(num)==0 else int(num[0]["nummin"])+1
-        iministerio = Ministerio(nummin=num,estado=Estado.objects.get(pk=1),idusuario_creac=profile.numero)
+        iministerio = Ministerio(nummin=num,estado=Estado.objects.get(pk=1),
+            idusuario_creac_id=profile.numero)
         frmministerio = MinisterioForm(request.POST, instance=iministerio) # A form bound to the POST data
         if frmministerio.is_valid():
             frmministerio.save()
@@ -52,9 +53,9 @@ def ministerioadd(request):
 @login_required()
 def ministerioedit(request, codigo):
     if request.method == 'POST':
-        profile = Usuario.objects.get(user = request.user)
+        profile = request.user.get_profile()
         ministerio = Ministerio.objects.get(nummin=int(codigo))
-        ministerio.idusuario_mod=profile.numero
+        ministerio.idusuario_mod_id=profile.numero
         frmministerio = MinisterioForm(request.POST, instance=ministerio) # A form bound to the POST data	
         if frmministerio.is_valid():
             frmministerio.save() # Crear un parametro en home para mostrar los mensajes de exito.
@@ -62,7 +63,10 @@ def ministerioedit(request, codigo):
     else:
         ministerio = get_object_or_404(Ministerio, nummin=int(codigo))
         frmministerio = MinisterioForm(instance=ministerio)
-    return render_to_response('dependencia/ministerio.html', {'frmministerio': frmministerio,'opcion':'edit','codigo':codigo,}, context_instance=RequestContext(request),)
+    return render_to_response('dependencia/ministerio.html', 
+        {'frmministerio': frmministerio,
+        'opcion':'edit','codigo':codigo,}, 
+        context_instance=RequestContext(request),)
 
 @login_required()
 def ministerioquery(request):
@@ -78,7 +82,11 @@ def ministerioquery(request):
     tblministerios = MinisterioTable(ministerios.order_by(col))
     config.configure(tblministerios)
     tblministerios.paginate(page=request.GET.get('page', 1), per_page=6)
-    return render_to_response('dependencia/ministerio_consulta.html', {'consultaministerioform':consultaministerioform,'tabla':tblministerios,'mensaje':(request.GET['m'] if 'm' in request.GET else '')}, context_instance=RequestContext(request),)
+    return render_to_response('dependencia/ministerio_consulta.html',
+        {'consultaministerioform':consultaministerioform,
+        'tabla':tblministerios,
+        'mensaje':(request.GET['m'] if 'm' in request.GET else '')},
+        context_instance=RequestContext(request),)
 
 @login_required()
 def ministerioprint(request):
@@ -87,18 +95,22 @@ def ministerioprint(request):
         query = Ministerio.objects.filter(ministerio__icontains=request.GET['ministerio']).order_by(col)
     else:
         query = Ministerio.objects.all().order_by(col)
-    html = render_to_string('dependencia/reportemin.html',{'data': query,'pagesize':'A4','usuario':request.user.get_profile()},context_instance=RequestContext(request))
+    html = render_to_string('dependencia/reportemin.html',
+        {'data': query,'pagesize':'A4',
+        'usuario':request.user.get_profile()},
+        context_instance=RequestContext(request))
     filename= "ministerio_%s.pdf" % datetime.today().strftime("%Y%m%d")        
     return imprimirToPDF(html,filename)
     
 @login_required()
 def odpadd(request):
-    profile = Usuario.objects.get(user = request.user)
+    profile = request.user.get_profile()
     mensaje=""
     if request.method == 'POST':
         num = Odp.objects.values("numodp").order_by("-numodp",)[:1]
         num = 1 if len(num)==0 else int(num[0]["numodp"])+1
-        iodp = Odp(numodp=num,estado=Estado.objects.get(pk=1),idusuario_creac=profile.numero)
+        iodp = Odp(numodp=num,estado=Estado.objects.get(pk=1),
+            idusuario_creac_id=profile.numero)
         frmopd = OdpForm(request.POST, instance=iodp) # A form bound to the POST data
         if frmopd.is_valid():
             frmopd.save()
@@ -111,9 +123,9 @@ def odpadd(request):
 @login_required()
 def odpedit(request, codigo):
     if request.method == 'POST':
-        profile = Usuario.objects.get(user = request.user)
+        profile = request.user.get_profile()
         odp = Odp.objects.get(numodp=int(codigo))
-        odp.idusuario_mod=profile.numero
+        odp.idusuario_mod_id=profile.numero
         frmodp = OdpForm(request.POST, instance=odp) # A form bound to the POST data	
         if frmodp.is_valid():
             frmodp.save()
@@ -121,7 +133,9 @@ def odpedit(request, codigo):
     else:
         odp = get_object_or_404(Odp, numodp=int(codigo))
         frmodp = OdpForm(instance=odp)
-    return render_to_response('dependencia/odp.html', {'frmodp': frmodp,'opcion':'edit','codigo':codigo,}, context_instance=RequestContext(request),)
+    return render_to_response('dependencia/odp.html',
+        {'frmodp': frmodp,'opcion':'edit','codigo':codigo,},
+        context_instance=RequestContext(request),)
 
 @login_required()
 def odpquery(request):
@@ -132,9 +146,11 @@ def odpquery(request):
     consultaodpform = ConsultaOdpForm(request.GET)
     if 'nummin' in request.GET and 'odp' in request.GET:   
        if (request.GET['nummin'] and request.GET['odp']) or request.GET['nummin']:
-          odps = Odp.objects.filter(odp__icontains=request.GET['odp'],nummin=request.GET['nummin']).order_by(col)
+          odps = Odp.objects.filter(odp__icontains=request.GET['odp'],
+            nummin=request.GET['nummin']).order_by(col)
        elif request.GET['odp']:
-          odps = Odp.objects.filter(odp__icontains=request.GET['odp']).order_by(col)
+          odps = Odp.objects.filter(odp__icontains=
+            request.GET['odp']).order_by(col)
        else:
           odps = Odp.objects.all()
     else:
@@ -142,24 +158,30 @@ def odpquery(request):
     tblodps = OdpTable(odps.order_by(col))
     config.configure(tblodps)
     tblodps.paginate(page=request.GET.get('page', 1), per_page=6)
-    return render_to_response('dependencia/odp_consulta.html', {'consultaodpform':consultaodpform,'tabla':tblodps,'mensaje':(request.GET['m'] if 'm' in request.GET else '')}, context_instance=RequestContext(request),)
+    return render_to_response('dependencia/odp_consulta.html',
+        {'consultaodpform':consultaodpform,'tabla':tblodps,
+        'mensaje':(request.GET['m'] if 'm' in request.GET else '')},
+        context_instance=RequestContext(request),)
 
 @login_required()
 def odpprint(request):
     col = 'odp'
     if (request.GET['nummin'] and request.GET['odp']) or request.GET['nummin']:
-        query = Odp.objects.filter(odp__icontains=request.GET['odp'],nummin=request.GET['nummin']).order_by(col)
+        query = Odp.objects.filter(odp__icontains=request.GET['odp'],
+            nummin=request.GET['nummin']).order_by(col)
     elif request.GET['odp']:
         query = Odp.objects.filter(odp__icontains=request.GET['odp']).order_by(col)
     else:
         query = Odp.objects.all().order_by(col)
-    html = render_to_string('dependencia/reporteodp.html',{'data': query,'pagesize':'A4','usuario':request.user.get_profile()},context_instance=RequestContext(request))
+    html = render_to_string('dependencia/reporteodp.html',
+        {'data': query,'pagesize':'A4',
+        'usuario':request.user.get_profile()},context_instance=RequestContext(request))
     filename= "opd_%s.pdf" % datetime.today().strftime("%Y%m%d")        
     return imprimirToPDF(html,filename)
 
 @login_required()
 def gobernacionadd(request):
-    profile = Usuario.objects.get(user = request.user)
+    profile = request.user.get_profile()
     mensaje=""
     if request.method == 'POST':
         from ubigeo.models import Region
@@ -168,23 +190,28 @@ def gobernacionadd(request):
         region = Region()
         if request.POST['region']:
             region = Region.objects.get(numreg= request.POST['region'])
-        igobernacion = Gobernacion(numgob=num,estado=Estado.objects.get(pk=1),region= region,idusuario_creac=profile.numero)
-        frmgobernacion = GobernacionForm(request.POST, instance=igobernacion) # A form bound to the POST data
+        igobernacion = Gobernacion(numgob=num,estado=Estado.objects.get(pk=1),
+            region= region,idusuario_creac_id=profile.numero)
+        frmgobernacion = GobernacionForm(request.POST,
+        instance=igobernacion) # A form bound to the POST data
         if frmgobernacion.is_valid():
             frmgobernacion.save()
             frmgobernacion = GobernacionForm() # Crear un parametro en home para mostrar los mensajes de exito.
             mensaje = "Registro grabado satisfactoriamente."
     else:        
         frmgobernacion = GobernacionForm()
-    return render_to_response('dependencia/gobernacion.html', {'frmgobernacion': frmgobernacion,'opcion':'add','mensaje':mensaje,}, context_instance=RequestContext(request),)
+    return render_to_response('dependencia/gobernacion.html',
+        {'frmgobernacion': frmgobernacion,'opcion':'add',
+        'mensaje':mensaje,}, context_instance=RequestContext(request),)
 
 @login_required() 
 def gobernacionedit(request, codigo):
     if request.method == 'POST':
-        profile = Usuario.objects.get(user = request.user)
+        profile = request.user.get_profile()
         gobernacion = Gobernacion.objects.get(numgob=int(codigo))
-        gobernacion.idusuario_mod=profile.numero
-        frmgobernacion = GobernacionForm(request.POST, instance=gobernacion) # A form bound to the POST data	
+        gobernacion.idusuario_mod_id=profile.numero
+        frmgobernacion = GobernacionForm(request.POST,
+            instance=gobernacion)
         if frmgobernacion.is_valid():
             frmgobernacion.save()
             return redirect(reverse('ogcs-mantenimiento-gobernacion-consulta')+'?m=edit')
@@ -192,7 +219,9 @@ def gobernacionedit(request, codigo):
         gobernacion = get_object_or_404(Gobernacion, numgob=int(codigo))
         frmgobernacion = GobernacionForm(instance=gobernacion)
         #frmgobernacion.provincia.choices = Provincia.objects.filter(region=gobernacion.region).values_list('numpro','provincia')        
-    return render_to_response('dependencia/gobernacion.html', {'frmgobernacion': frmgobernacion,'opcion':'edit','codigo':codigo,}, context_instance=RequestContext(request),)
+    return render_to_response('dependencia/gobernacion.html',
+        {'frmgobernacion': frmgobernacion,'opcion':'edit',
+        'codigo':codigo,}, context_instance=RequestContext(request),)
 
 @login_required()
 def gobernacionquery(request):
@@ -203,9 +232,11 @@ def gobernacionquery(request):
     consultagobernacionform = ConsultaGobernacionForm(request.GET)
     if 'region' in request.GET and 'provincia' in request.GET:
 	if request.GET['region'] and request.GET['provincia']:
-	    gobernaciones = Gobernacion.objects.filter(region=request.GET['region'], provincia=request.GET['provincia']).order_by(col)
+	    gobernaciones = Gobernacion.objects.filter(region=request.GET['region'],
+            provincia=request.GET['provincia']).order_by(col)
 	elif request.GET['region']:
-	    gobernaciones = Gobernacion.objects.filter(region=request.GET['region'],).order_by(col)
+	    gobernaciones = Gobernacion.objects.filter(region=
+            request.GET['region'],).order_by(col)
         else:
 	    gobernaciones = Gobernacion.objects.all().order_by(col)
     else:
@@ -213,18 +244,26 @@ def gobernacionquery(request):
     tblgobernaciones = GobernacionTable(gobernaciones.order_by(col))
     config.configure(tblgobernaciones)
     tblgobernaciones.paginate(page=request.GET.get('page', 1), per_page=6)
-    return render_to_response('dependencia/gobernacion_consulta.html', {'consultagobernacionform':consultagobernacionform,'tabla':tblgobernaciones,'mensaje':(request.GET['m'] if 'm' in request.GET else '')}, context_instance=RequestContext(request),)
+    return render_to_response('dependencia/gobernacion_consulta.html',
+        {'consultagobernacionform':consultagobernacionform,
+        'tabla':tblgobernaciones,
+        'mensaje':(request.GET['m'] if 'm' in request.GET else '')},
+        context_instance=RequestContext(request),)
 
 @login_required()
 def gobernacionprint(request):
     col = 'gobernacion'
     if (request.GET['region'] and request.GET['provincia']) or request.GET['region']:
-        query = Gobernacion.objects.filter(region=request.GET['region'], provincia=request.GET['provincia']).order_by(col)
+        query = Gobernacion.objects.filter(region=request.GET['region'],
+            provincia=request.GET['provincia']).order_by(col)
     elif request.GET['provincia']:
         query = Gobernacion.objects.filter(provincia=request.GET['region']).order_by(col)
     else:
         query = Gobernacion.objects.all().order_by(col)
-    html = render_to_string('dependencia/reportegob.html',{'data': query,'pagesize':'A4','usuario':request.user.get_profile()},context_instance=RequestContext(request))
+    html = render_to_string('dependencia/reportegob.html',
+        {'data': query,'pagesize':'A4',
+        'usuario':request.user.get_profile()},
+        context_instance=RequestContext(request))
     filename= "gobernacion_%s.pdf" % datetime.today().strftime("%Y%m%d")        
     return imprimirToPDF(html,filename)  
 
@@ -234,10 +273,11 @@ def jsondependencia(request):
     if not 'r' in request.GET:
         dependencia ={}
     elif request.GET.get('r')=='1':
-        dependencia = Ministerio.objects.all().order_by('ministerio')
+        dependencia = Ministerio.objects.filter(estado=1).order_by('ministerio')
     elif request.GET.get('r')=='2':
-        dependencia = Odp.objects.all().order_by('odp')
+        dependencia = Odp.objects.filter(estado=1).order_by('odp')
     elif request.GET.get('r')=='3':
-        dependencia = Gobernacion.objects.all().order_by('gobernacion')
-    return HttpResponse(serializers.serialize("json", dependencia, ensure_ascii=False),mimetype='application/json')
+        dependencia = Gobernacion.objects.filter(estado=1).order_by('gobernacion')
+    return HttpResponse(serializers.serialize("json", dependencia,
+        ensure_ascii=False),mimetype='application/json')
 

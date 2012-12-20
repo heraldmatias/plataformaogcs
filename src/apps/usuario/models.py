@@ -64,7 +64,13 @@ class Usuario(models.Model):
     facebook = models.URLField(verbose_name='Cuenta Facebook', max_length=150, blank=True, null=True)
     estado = models.ForeignKey(Estado, verbose_name='Estado',)
     politica = models.BooleanField(verbose_name='Acepto Politica de Uso',)
-    idusuario_mod = models.IntegerField(verbose_name='Usuario modifico', null=True, blank=True)
+    idusuario_creac = models.ForeignKey('self',verbose_name='Usuario creador',
+        related_name='creador', to_field='numero')    
+    fec_creac = models.DateTimeField(verbose_name='Fecha de creacióno',
+        auto_now_add=True)
+    idusuario_mod = models.ForeignKey('self',related_name='modificador',
+        verbose_name='Usuario modifico', null=True, blank=True,
+        to_field='numero')
     fec_mod = models.DateTimeField(verbose_name='Fecha modifico', auto_now=True, null=True, blank=True)
     foto = models.FileField(upload_to='users/',verbose_name='Foto', null=True, blank=True)
 

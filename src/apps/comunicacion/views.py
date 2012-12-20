@@ -126,7 +126,10 @@ def pgcsadd(request):
             except:
                 num = Pgcs.objects.values("numpgcs").order_by("-numpgcs",)[:1]
                 num = 1 if len(num)==0 else int(num[0]["numpgcs"])+1
-                obj = Pgcs(numpgcs=num,organismo=profile.organismo,dependencia=profile.dependencia,idusuario_creac=profile.numero,tipopgcs=TipoOgcs.objects.get(codigo=1))
+                obj = Pgcs(numpgcs=num,organismo=profile.organismo,
+                    dependencia=profile.dependencia,
+                    idusuario_creac_id=profile.numero,
+                    tipopgcs=TipoOgcs.objects.get(codigo=1))
             FileSystemStorage().delete('pgcs/'+filename)
             request.FILES['archivo'].name = filename
         formulario = PgcsForm(request.POST,request.FILES,instance=obj ) # A form bound to the POST data
@@ -138,7 +141,9 @@ def pgcsadd(request):
             mensaje="Registro grabado satisfactoriamente."
     else:        
         formulario = PgcsForm()
-    return render_to_response('comunicacion/pgcs.html', {'formulario': formulario,'mensaje':mensaje,}, context_instance=RequestContext(request),)
+    return render_to_response('comunicacion/pgcs.html',
+        {'formulario': formulario,'mensaje':mensaje,},
+        context_instance=RequestContext(request),)
 
 @login_required()
 def pgcsquery(request):
@@ -161,10 +166,13 @@ def pgcsquery(request):
     else:
         filtro.append(u"pgcs.organismo_id =%s"%request.user.get_profile().organismo.codigo)
         filtro.append(u"pgcs.dependencia =%s"%request.user.get_profile().dependencia)
-        filtro.append(u"idusuario_creac="+str(request.user.get_profile().numero))
-    filtro.append(u"idusuario_creac=usuario.numero")
+        filtro.append(u"idusuario_creac_id="+str(request.user.get_profile().numero))    
     filtro.append(u"tipopgcs_id=1")
-    query = Pgcs.objects.extra(tables=['usuario',],where=filtro,select={'usuario':'usuario.usuario','dependencia':"case pgcs.organismo_id when 1 then (select ministerio from ministerio where nummin=pgcs.dependencia) when 2 then (select odp from odp where numodp=pgcs.dependencia) when 3 then (select gobernacion from gobernacion where numgob=pgcs.dependencia) end"})
+    query = Pgcs.objects.extra(where=filtro,
+        select={'dependencia':"""case pgcs.organismo_id 
+        when 1 then (select ministerio from ministerio where nummin=pgcs.dependencia)
+        when 2 then (select odp from odp where numodp=pgcs.dependencia)
+        when 3 then (select gobernacion from gobernacion where numgob=pgcs.dependencia) end"""})
     tabla = PgcsTable(query.order_by(col))
     config.configure(tabla)
     tabla.paginate(page=request.GET.get('page', 1), per_page=6)
@@ -185,12 +193,16 @@ def pgcsprint(request,tipo):
         filtro.append(u"pgcs.organismo_id =%s"%request.user.get_profile().organismo.codigo)
         filtro.append(u"pgcs.dependencia =%s"%request.user.get_profile().dependencia)
         if tipo == 1: 
-            filtro.append(u"idusuario_creac="+str(request.user.get_profile().numero))
-    filtro.append(u"idusuario_creac=usuario.numero")    
+            filtro.append(u"idusuario_creac_id="+str(request.user.get_profile().numero))    
     filtro.append(u"tipopgcs_id="+str(tipo))
-    query = Pgcs.objects.extra(tables=['usuario',],where=filtro,select={'usuario':'usuario.usuario','dependencia':"case pgcs.organismo_id when 1 then (select ministerio from ministerio where nummin=pgcs.dependencia) when 2 then (select odp from odp where numodp=pgcs.dependencia) when 3 then (select gobernacion from gobernacion where numgob=pgcs.dependencia) end"})
+    query = Pgcs.objects.extra(where=filtro,
+        select={'dependencia':"""
+        case pgcs.organismo_id 
+        when 1 then (select ministerio from ministerio where nummin=pgcs.dependencia)
+        when 2 then (select odp from odp where numodp=pgcs.dependencia)
+        when 3 then (select gobernacion from gobernacion where numgob=pgcs.dependencia) end"""})
     html = render_to_string('comunicacion/reportepgcs.html' if tipo=="1" else 'comunicacion/reporte_pgcs_aporte.html',{'data': query,'pagesize':'A4','usuario':request.user.get_profile()},context_instance=RequestContext(request))
-    filename= ("pgcs_%s.csv" if tipo=="1" else "pgcsaporte_%s.pdf") % datetime.today().strftime("%Y%m%d")
+    filename= ("pgcs_%s.pdf" if tipo=="1" else "pgcsaporte_%s.pdf") % datetime.today().strftime("%Y%m%d")
     return imprimirToPDF(html,filename) 
 
 @login_required()
@@ -208,7 +220,8 @@ def pgcs_apor_add(request):
             except:
                 num = Pgcs.objects.values("numpgcs").order_by("-numpgcs",)[:1]
                 num = 1 if len(num)==0 else int(num[0]["numpgcs"])+1
-                obj = Pgcs(numpgcs=num,idusuario_creac=profile.numero,tipopgcs=TipoOgcs.objects.get(codigo=2))
+                obj = Pgcs(numpgcs=num,idusuario_creac_id=profile.numero,
+                    tipopgcs=TipoOgcs.objects.get(codigo=2))
             FileSystemStorage().delete('pgcs/'+filename)
             request.FILES['archivo'].name = filename
         formulario = PgcsAporteForm(request.POST,request.FILES,instance=obj ) # A form bound to the POST data
@@ -243,14 +256,15 @@ def pgcs_apor_query(request):
     else:
         filtro.append(u"pgcs.organismo_id =%s"%request.user.get_profile().organismo.codigo)
         filtro.append(u"pgcs.dependencia =%s"%request.user.get_profile().dependencia)
-        #filtro.append(u"idusuario_creac="+str(request.user.get_profile().numero))
-    filtro.append(u"idusuario_creac=usuario.numero")
+        #filtro.append(u"idusuario_creac="+str(request.user.get_profile().numero))    
     filtro.append(u"tipopgcs_id=2")
-    query = Pgcs.objects.extra(tables=['usuario',],where=filtro,select={'usuario':'usuario.usuario','dependencia':"case pgcs.organismo_id when 1 then (select ministerio from ministerio where nummin=pgcs.dependencia) when 2 then (select odp from odp where numodp=pgcs.dependencia) when 3 then (select gobernacion from gobernacion where numgob=pgcs.dependencia) end"})
+    query = Pgcs.objects.extra(where=filtro,select={'dependencia':"case pgcs.organismo_id when 1 then (select ministerio from ministerio where nummin=pgcs.dependencia) when 2 then (select odp from odp where numodp=pgcs.dependencia) when 3 then (select gobernacion from gobernacion where numgob=pgcs.dependencia) end"})
     tabla = PgcsTable(query.order_by(col))
     config.configure(tabla)
     tabla.paginate(page=request.GET.get('page', 1), per_page=6)
-    return render_to_response('comunicacion/pgcs_consulta.html', {'formulario':formulario,'tabla':tabla,'aporte':'aporte',}, context_instance=RequestContext(request),)
+    return render_to_response('comunicacion/pgcs_consulta.html',
+        {'formulario':formulario,'tabla':tabla,'aporte':'aporte',},
+        context_instance=RequestContext(request),)
 
 ######################## MCCA INICIO ###############################################
 ####################################################################################

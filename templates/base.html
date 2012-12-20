@@ -74,7 +74,10 @@ table tr td{padding-left:10px;}
 <li class="opcion"><a href="{% url ogcs-mantenimiento-foro-add %}" data-toggle="modal">Foro</a></li>
 <li class="opcion"><a href="{% url ogcs-mantenimiento-tema-add %}" data-toggle="modal">Tema</a></li>
 		  <li class="opcion"><a href="{% url ogcs-mantenimiento-usuario-add 1 %}" data-toggle="modal">Usuario</a></li>
-                  <li class="opcion"><a href="{% url ogcs-mantenimiento-usuario-add 2 %}" data-toggle="modal">Administrador</a></li>
+                  <li class="opcion">
+                    <a href="{% url ogcs-mantenimiento-usuario-add 2 %}" data-toggle="modal">Administrador</a></li>
+                  <li class="opcion">
+                    <a href="{% url ogcs-usuario-auditoria %}" data-toggle="modal">Auditoria</a></li>
                 </ul></li>
             {% endif %}<!--data-content="Los OAC se utilizan para..." rel="popover" data-original-title="Organigrama del Área de Comunicaciones"  rel="tooltip" data-original-title="first tooltip"  <div class="popover-content"><p></p></div>--> 
             <li class="dropdown principal"><a class="dropdown-toggle menublanco" data-toggle="dropdown" data-content="Los OAC se utilizan para..." rel="popover" data-original-title="Organigrama del Área de Comunicaciones" href="">OAC<b class="caret"></b></a>
