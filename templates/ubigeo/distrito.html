@@ -74,11 +74,8 @@ function get_provincias(){
     var id = region.val();
     $.getJSON('/ubigeo/provincia/json/?r='+id, function(data){
         $.each(data, function(key,value){
-                    /*if(value.fields.numpro==idpro){
-            provincia.append("<option value='"+value.fields.numpro+"' selected='selected'>"+value.fields.provincia+"</option>");select=false;
-            }else{*/
+            provincia.html("<option value>--ELEGIR--</option>");
             provincia.append("<option value='"+value.fields.numpro+"'>"+value.fields.provincia+"</option>");
-            //}
         });
 	});
 }

@@ -150,9 +150,17 @@ def jsonprovincia(request):
 
 @login_required
 def distritoadd(request):
+    profile = Usuario.objects.get(user = request.user)
     mensaje=""
     if request.method == 'POST':
-        frmdistrito = DistritoForm()
+        num = Distrito.objects.values("numdis").order_by("-numdis")[:1]
+        num = 1 if len(num)==0 else int(num[0]["numdis"])+1
+        distrito = Distrito(numdis=num,estado=Estado.objects.get(pk=1),idusuario_creac=profile.numero)
+        frmdistrito = DistritoForm(request.POST, instance=distrito)
+        if frmdistrito.is_valid():
+            frmdistrito.save()
+            frmdistrito = DistritoForm()
+            mensaje="Registro grabado satisfactoriamente"
     else:
         frmdistrito = DistritoForm()
     return render_to_response('ubigeo/distrito.html', {'frmdistrito': frmdistrito, 'opcion':'add', 'mensaje':mensaje}, context_instance=RequestContext(request),)

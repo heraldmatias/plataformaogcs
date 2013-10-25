@@ -56,7 +56,7 @@ class ProvinciaForm(forms.ModelForm):
 
 class DistritoForm(forms.ModelForm):
 
-    provincia = forms.ChoiceField(choices=list(), label='Provincia')
+    provincia = forms.ChoiceField(label='Provincia')
 
     class Meta:
         model = Distrito

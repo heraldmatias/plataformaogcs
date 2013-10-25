@@ -50,9 +50,10 @@ class Provincia(models.Model):
 class Distrito(models.Model):
     codigo = models.AutoField(verbose_name='Codigo', primary_key=True)
     numdis = models.IntegerField(verbose_name='Numero del distrito', unique=True)
-    provincia = models.ForeignKey(Provincia, verbose_name='Provincia', max_length=70, to_field='numpro' )
+    provincia = models.IntegerField(verbose_name='Provincia', max_length=70 )
     region = models.ForeignKey(Region, verbose_name='Región', max_length=70, to_field='numreg')
     distrito = models.CharField(verbose_name='Distrito', max_length=70,)
+    estado = models.ForeignKey(Estado, verbose_name='Estado')
     idusuario_creac = models.IntegerField(verbose_name='Numero del Usuario de creación', blank=True, null=True)
     fec_creac = models.DateTimeField(verbose_name='Fecha de creación del registro', auto_now_add=True, blank=True, null=True)
     idusuario_mod = models.IntegerField(verbose_name='Numero del Usuario de modificación', blank=True, null=True)
