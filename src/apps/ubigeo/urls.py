@@ -11,4 +11,5 @@ urlpatterns = patterns('ubigeo.views',
     url(r'^provincia/edit/(?P<codigo>\d+)/$','provinciaedit', name='ogcs-mantenimiento-provincia-edit'),
     url(r'^provincia/consulta/$','provinciaquery', name='ogcs-mantenimiento-provincia-consulta'),
     url(r'^provincia/json/$','jsonprovincia', name='ogcs-provincia-jsonprovincia'),
+    url(r'^distrito/add/$', 'distritoadd', name='ogcs-mantenimiento-distrito-add'),
 )

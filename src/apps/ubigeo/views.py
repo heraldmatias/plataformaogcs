@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 from django.shortcuts import render_to_response, redirect
-from forms import RegionForm, ProvinciaForm, ConsultaRegionForm, RegionTable, ConsultaProvinciaForm, ProvinciaTable
+from forms import RegionForm, ProvinciaForm, ConsultaRegionForm, RegionTable, ConsultaProvinciaForm, ProvinciaTable, DistritoForm
 from django.template import RequestContext
 from usuario.models import Usuario, Estado
-from models import Region, Provincia
+from models import Region, Provincia, Distrito
 from django.contrib.auth.decorators import login_required
 from django.core import serializers
 from django.shortcuts import get_object_or_404
@@ -147,3 +147,12 @@ def jsonprovincia(request):
     else:
         provincias = {}
     return HttpResponse(serializers.serialize("json", provincias, ensure_ascii=False),mimetype='application/json')
+
+@login_required
+def distritoadd(request):
+    mensaje=""
+    if request.method == 'POST':
+        frmdistrito = DistritoForm()
+    else:
+        frmdistrito = DistritoForm()
+    return render_to_response('ubigeo/distrito.html', {'frmdistrito': frmdistrito, 'opcion':'add', 'mensaje':mensaje}, context_instance=RequestContext(request),)

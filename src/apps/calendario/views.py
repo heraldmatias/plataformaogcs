@@ -25,7 +25,7 @@ def eventoadd(request, codigo=None):
             if codigo:
                 evento.idusuario_mod = request.user.get_profile()
                 evento.fec_mod = datetime.today()                
-                insert_or_update_event(evento,url_edit)                
+                insert_or_update_event(evento,url_edit)
                 
                 return redirect('ogcs-mantenimiento-evento-query') 
             else:
@@ -34,7 +34,7 @@ def eventoadd(request, codigo=None):
                 evento.fec_creac = datetime.today()
                 evento.organismo_id = evento.idusuario_creac.organismo_id
                 evento.dependencia = evento.idusuario_creac.dependencia
-                insert_or_update_event(evento)                
+                insert_or_update_event(evento)
             form = EventoForm()
     else:        
         form = EventoForm(instance = evento)

@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from django import forms
-from models import Region, Provincia
+from models import Region, Provincia, Distrito
 import django_tables2 as tables
 from django_tables2.utils import A
 
@@ -53,3 +53,11 @@ class ProvinciaForm(forms.ModelForm):
         model = Provincia
         exclude = ('numpro','idusuario_creac','idusuario_mod',)
 
+
+class DistritoForm(forms.ModelForm):
+
+    provincia = forms.ChoiceField(choices=list(), label='Provincia')
+
+    class Meta:
+        model = Distrito
+        exclude = ('numdis', 'idusuario_creac', 'idusuario_mod')
