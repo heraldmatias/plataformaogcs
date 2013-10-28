@@ -90,7 +90,7 @@ def get_user_permissions():
     permisos = Permission.objects.filter(name__contains='PGCS').exclude(name__contains='APORTE')
     for permiso in permisos: 
         perms.append(permiso)
-    perms.append(Permission.objects.get(codename='query_pgcs_aporte',content_type__id=21))
+    #perms.append(Permission.objects.get(codename='query_pgcs_aporte',content_type__id=21))
     #Modulo MCCA
     permisos = Permission.objects.filter(content_type__id=23)
     for permiso in permisos: 
