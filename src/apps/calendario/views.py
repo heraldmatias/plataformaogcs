@@ -39,7 +39,7 @@ def eventoadd(request, codigo=None):
     else:        
         form = EventoForm(instance = evento)
     return render_to_response('calendar/actividad.html',{'form':form,
-        'opcion':'add','codigo':codigo},context_instance=RequestContext(request))
+        'opcion':'add','codigo':codigo,'evento': evento if evento else ''},context_instance=RequestContext(request))
 
 
 def eventoquery(request):

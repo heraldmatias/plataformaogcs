@@ -105,6 +105,9 @@
             $.each(data, function(key,value){
                 provincia.append("<option value='"+value.fields.numpro+"'>"+value.fields.provincia+"</option>");
             });
+            {% if evento %}
+                provincia.val('{{ evento.provincia.numpro }}');
+            {% endif %}
             get_distritos();
       });
     }
@@ -118,6 +121,9 @@
         $.each(data, function(key,value){
           distrito.append("<option value='"+value.fields.numdis+"'>"+value.fields.distrito+"</option>");
         });
+        {% if evento %}
+            distrito.val('{{ evento.distrito.numdis }}');
+        {% endif %}
       });
     }
 
