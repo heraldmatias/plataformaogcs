@@ -8,6 +8,7 @@ import gdata.calendar.client
 import atom
 import random 
 from models import Evento
+from ubigeo.models import Region, Provincia, Distrito
 from datetime import datetime
 from django.utils.safestring import mark_safe
 email = "plataformaintersectorial@gmail.com"
@@ -78,18 +79,24 @@ def insert_or_update_event(evento, url_edit=None):
     event.title = atom.data.Title(text=u'%s: %s' %
         (evento.idusuario_creac.get_dependencia().iniciales, evento.titulo))
     event.content = atom.data.Content(text=evento.descripcion)
-    event.where.append(gdata.calendar.data.CalendarWhere(value=evento.lugar))
+    event.where.append(gdata.calendar.data.CalendarWhere(value=u'%s - %s - %s / %s' % 
+                        (Region.objects.get(numreg=evento.region.pk).region,
+                        Provincia.objects.get(numpro=evento.provincia.pk).provincia,
+                        Distrito.objects.get(numdis=evento.distrito.pk).distrito, 
+                        evento.lugar)))
     event.color = gdata.calendar.data.ColorProperty(value='#000000')
     
     start_time = time.strftime('%Y-%m-%dT%H:%M:%S.000Z',
         time.gmtime(time.mktime(datetime.combine(evento.fec_inicio, evento.hor_inicio).timetuple())))
-    end_time = time.strftime('%Y-%m-%dT%H:%M:%S.000Z',
-        time.gmtime(time.mktime(datetime.combine(evento.fec_termin, evento.hor_termin).timetuple())))
+    #end_time = time.strftime('%Y-%m-%dT%H:%M:%S.000Z',
+    #    time.gmtime(time.mktime(datetime.combine(evento.fec_termin, evento.hor_termin).timetuple())))
+    
     #end_time = datetime.combine(f, h).strftime('%Y-%m-%dT%H:%M:%S.000Z')
     #start_time2 = time.strftime('%Y-%m-%dT%H:%M:%S.000Z', time.gmtime())
     
     #end_time = time.strftime('%Y-%m-%dT%H:%M:%S.000Z', time.gmtime(time.time() + 3600))
-    event.when.append(gdata.calendar.data.When(start=start_time, end=end_time))
+    #event.when.append(gdata.calendar.data.When(start=start_time, end=end_time))
+    event.when.append(gdata.calendar.data.When(start=start_time))
 
     new_event = calendar_client.InsertEvent(event,calendar)
     evento.url_edit = new_event.GetEditLink().href    
@@ -149,10 +156,11 @@ def _InsertEvent(cal_client, title='Tennis with Beth',
         if start_time is None:
         # Use current time for the start_time and have the event last 1 hour
             start_time = time.strftime('%Y-%m-%dT%H:%M:%S.000Z', time.gmtime())
-            end_time = time.strftime('%Y-%m-%dT%H:%M:%S.000Z',
-                                     time.gmtime(time.time() + 3600))
-        event.when.append(gdata.data.When(start=start_time,
-                                          end=end_time))    
+            #end_time = time.strftime('%Y-%m-%dT%H:%M:%S.000Z',
+            #                         time.gmtime(time.time() + 3600))
+        #event.when.append(gdata.data.When(start=start_time,
+        #                                  end=end_time))    
+        event.when.append(gdata.data.When(start=start_time))    
     new_event = cal_client.InsertEvent(event)
     return new_event
 

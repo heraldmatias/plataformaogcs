@@ -37,9 +37,18 @@
         {{ form.fec_inicio.errors }}
       <div class="span2"><label>Fecha Inicio:</label></div> <div class="span2"><label class="input-append date" style="display:inline" id="dp1" data-date-format="dd/mm/yyyy" > {{ form.fec_inicio }}</label> </div>
       <div class="span2"> {{ form.hor_inicio }} </div>
-        {{ form.fec_termin.errors }}
-      <div class="span2" style="margin-left:30px;"><label >Fecha Final:</label></div> <div class="span2"><label class="input-append date" style="display:inline" id="dp2" data-date-format="dd/mm/yyyy" > {{ form.fec_termin }}</label> </div>
-      <div class="span2"> {{ form.hor_termin }} </div> </div><br>
+      <br><br><br>
+      <!-- ULTIMO AGREGADO -->
+      {{ form.region.errors }}
+      <div class="row-fluid">
+      <div class="span2">{{ form.region.label_tag }}:</div><div class="span9">{{ form.region }}</div></div><br>
+      <div class="row-fluid">
+      <div class="span2">{{ form.provincia.label_tag }}:</div><div class="span9">{{ form.provincia }}</div></div><br>
+      <div class="row-fluid">
+      <div class="span2">{{ form.distrito.label_tag }}:</div><div class="span9">{{ form.distrito }}</div></div>
+      <br>
+      </div>
+      <!-- FIN DE ULTIMO AGREGADO -->
       {{ form.lugar.errors }}
       <div class="row-fluid">        
       <div class="span2">{{ form.lugar.label_tag }}:</div><div class="span9">{{ form.lugar }}</div></div><br>
@@ -59,6 +68,10 @@
   <script src="{{ STATIC_URL }}bootstrap/datepicker/js/bootstrap-timepicker.js" type="text/javascript"></script>
   <script type="text/javascript">
   $(document).ready(function() {
+    
+    get_provincias();
+    get_distritos();
+
     $('#id_fec_inicio').datepicker({
         format: 'dd/mm/yyyy',
         autoclose: true,
@@ -77,6 +90,36 @@
       showMeridian: false,
       defaultTime: 'value'
     });   
-   }); 
+   });
+   
+   comboelegir('id_distrito');
+   comboelegir('id_provincia');
+   comboelegir('id_region');
+
+   function get_provincias(){
+        var provincia = $("#id_provincia");
+        var region = $("#id_region");
+        var id = region.val();
+        $.getJSON('/ubigeo/provincia/json/?r='+id, function(data){
+            provincia.html("<option value>--ELEGIR--</option>");
+            $.each(data, function(key,value){
+                provincia.append("<option value='"+value.fields.numpro+"'>"+value.fields.provincia+"</option>");
+            });
+            get_distritos();
+      });
+    }
+
+    function get_distritos(){
+      var region = $("#id_region");
+      var provincia = $("#id_provincia");
+      var distrito = $("#id_distrito");
+      $.getJSON('/ubigeo/distrito/json/?r='+region.val()+'&p='+provincia.val(), function(data){
+        distrito.html("<option value>--ELEGIR--</option>");
+        $.each(data, function(key,value){
+          distrito.append("<option value='"+value.fields.numdis+"'>"+value.fields.distrito+"</option>");
+        });
+      });
+    }
+
   </script>
 {% endblock %}

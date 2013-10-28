@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 from django.shortcuts import render_to_response, redirect
-from forms import RegionForm, ProvinciaForm, ConsultaRegionForm, RegionTable, ConsultaProvinciaForm, ProvinciaTable, DistritoForm
+from forms import (RegionForm, ProvinciaForm, ConsultaRegionForm, 
+                    RegionTable, ConsultaProvinciaForm, ProvinciaTable, 
+                    DistritoForm, ConsultaDistritoForm, DistritoTable)
 from django.template import RequestContext
 from usuario.models import Usuario, Estado
 from models import Region, Provincia, Distrito
@@ -148,6 +150,16 @@ def jsonprovincia(request):
         provincias = {}
     return HttpResponse(serializers.serialize("json", provincias, ensure_ascii=False),mimetype='application/json')
 
+@login_required()
+def jsondistrito(request):
+    if request.GET['r'] and request.GET['p']:
+        distritos = Distrito.objects.filter(
+            region = Region.objects.get(numreg = request.GET['r']),
+            provincia = Provincia.objects.get(numpro = request.GET['p'])).order_by('distrito')
+    else:
+        distritos = {}
+    return HttpResponse(serializers.serialize("json", distritos, ensure_ascii=False),mimetype='application/json')
+
 @login_required
 def distritoadd(request):
     profile = Usuario.objects.get(user = request.user)
@@ -158,9 +170,56 @@ def distritoadd(request):
         distrito = Distrito(numdis=num,estado=Estado.objects.get(pk=1),idusuario_creac=profile.numero)
         frmdistrito = DistritoForm(request.POST, instance=distrito)
         if frmdistrito.is_valid():
-            frmdistrito.save()
+            dist = frmdistrito.save(commit=False)
+            dist.provincia_id = request.POST['provincia']
+            print dist.__dict__
+            dist.save()
             frmdistrito = DistritoForm()
             mensaje="Registro grabado satisfactoriamente"
     else:
         frmdistrito = DistritoForm()
     return render_to_response('ubigeo/distrito.html', {'frmdistrito': frmdistrito, 'opcion':'add', 'mensaje':mensaje}, context_instance=RequestContext(request),)
+
+@login_required
+def distritoquery(request):
+    col  = "-distrito"
+    if "2-sort" in request.GET:
+        col = request.GET['2-sort']
+    config = RequestConfig(request)
+    consultadistritoform = ConsultaDistritoForm(request.GET)
+    if 'region' in request.GET and 'provincia' in request.GET and 'distrito' in request.GET:
+        print 'paso uno'
+        if request.GET['region'] and request.GET['provincia'] and request.GET['distrito']:
+            distritos = Distrito.objects.filter(distrito__icontains=request.GET['distrito'], provincia=request.GET['provincia'], region=request.GET['region']).order_by(col)
+        elif request.GET['region'] and request.GET['provincia']:
+            distritos = Distrito.objects.filter(provincia=request.GET['provincia'], region=request.GET['region']).order_by(col)
+        elif request.GET['region'] and request.GET['distrito']:
+            distritos = Distrito.objects.filter(distrito__icontains=request.GET['distrito'], region=request.GET['region']).order_by(col)     
+        elif request.GET['region']:
+            distritos = Distrito.objects.filter(region=request.GET['region']).order_by(col)
+        elif request.GET['distrito']:
+            distritos = Distrito.objects.filter(distrito__icontains=request.GET['distrito']).order_by(col)     
+        else:
+            distritos = Distrito.objects.all().order_by(col)
+    else:
+        distritos = Distrito.objects.all().order_by(col)
+    tbldistritos = DistritoTable(distritos.order_by(col))
+    config.configure(tbldistritos)
+    tbldistritos.paginate(page=request.GET.get('page',1), per_page=6)
+    return render_to_response('ubigeo/distrito_consulta.html', {'consultadistritoform':consultadistritoform,'tabla':tbldistritos,'mensaje':(request.GET['m'] if 'm' in request.GET else '')}, context_instance=RequestContext(request),)
+
+@login_required
+def distritoedit(request, codigo):
+
+    if request.method == 'POST':
+        profile = Usuario.objects.get(user = request.user)
+        distrito = Distrito.objects.get(numdis=int(codigo))
+        distrito.idusuario_mod=profile.numero
+        frmdistrito = DistritoForm(request.POST, instance=distrito)
+        if frmdistrito.is_valid():
+            frmdistrito.save()
+            return redirect(reverse('ogcs-mantenimiento-distrito-consulta')+'?m=edit')
+    else:
+        distrito = get_object_or_404(Distrito, numdis=int(codigo))
+        frmdistrito = DistritoForm(instance=distrito)
+    return render_to_response('ubigeo/distrito.html', {'frmdistrito':frmdistrito, 'opcion':'edit','codigo':codigo, 'provincia':distrito.provincia.pk}, context_instance=RequestContext(request))

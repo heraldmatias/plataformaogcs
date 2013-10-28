@@ -9,9 +9,9 @@
 {% endif %}
 <ul class="nav nav-tabs">
  {% if opcion == "add" %}
-    <li class="active"><a href="{% url ogcs-mantenimiento-provincia-add %}">Nuevo</a></li>{% else %}
+    <li class="active"><a href="{% url ogcs-mantenimiento-distrito-add %}">Nuevo</a></li>{% else %}
     <li class="active"><a href="{% url ogcs-mantenimiento-provincia-edit codigo %}">Modificar</a></li>{% endif %}
-    <li><a href="{% url  ogcs-mantenimiento-provincia-consulta %}" >Consultar</a></li>
+    <li><a href="{% url ogcs-mantenimiento-distrito-consulta %}" >Consultar</a></li>
 </ul>
 <div class="tab-content" id="contenido_izq">
 <div id="nuevo" class="tab-pane fade in active">
@@ -32,7 +32,6 @@
       {{ frmdistrito.region.errors }}
       <div class="row-fluid">
       <div class="span2">{{ frmdistrito.region.label_tag }}:</div> {{ frmdistrito.region }}</div><p></p>
-      {{ frmdistrito.provincia.errors }}
       <div class="row-fluid">
       <div class="span2">{{ frmdistrito.provincia.label_tag }}:</div> {{ frmdistrito.provincia }}</div><p></p>
       {{ frmdistrito.distrito.errors }}
@@ -59,13 +58,13 @@
   {% endblock %}
   {% block scriptjs %}    
 <script>
+
 validaletra('id_distrito');
 comboelegir('id_region');
+comboelegir('id_provincia');
 
 $(document).ready(function(){
-    $('#id_region').change(function(){
-        get_provincias();
-    })
+    get_provincias();
 })
 
 function get_provincias(){
@@ -73,10 +72,14 @@ function get_provincias(){
     var region = $("#id_region");
     var id = region.val();
     $.getJSON('/ubigeo/provincia/json/?r='+id, function(data){
+        provincia.html("<option value>--ELEGIR--</option>");
         $.each(data, function(key,value){
-            provincia.html("<option value>--ELEGIR--</option>");
             provincia.append("<option value='"+value.fields.numpro+"'>"+value.fields.provincia+"</option>");
         });
+        {% if opcion == "edit"%}
+        provincia.val('{{provincia}}')
+        {% endif %}
+        
 	});
 }
 

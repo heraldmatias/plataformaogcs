@@ -46,26 +46,35 @@ def eventoquery(request):
     form = EventoConsultaForm(request.GET)
     usuario = request.user.get_profile()
     query = Evento.objects.all()
-    if 'fechaini' in request.GET and 'fechafin' in request.GET:
+    if 'fechaini' in request.GET:
         start_date = None
-        end_date = None
         try:
             start_date = ((request.GET['fechaini']) and
                 datetime.strptime(request.GET['fechaini'],"%d/%m/%Y") or None)
-            end_date = ((request.GET['fechafin']) and
-                datetime.strptime(request.GET['fechafin'],"%d/%m/%Y") or None)
         except:
             pass
-        if start_date and end_date:
-            query = query.filter(fec_inicio__gte=start_date, fec_termin__lte= end_date)
-        elif start_date:
-            query = query.filter(fec_inicio__gte=start_date)
-        elif end_date:
-            query = query.filter(fec_termin__lte=end_date)
+        if start_date:
+            query = query.filter(fec_inicio=start_date)
+        #if start_date and end_date:
+        #    query = query.filter(fec_inicio__gte=start_date, fec_termin__lte= end_date)
+        #elif start_date:
+        #    query = query.filter(fec_inicio__gte=start_date)
+        #elif end_date:
+        #    query = query.filter(fec_termin__lte=end_date)
     if request.GET.get('titulo'):
         query = query.filter(titulo__icontains=request.GET.get('titulo'))
-    query = query.filter(organismo__codigo = usuario.organismo_id,
-    	dependencia=usuario.dependencia)
+    if request.GET.get('organismo') and request.GET.get('dependencia'):
+        query = query.filter(organismo__codigo = request.GET.get('organismo'), dependencia = request.GET.get('dependencia'))
+    if request.GET.get('organismo'):
+        query = query.filter(organismo__codigo = request.GET.get('organismo'))
+    if request.GET.get('region') and request.GET.get('provincia') and request.GET.get('distrito'):
+        query = query.filter(region__numreg = request.GET.get('region'), provincia__numpro = request.GET.get('provincia'), distrito__numdis = request.GET.get('distrito'))
+    elif request.GET.get('region') and request.GET.get('provincia'):
+        query = query.filter(region__numreg = request.GET.get('region'), provincia__numpro = request.GET.get('provincia'))
+    elif request.GET.get('region'):
+        query = query.filter(region__numreg = request.GET.get('region'))
+    #query = query.filter(organismo__codigo = usuario.organismo_id,
+    #	dependencia=usuario.dependencia)
     table_eventos = EventoTable(query)
     config = RequestConfig(request,paginate={"per_page": 10})
     config.configure(table_eventos)

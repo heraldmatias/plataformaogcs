@@ -56,8 +56,38 @@ class ProvinciaForm(forms.ModelForm):
 
 class DistritoForm(forms.ModelForm):
 
-    provincia = forms.ChoiceField(label='Provincia')
+    def __init__(self, *args, **kwargs):
+        super(DistritoForm, self).__init__(*args, **kwargs)
+        self.fields.keyOrder = ['region', 'provincia', 'distrito', 'estado']
 
     class Meta:
         model = Distrito
         exclude = ('numdis', 'idusuario_creac', 'idusuario_mod')
+        widgets = {
+            'region': forms.Select(attrs={'onChange':'get_provincias();',}),
+        }
+
+class ConsultaDistritoForm(forms.ModelForm):
+    distrito = forms.CharField(label="Digite el texto de busqueda",required=False)
+    class Meta:
+        model = Distrito
+        fields = ('region','provincia','distrito')
+        widgets = {
+            'region': forms.Select(attrs={'onChange':'get_provincias();',}),
+        }
+
+class DistritoTable(tables.Table):
+    item = tables.Column()
+    region = tables.Column(verbose_name="Región",orderable=True)
+    provincia = tables.Column(verbose_name="Provincia",orderable=True)
+    distrito = tables.LinkColumn('ogcs-mantenimiento-distrito-edit', args=[A('numdis')],orderable=True)
+    estado = tables.Column()    
+
+    def render_item(self):
+        value = getattr(self, '_counter', 1)
+        self._counter = value + 1
+        return '%d' % value
+
+    class Meta:
+        attrs = {"class": "table table-bordered table-condensed table-striped"}
+        orderable = False

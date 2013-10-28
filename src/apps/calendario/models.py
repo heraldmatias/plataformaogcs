@@ -6,17 +6,21 @@ from usuario.models import Organismo, Usuario
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from datetime import datetime
+from ubigeo.models import Region, Provincia, Distrito
 class Evento(models.Model):
     codigo = models.AutoField(primary_key=True, db_index=True)
     organismo = models.ForeignKey(Organismo, verbose_name='Organismo')
     dependencia = models.IntegerField(verbose_name='Dependencia',)
     titulo = models.CharField(verbose_name='Titulo', max_length=200)
     descripcion = models.TextField()
+    region = models.ForeignKey(Region, verbose_name=u'Región')
+    provincia = models.ForeignKey(Provincia, verbose_name='Provincia')
+    distrito = models.ForeignKey(Distrito, verbose_name='Distrito')
     lugar = models.CharField(max_length=200)
     fec_inicio = models.DateField(default=datetime.today())
     hor_inicio = models.TimeField()
-    fec_termin = models.DateField(default=datetime.today())
-    hor_termin =  models.TimeField()
+    fec_termin = models.DateField(null=True, blank=True)
+    hor_termin =  models.TimeField(null=True, blank=True)
     url_edit = models.CharField(max_length=300, null=True, blank=True)
     idusuario_creac = models.ForeignKey(Usuario,verbose_name='Usuario creador',
     	related_name='ucreador')    

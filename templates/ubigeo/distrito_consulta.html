@@ -1,0 +1,75 @@
+  {% extends 'base.html' %}
+  {% load static %}
+  {% block title %} Plataforma Intersectorial de Comunicaci&oacute;n OGCS {% endblock %}
+  {% block content %}  
+  {% load render_table from django_tables2 %}
+{% if mensaje %}
+<h4><div class="alert alert-success"><a class="close" data-dismiss="alert">×</a><strong>Mensaje:</strong>
+<p>Registro modificado satisfactoriamente.</p></div></h4>
+{% endif %}
+<ul class="nav nav-tabs">
+    <li ><a href="{% url ogcs-mantenimiento-distrito-add %}">Nuevo</a></li>
+    <li class="active"><a href="{% url ogcs-mantenimiento-distrito-consulta %}" >Consultar</a></li>
+</ul>
+<div class="tab-content" id="contenido_izq">
+<div id="nuevo" class="tab-pane fade in active">
+<form class="form-inline" name="frmreg" method="get" action="{% url ogcs-mantenimiento-distrito-consulta %}"><!--data-toggle="modal"-->
+<div id="frmregion" class="modal" style="position: relative; top: auto; left: auto; margin: 0 auto auto 20px; z-index: 1;width:720px;height:auto"><!--class="modal hide fade">-->
+    <div class="modal-header">
+      <a class="close" data-dismiss="modal" href="javascript: cerrarformulario('contenido');">&times;</a>
+      <h3>Consulta de Distritos</h3>
+    </div>
+    <div class="modal-body">
+      <div class="row-fluid">
+      {% for campo in consultadistritoform %}
+      <div class="row-fluid">
+        <div class="span3" >
+        {% if campo.label == "Región" %}
+          <label for="id_region">Elija la Región</label>:
+        {% else %}
+        {{ campo.label_tag }}:
+        {% endif %}
+        </div>
+      <div class="span4" > {{ campo }}</div>
+      {% if campo.label == "Digite el texto de busqueda" %} <div class="span2"><input class="btn-primary" name="grabar" value="Consultar" type="submit"></div><div class="span1"><a class="btn btn-primary" href="javascript: imprimir();">Imprimir</a> </div>{% endif %}</div><p></p>
+      {% endfor %} </div>
+      <fieldset>
+	<legend><h4>Lista de distritos</h4></legend>
+      {% render_table tabla %}    
+      </fieldset>
+    </div>
+    <div class="modal-footer">
+     <input class="btn" name="grabar" value="Cerrar" type="button" onclick="cerrarformulario('contenido');">      
+    </div>
+</div>
+</form>
+</div></div>
+  {% endblock %}
+  {% block scriptjs %}    
+<script>
+$(document).ready(function(){
+  get_provincias();
+});
+
+function get_provincias(){
+    var provincia = $("#id_provincia");
+    var region = $("#id_region");
+    var id = region.val();
+    $.getJSON('/ubigeo/provincia/json/?r='+id, function(data){
+        provincia.html("<option value>--ELEGIR--</option>");
+        $.each(data, function(key,value){
+            provincia.append("<option value='"+value.fields.numpro+"'>"+value.fields.provincia+"</option>");
+        });
+  });
+}
+
+function imprimir(){
+var region=$('#id_region').val();
+var provin=$('#id_provincia').val();
+var url="{% url  ogcs-mantenimiento-provincia-print %}?region="+region+"&provincia="+provin;
+location.href=url;
+}
+combotodos('id_region');
+validaletra('id_distrito');
+</script>
+  {% endblock %}
