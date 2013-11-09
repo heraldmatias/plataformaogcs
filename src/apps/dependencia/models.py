@@ -61,8 +61,8 @@ class Odp(models.Model):
 class Gobernacion(models.Model):
     codigo = models.AutoField(verbose_name='Codigo', primary_key=True)
     numgob = models.IntegerField(verbose_name='Numero', unique=True)
-    region = models.ForeignKey(Region, verbose_name='Region', to_field='numreg',)
-    provincia = models.ForeignKey(Provincia, verbose_name='Provincia', to_field='numpro')
+    region = models.ForeignKey(Region, verbose_name='Region')
+    provincia = models.ForeignKey(Provincia, verbose_name='Provincia')
     gobernacion = models.CharField(verbose_name='Gobernación', max_length=70,unique=True)
     iniciales = models.CharField(verbose_name='Iniciales', max_length=15,unique=True) 
     estado = models.ForeignKey(Estado, verbose_name='Estado')

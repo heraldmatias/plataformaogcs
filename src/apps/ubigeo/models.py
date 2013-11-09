@@ -5,7 +5,8 @@ from usuario.models import Estado
 
 class Region(models.Model):
     codigo = models.AutoField(verbose_name='Codigo', primary_key=True)
-    numreg = models.IntegerField(verbose_name='Numero de la región', unique=True)
+    #numreg = models.IntegerField(verbose_name='Numero de la región', unique=True)
+    numreg = models.IntegerField(verbose_name='Numero de la región')
     region = models.CharField(verbose_name='Región',unique=True, max_length=70)
     estado = models.ForeignKey(Estado, verbose_name='Estado',)
     idusuario_creac = models.IntegerField(verbose_name='Numero del Usuario de creación')
@@ -26,8 +27,9 @@ class Region(models.Model):
 
 class Provincia(models.Model):
     codigo = models.AutoField(verbose_name='Codigo', primary_key=True)
-    numpro = models.IntegerField(verbose_name='Numero de la provincia', unique=True)
-    region = models.ForeignKey(Region, verbose_name='Región', max_length=70, to_field='numreg')
+    #numpro = models.IntegerField(verbose_name='Numero de la provincia', unique=True)
+    numpro = models.IntegerField(verbose_name='Numero de la provincia')
+    region = models.ForeignKey(Region, verbose_name='Región', max_length=70, related_name='fpr')
     provincia = models.CharField(verbose_name='Provincia', max_length=70,)
     estado = models.ForeignKey(Estado, verbose_name='Estado')
     idusuario_creac = models.IntegerField(verbose_name='Numero del Usuario de creación', blank=True, null=True)
@@ -49,9 +51,10 @@ class Provincia(models.Model):
 
 class Distrito(models.Model):
     codigo = models.AutoField(verbose_name='Codigo', primary_key=True)
-    numdis = models.IntegerField(verbose_name='Numero del distrito', unique=True)
-    provincia = models.ForeignKey(Provincia, verbose_name='Provincia', max_length=70, to_field='numpro')
-    region = models.ForeignKey(Region, verbose_name='Región', max_length=70, to_field='numreg')
+    #numdis = models.IntegerField(verbose_name='Numero del distrito', unique=True)
+    numdis = models.IntegerField(verbose_name='Numero del distrito')
+    provincia = models.ForeignKey(Provincia, verbose_name='Provincia', max_length=70)
+    region = models.ForeignKey(Region, verbose_name='Región', max_length=70, related_name='fdr')
     distrito = models.CharField(verbose_name='Distrito', max_length=70,)
     estado = models.ForeignKey(Estado, verbose_name='Estado')
     idusuario_creac = models.IntegerField(verbose_name='Numero del Usuario de creación', blank=True, null=True)

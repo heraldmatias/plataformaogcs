@@ -153,9 +153,7 @@ def jsonprovincia(request):
 @login_required()
 def jsondistrito(request):
     if request.GET['r'] and request.GET['p']:
-        distritos = Distrito.objects.filter(
-            region = Region.objects.get(numreg = request.GET['r']),
-            provincia = Provincia.objects.get(numpro = request.GET['p'])).order_by('distrito')
+        distritos = Distrito.objects.filter(region__numreg = request.GET['r'], provincia__numpro = request.GET['p']).order_by('distrito')
     else:
         distritos = {}
     return HttpResponse(serializers.serialize("json", distritos, ensure_ascii=False),mimetype='application/json')
@@ -189,21 +187,32 @@ def distritoquery(request):
     consultadistritoform = ConsultaDistritoForm(request.GET)
     if 'region' in request.GET and 'provincia' in request.GET and 'distrito' in request.GET:
         print 'paso uno'
+        print request.GET['region']
+        print request.GET['provincia']
         if request.GET['region'] and request.GET['provincia'] and request.GET['distrito']:
-            distritos = Distrito.objects.filter(distrito__icontains=request.GET['distrito'], provincia=request.GET['provincia'], region=request.GET['region']).order_by(col)
+            distritos = Distrito.objects.filter(distrito__icontains=request.GET['distrito'], provincia__numpro=request.GET['provincia'], region=request.GET['region']).order_by(col)
         elif request.GET['region'] and request.GET['provincia']:
-            distritos = Distrito.objects.filter(provincia=request.GET['provincia'], region=request.GET['region']).order_by(col)
+            distritos = Distrito.objects.filter(provincia__numpro=request.GET['provincia'], region__numreg=request.GET['region']).order_by(col)
         elif request.GET['region'] and request.GET['distrito']:
-            distritos = Distrito.objects.filter(distrito__icontains=request.GET['distrito'], region=request.GET['region']).order_by(col)     
+            distritos = Distrito.objects.filter(distrito__icontains=request.GET['distrito'], region__numreg=request.GET['region']).order_by(col)
         elif request.GET['region']:
-            distritos = Distrito.objects.filter(region=request.GET['region']).order_by(col)
+            distritos = Distrito.objects.filter(region__numreg=request.GET['region']).order_by(col)
         elif request.GET['distrito']:
             distritos = Distrito.objects.filter(distrito__icontains=request.GET['distrito']).order_by(col)     
         else:
             distritos = Distrito.objects.all().order_by(col)
     else:
         distritos = Distrito.objects.all().order_by(col)
-    tbldistritos = DistritoTable(distritos.order_by(col))
+
+    lista = list()
+    for d in distritos:
+        provincia = Provincia.objects.get(numpro=d.provincia_id, region=d.region)
+        dic = {'numdis': d.numdis, 'region': d.region, 'provincia': provincia.provincia, 'distrito': d.distrito, 'estado': d.estado }
+        lista.append(dic)
+
+    distritos = lista
+
+    tbldistritos = DistritoTable(distritos)
     config.configure(tbldistritos)
     tbldistritos.paginate(page=request.GET.get('page',1), per_page=6)
     return render_to_response('ubigeo/distrito_consulta.html', {'consultadistritoform':consultadistritoform,'tabla':tbldistritos,'mensaje':(request.GET['m'] if 'm' in request.GET else '')}, context_instance=RequestContext(request),)
