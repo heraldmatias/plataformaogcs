@@ -36,7 +36,7 @@ class RegionTable(tables.Table):
 class ProvinciaTable(tables.Table):
     item = tables.Column()
     region = tables.Column(verbose_name="Región",orderable=True)
-    provincia = tables.LinkColumn('ogcs-mantenimiento-provincia-edit', args=[A('numpro')],orderable=True)
+    provincia = tables.LinkColumn('ogcs-mantenimiento-provincia-edit', args=[A('region_id'), A('numpro')],orderable=True)
     estado = tables.Column()    
 
     def render_item(self):
@@ -80,7 +80,7 @@ class DistritoTable(tables.Table):
     item = tables.Column()
     region = tables.Column(verbose_name="Región",orderable=True)
     provincia = tables.Column(verbose_name="Provincia",orderable=True)
-    distrito = tables.LinkColumn('ogcs-mantenimiento-distrito-edit', args=[A('numdis')],orderable=True)
+    distrito = tables.LinkColumn('ogcs-mantenimiento-distrito-edit', args=[A('region.numreg'), A('provincia.numpro'), A('numdis')],orderable=True)
     estado = tables.Column()    
 
     def render_item(self):

@@ -106,7 +106,7 @@
                 provincia.append("<option value='"+value.fields.numpro+"'>"+value.fields.provincia+"</option>");
             });
             {% if evento %}
-                provincia.val('{{ evento.provincia.numpro }}');
+                provincia.val('{{ evento.provincia_id }}');
             {% endif %}
             get_distritos();
       });
@@ -122,7 +122,7 @@
           distrito.append("<option value='"+value.fields.numdis+"'>"+value.fields.distrito+"</option>");
         });
         {% if evento %}
-            distrito.val('{{ evento.distrito.numdis }}');
+            distrito.val('{{ evento.distrito_id }}');
         {% endif %}
       });
     }

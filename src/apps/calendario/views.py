@@ -68,11 +68,11 @@ def eventoquery(request):
     if request.GET.get('organismo'):
         query = query.filter(organismo__codigo = request.GET.get('organismo'))
     if request.GET.get('region') and request.GET.get('provincia') and request.GET.get('distrito'):
-        query = query.filter(region__numreg = request.GET.get('region'), provincia__numpro = request.GET.get('provincia'), distrito__numdis = request.GET.get('distrito'))
+        query = query.filter(region = request.GET.get('region'), provincia = request.GET.get('provincia'), distrito = request.GET.get('distrito'))
     elif request.GET.get('region') and request.GET.get('provincia'):
-        query = query.filter(region__numreg = request.GET.get('region'), provincia__numpro = request.GET.get('provincia'))
+        query = query.filter(region = request.GET.get('region'), provincia = request.GET.get('provincia'))
     elif request.GET.get('region'):
-        query = query.filter(region__numreg = request.GET.get('region'))
+        query = query.filter(region = request.GET.get('region'))
     #query = query.filter(organismo__codigo = usuario.organismo_id,
     #	dependencia=usuario.dependencia)
     table_eventos = EventoTable(query)

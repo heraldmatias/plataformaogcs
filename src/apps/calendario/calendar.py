@@ -79,10 +79,14 @@ def insert_or_update_event(evento, url_edit=None):
     event.title = atom.data.Title(text=u'%s: %s' %
         (evento.idusuario_creac.get_dependencia().iniciales, evento.titulo))
     event.content = atom.data.Content(text=evento.descripcion)
+    print 'por aca!! :D'
+    print evento.region_id
+    print evento.provincia_id
+    print evento.distrito_id
     event.where.append(gdata.calendar.data.CalendarWhere(value=u'%s - %s - %s / %s' % 
-                        (Region.objects.get(numreg=evento.region.pk).region,
-                        Provincia.objects.get(numpro=evento.provincia.pk).provincia,
-                        Distrito.objects.get(numdis=evento.distrito.pk).distrito, 
+                        (Region.objects.get(numreg=evento.region_id).region,
+                        Provincia.objects.get(region=evento.region_id, numpro=evento.provincia_id ).provincia,
+                        Distrito.objects.get(region=evento.region_id,provincia=evento.provincia_id, numdis=evento.distrito_id).distrito,
                         evento.lugar)))
     event.color = gdata.calendar.data.ColorProperty(value='#000000')
     
