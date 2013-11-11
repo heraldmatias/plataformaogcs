@@ -51,12 +51,12 @@ class CasoExitoForm(forms.ModelForm):
         model = CasoExito
         fields = ('descripcion','archivo','estado','fecha')
         widgets = {
-            'descripcion': forms.Textarea(attrs={'style':'width:90%','rows':'6'}),            
+            'descripcion': forms.Textarea(attrs={'style':'width:90%','rows':'6'}),
         }
 
 class ConsultaCeForm(forms.ModelForm):
-    fechaini = forms.DateField(label='Fecha Desde',widget=forms.TextInput(attrs={'style':'width:100px;',}))
-    fechafin = forms.DateField(label='Fecha Hasta',widget=forms.TextInput(attrs={'style':'width:100px;',}))
+    fechaini = forms.DateField(label='Fecha de registro',widget=forms.TextInput(attrs={'style':'width:100px;',}))
+    #fechafin = forms.DateField(label='Fecha Hasta',widget=forms.TextInput(attrs={'style':'width:100px;',}))
     class Meta:
         model = CasoExito
         fields = ('organismo','dependencia')
@@ -69,14 +69,14 @@ class CeTable(tables.Table):
     item = tables.Column(empty_values=())
     organismo = tables.Column(orderable=True)
     dependencia = tables.Column(orderable=True)
-    fecha = tables.DateColumn(format="d/m/Y",verbose_name='Fecha',orderable=True)
+    fecha = tables.DateColumn(format="d/m/Y",verbose_name='Fecha de Registro',orderable=True)
     descripcion = tables.TemplateColumn("{{ record.descripcion|truncatewords:10 }}")    
-    fec_creac = tables.DateColumn(format="d/m/Y H:i a",verbose_name='Fecha de Registro',orderable=True)
+    fec_creac = tables.DateColumn(format="d/m/Y H:i a",verbose_name='Fecha de creación',orderable=True)
     idusuario_creac = tables.Column(verbose_name='Usuario',)
     descargar = tables.TemplateColumn('<a href={% url ogcs-descarga record.archivo %}>Descargar</a>',verbose_name="Descargar")
-    modificar = tables.TemplateColumn("""{% if record.idusuario_creac_id == user.get_profile.numero %}
-        <a href={% url ogcs-mantenimiento-prensa-ce-edit record.codigo %}>Modificar</a>{% endif %}
-        """,verbose_name="Modificar")
+    #modificar = tables.TemplateColumn("""{% if record.idusuario_creac_id == user.get_profile.numero %}
+    #    <a href={% url ogcs-mantenimiento-prensa-ce-edit record.codigo %}>Modificar</a>{% endif %}
+    #    """,verbose_name="Modificar")
     def __init__(self, *args, **kwargs):
         super(CeTable, self).__init__(*args, **kwargs)
         self.counter = itertools.count(1)        

@@ -198,22 +198,24 @@ def query_caso_exito(request):
         if request.GET['dependencia']:            
             dependencia=request.GET['dependencia']
             query = query.filter(dependencia=request.GET['dependencia'])
-    if 'fechaini' in request.GET and 'fechafin' in request.GET:
+    if 'fechaini' in request.GET: #and 'fechafin' in request.GET:
         start_date = None
-        end_date = None
+        #end_date = None
         try:
             start_date = ((request.GET['fechaini']) and
                 datetime.strptime(request.GET['fechaini'],"%d/%m/%Y") or None)
-            end_date = ((request.GET['fechafin']) and
-                datetime.strptime(request.GET['fechafin'],"%d/%m/%Y") or None)
+            # end_date = ((request.GET['fechafin']) and
+            #     datetime.strptime(request.GET['fechafin'],"%d/%m/%Y") or None)
         except:
             pass
-        if start_date and end_date:
-            query = query.filter(fecha__range=(start_date, end_date))
-        elif start_date:
+        if start_date:
             query = query.filter(fecha__gte=start_date)
-        elif end_date:
-            query = query.filter(fecha__lte=end_date)    
+        # if start_date and end_date:
+        #     query = query.filter(fecha__range=(start_date, end_date))
+        # elif start_date:
+        #     query = query.filter(fecha__gte=start_date)
+        # elif end_date:
+        #     query = query.filter(fecha__lte=end_date)
     query = query.extra(select={'dependencia':"""case tbl_caso_exito.organismo_id when 1
          then (select ministerio from ministerio where nummin=tbl_caso_exito.dependencia) 
          when 2 then (select odp from odp where numodp=tbl_caso_exito.dependencia) 
