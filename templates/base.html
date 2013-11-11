@@ -151,8 +151,10 @@
                 <ul class="dropdown-menu">
                     <li><a href="{% url ogcs-mantenimiento-mcca-add %}" data-toggle="modal">Nuevo Matriz de Campaña de
                         Comunicaciones Anuales</a></li>
+                    {% if user.get_profile.organismo_id == 1 and user.get_profile.dependencia == 1 %}
                     <li><a href="{% url ogcs-mantenimiento-mcca-query %}" data-toggle="modal">Consultar Matriz de
                         Campaña de Comunicaciones Anuales</a></li>
+                    {% endif %}
                 </ul>
             </li>
             <li class="dropdown principal"><a class="dropdown-toggle menublanco" data-toggle="dropdown" rel="popover"

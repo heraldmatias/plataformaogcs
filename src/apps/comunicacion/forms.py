@@ -69,7 +69,7 @@ class PgcsTable(tables.Table):
     item = tables.Column()
     organismo = tables.Column(orderable=True)
     dependencia = tables.Column(orderable=True)
-    fec_creac = tables.Column(verbose_name='Fecha de Creación')
+    fec_creac = tables.Column(verbose_name='Fecha de Creación', orderable=True)
     usuario = tables.Column(verbose_name='Usuario')
     Descargar = tables.TemplateColumn('<a href={{ record.urlpgcs }}>Descargar</a>')
 
