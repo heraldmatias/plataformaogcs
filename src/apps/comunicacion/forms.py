@@ -299,24 +299,25 @@ class MccaTable(tables.Table):
 class MccForm(forms.ModelForm):
     class Meta:
         model = Mcc 
-        fields = ('nombremmc', 'nummcctipo', 'nummccestado',  'fechaini', 'fechafin','descripcionmcc', 'propuestamcc')
+        fields = ('nombremmc', 'nummcctipo',  'fechaini', 'fechafin','descripcionmcc', 'mensajes', 'cuestionamientos')
         widgets = {
             'nummcctipo': forms.Select(),
-            'nummccestado': forms.Select(),                        
             'fechaini': forms.TextInput(attrs={'size':'15'}),
             'fechafin': forms.TextInput(attrs={'size':'15'}),
             'descripcionmcc': forms.Textarea(attrs={'class':'span20','cols':'104'}),
-            'propuestamcc': forms.Textarea(attrs={'class':'span20','cols':'104'}),
+            'mensajes': forms.Textarea(attrs={'class':'span20','cols':'104'}),
+            'cuestionamientos': forms.Textarea(attrs={'class':'span20','cols':'104'}),
         }
         exclude = ('idusuario_creac', 'idusuario_mod', )
 
 class MccForm_Lugar(forms.ModelForm):
     class Meta:
         model = MccLugar
-        fields = ('region', 'provincia','lugar')
+        fields = ('region', 'provincia', 'distrito','lugar')
         widgets = {
-            'region': forms.Select(attrs={'onChange':'provincias(0);', }),
-            'provincia': forms.Select(),
+            'region': forms.Select(attrs={'onChange':'get_provincias();', }),
+            'provincia': forms.Select(attrs={'onChange':'get_distritos();', }),
+            'distrito': forms.Select(),
             'lugar': forms.TextInput(attrs={'style':'width:500px;'}),
         }
 
@@ -324,6 +325,7 @@ class MccForm_LugarTable(tables.Table):
     item = tables.Column()
     region = tables.TemplateColumn('<input type="hidden" name="col_reg" value="{{ record.region_id }}">{{ record.region }}')
     provincia = tables.TemplateColumn('<input type="hidden" name="col_pro" value="{{ record.provincia_id }}">{{ record.provincia }}')
+    distrito = tables.TemplateColumn('<input type="hidden" name="col_dis" value="{{ record.distrito_id }}">{{ record.distrito }}')
     lugar = tables.TemplateColumn('<input type="hidden" name="col_lug" value="{{ record.lugar }}">{{ record.lugar }}')
     eliminar = tables.TemplateColumn("{% if user.get_profile.nivel.codigo == 1 %}<a href='javascript: removedetalle(3,{{ record.item }})'><div id='delete'></div></a>{% endif %}")
 
@@ -397,10 +399,9 @@ class ConsultaMccForm(forms.ModelForm):
     class Meta:
         model = Mcc
         #fields = ('nombremmc','nummcctipo','nummccestado_id','region_id','provincia_id','fechaini','fechafin')
-        fields = ('nombremmc', 'organismo', 'dependencia', 'nummcctipo', 'codigo', 'fechaini', 'fechafin', 'nummcctipo', 'nummccestado')
+        fields = ('nombremmc', 'organismo', 'dependencia', 'nummcctipo', 'codigo', 'fechaini', 'fechafin', 'nummcctipo')
         widgets = {
             'nummcctipo': forms.Select(),
-            'nummccestado': forms.Select(),
             'organismo': forms.Select(attrs={'onChange':'dependencias(0);', }),
             'dependencia':forms.Select(),
             #'region': forms.Select(attrs={'onChange':'provincias(0);', }),

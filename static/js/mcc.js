@@ -13,6 +13,7 @@ tablas[3]='#tabla_lugar';
 function lugares(){
     var region=$('#id_region');
     var provincia=$("#id_provincia");
+    var distrito=$("#id_distrito");
     var lugar=$('#id_lugar');
     var tabla= $(tablas[3]).find("tbody");
     var n= tabla.find("tr").length;
@@ -32,6 +33,14 @@ function lugares(){
     }else {
 		$('#alert4').hide();
 	}
+
+    if ($.trim(distrito.val())==''){
+        $('#alert4').show().find('strong').text('Debe elegir la distrito.');
+		distrito.focus();
+        return false;
+    }else {
+		$('#alert4').hide();
+	}
 	/*if ($.trim(lugar.val())==''){
         $('#alert4').show().find('strong').text('Debe ingresar el lugar de acción.')
 		lugar.focus();
@@ -40,14 +49,20 @@ function lugares(){
 		$('#alert4').hide();
 	}*/
     $.each(tabla.find("tr"),function(){   
-        if ($(this).find("td:eq(1) input:hidden").val()==region.val() & $(this).find("td:eq(2) input:hidden").val()==provincia.val() & $(this).find("td:eq(3) input:hidden").val()==lugar.val()){
+        if ($(this).find("td:eq(1) input:hidden").val()==region.val()
+            & $(this).find("td:eq(2) input:hidden").val()==provincia.val()
+            & $(this).find("td:eq(3) input:hidden").val()==distrito.val()
+            & $(this).find("td:eq(4) input:hidden").val()==lugar.val()){
             ok=false;
             return false;
         }
     });
     if(ok==true){
         n+=1;
-        fila="<tr class='"+n+"'><td>"+n+"</td><td><input type='hidden' name='col_reg' value='"+region.val()+"'>"+region.find('option:selected').text()+"</td><td><input type='hidden' name='col_pro' value='"+provincia.val()+"'>"+provincia.find('option:selected').text()+"</td><td><input type='hidden' name='col_lug' value='"+lugar.val()+"'>"+lugar.val()+"</td><td> <a href='javascript: removedetalle(3,"+n+")'><div id='delete'></div></a></td></tr>"
+        fila="<tr class='"+n+"'><td>"+n+"</td><td><input type='hidden' name='col_reg' value='"+region.val()+"'>"+region.find('option:selected').text()+"</td>" +
+            "<td><input type='hidden' name='col_pro' value='"+provincia.val()+"'>"+provincia.find('option:selected').text()+"</td>" +
+            "<td><input type='hidden' name='col_dis' value='"+distrito.val()+"'>"+distrito.find('option:selected').text()+"</td>" +
+            "<td><input type='hidden' name='col_lug' value='"+lugar.val()+"'>"+lugar.val()+"</td><td> <a href='javascript: removedetalle(3,"+n+")'><div id='delete'></div></a></td></tr>"
         tabla.append(fila);
 		$('#alert4').hide();
     }else{
@@ -58,6 +73,7 @@ function lugares(){
     }
     region.focus();
     provincia.val('');
+    distrito.val('');
     lugar.val('');
 }
 
@@ -244,13 +260,6 @@ function guardar_mcc(){
 						$('#alert').hide();
 						
 					}
-					if($.trim($("#id_nummccestado").val())=="" ){
-						$('#alert').show().find('strong').text('Debe elegir un estado');$("#id_nummccestado").focus();
-						return false;
-					}else{
-						$('#alert').hide();
-						
-					}						
 					if($.trim($("#id_descripcionmcc").val())=="" ){
 						$('#alert').show().find('strong').text('Ingrese una breve descripcion del estado actual del caso de crisis');$("#id_descripcionmcc").focus();
 						return false;
@@ -280,3 +289,32 @@ function guardar_mcc(){
 					}
 					return true;
 }
+
+function get_provincias(){
+        var provincia = $("#id_provincia");
+        var region = $("#id_region");
+        var id = region.val();
+        $.getJSON('/ubigeo/provincia/json/?r='+id, function(data){
+            provincia.html("<option value>--ELEGIR--</option>");
+            $.each(data, function(key,value){
+                provincia.append("<option value='"+value.fields.numpro+"'>"+value.fields.provincia+"</option>");
+            });
+            get_distritos();
+      });
+    }
+
+    function get_distritos(){
+      var region = $("#id_region");
+      var provincia = $("#id_provincia");
+      var distrito = $("#id_distrito");
+      $.getJSON('/ubigeo/distrito/json/?r='+region.val()+'&p='+provincia.val(), function(data){
+        distrito.html("<option value>--ELEGIR--</option>");
+        $.each(data, function(key,value){
+          distrito.append("<option value='"+value.fields.numdis+"'>"+value.fields.distrito+"</option>");
+        });
+      });
+    }
+    $(document).ready(function(){
+        get_provincias();
+        get_distritos();
+    });

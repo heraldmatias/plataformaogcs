@@ -707,6 +707,7 @@ def mccadd(request):
         #lugares
         col_reg = request.POST.getlist('col_reg')
         col_pro = request.POST.getlist('col_pro')
+        col_dis = request.POST.getlist('col_dis')
         col_lug = request.POST.getlist('col_lug')
         #actores
         numtvac = request.POST.getlist('numtvac')
@@ -717,8 +718,7 @@ def mccadd(request):
         lideres = request.POST.getlist('listlider')
         instli = request.POST.getlist('instli')
         #observaciones
-        cobs = request.POST.getlist('cobs')
-	profile = request.user.get_profile()
+        profile = request.user.get_profile()
         num = Mcc.objects.values("nummcc").order_by("-nummcc",)[:1]
         num = 1 if len(num) == 0 else int(num[0]["nummcc"]) + 1
         fecini = request.POST["fechaini"]
@@ -733,7 +733,9 @@ def mccadd(request):
         obj.save()
         #lugares_save
         for c in range(len(col_reg)):
-            MccLugar(nummcc=obj, item=c+1, region = Region.objects.get(codigo=col_reg[c]),provincia= Provincia.objects.get(codigo=col_pro[c]),lugar=col_lug[c],auditoria=1).save()
+            MccLugar(nummcc=obj, item=c+1, region_id=col_reg[c],
+                     provincia_id=col_pro[c], distrito_id=col_dis[c], lugar=col_lug[c],
+                     auditoria=1).save()
         #actores_save
         for c in range(len(numtvac)):
             MccActor(nummcc=obj, item=c + 1, numtipovarios=MccTipoVarios.objects.get(codigo=numtvac[c]), actor=actores[c], institucion=instac[c], auditoria=1).save()
@@ -741,24 +743,21 @@ def mccadd(request):
         for c in range(len(numtvli)):
             MccLider(nummcc=obj, item=c + 1, numtipovarios=MccTipoVarios.objects.get(codigo=numtvli[c]), lider=lideres[c], institucion=instli[c], auditoria=1).save()
         #observaciones_save
-        for c in range(len(cobs)):
-            MccObservacion(nummcc=obj, item=c + 1, observacion=cobs[c], auditoria=1).save()
-        formmcca = MccForm() # Crear un parametro en home para mostrar los mensajes de exito.
-				
-        mensaje = "Registro grabado satisfactoriamente."
-    
-       
     tabla1 = MccForm_ActorTable(list())
     tabla2 = MccForm_LiderTable(list())
-    tabla3 = MccForm_ObservacionTable(list())
+    #tabla3 = MccForm_ObservacionTable(list())
     tabla4 = MccForm_LugarTable([])
     formmcc = MccForm()
     formmcc_lugar = MccForm_Lugar()
     formmcc_lider = MccForm_Lider()
     formmcc_actor = MccForm_Actor()
-    formmcc_observacion = MccForm_Observacion()
+    #formmcc_observacion = MccForm_Observacion()
 
-    return render_to_response('comunicacion/mcc.html', {'form': formmcc, 'form_actor': formmcc_actor,'form_lugar': formmcc_lugar, 'form_lider': formmcc_lider, 'form_observacion':formmcc_observacion, 'tabla1':tabla1, 'tabla2':tabla2, 'tabla3':tabla3,'tabla4':tabla4, 'mensaje':mensaje, 'accion':'add'}, context_instance=RequestContext(request),)
+    return render_to_response('comunicacion/mcc.html', {'form': formmcc, 'form_actor': formmcc_actor,
+                                                        'form_lugar': formmcc_lugar, 'form_lider': formmcc_lider,
+                                                        'tabla1':tabla1, 'tabla2':tabla2,
+                                                        'tabla4':tabla4, 'mensaje':mensaje, 'accion':'add'},
+                              context_instance=RequestContext(request),)
 
 
 

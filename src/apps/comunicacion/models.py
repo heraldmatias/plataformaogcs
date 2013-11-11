@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from django.db import models
 from usuario.models import Organismo, Estado, Usuario
-from ubigeo.models import Region, Provincia
+from ubigeo.models import Region, Provincia, Distrito
 
 AUDITORIA = (
         (1,'ACTIVO'),
@@ -17,7 +17,7 @@ class Oac(models.Model):
     urloac = models.URLField(verbose_name='Url de la oac',max_length=100,null=True,blank=True)
     estado = models.ForeignKey(Estado, verbose_name='Estado', default=1)
     idusuario_creac = models.ForeignKey(Usuario,verbose_name='Usuario creador',to_field='numero')    
-    fec_creac = models.DateTimeField(verbose_name='Fecha de creación del registro',auto_now_add=True)
+    fec_creac = models.DateTimeField(verbose_name='Fecha de creaciï¿½n del registro',auto_now_add=True)
     idusuario_mod = models.ForeignKey(Usuario,verbose_name='Usuario modifico',
     related_name='modificador_oac', null=True, blank=True)
     fec_mod = models.DateTimeField(verbose_name='Fecha modifico', null=True, blank=True)
@@ -59,7 +59,7 @@ class Pgcs(models.Model):
         verbose_name='Usuario creador',
         related_name = 'upgcs',
         null=True,blank=True)
-    fec_creac = models.DateTimeField(verbose_name='Fecha de creación del registro',auto_now_add=True)
+    fec_creac = models.DateTimeField(verbose_name='Fecha de creaciï¿½n del registro',auto_now_add=True)
     
     class Meta:
         db_table = u'pgcs'
@@ -100,9 +100,9 @@ class Mcca(models.Model):
     nombremmca = models.CharField(verbose_name='Nombre de la mmca',max_length=70)
     fechaini = models.DateTimeField(verbose_name='Fecha de inicio de la campana',)
     fechafin = models.DateTimeField(verbose_name='Fecha de final de la campana',)	
-    publico = models.TextField(verbose_name='Nombre del público objetivo',)
+    publico = models.TextField(verbose_name='Nombre del pï¿½blico objetivo',)
     idusuario_creac = models.IntegerField(verbose_name='Usuario creador',)
-    fec_creac = models.DateTimeField(verbose_name='Fecha de creación del registro',auto_now_add=True)
+    fec_creac = models.DateTimeField(verbose_name='Fecha de creaciï¿½n del registro',auto_now_add=True)
     idusuario_mod = models.IntegerField(verbose_name='Usuario modifico', null=True, blank=True)
     fec_mod = models.DateTimeField(verbose_name='Fecha modifico', null=True, blank=True)
     idadministrador_mod	= models.IntegerField(verbose_name='Usuario modifico', null=True, blank=True)
@@ -294,13 +294,15 @@ class Mcc(models.Model):
     fechaini = models.DateTimeField(verbose_name='Fecha de inicio de la campana',)
     fechafin = models.DateTimeField(verbose_name='Fecha de final de la campana',)	
     nummcctipo = models.ForeignKey(MccTipo,verbose_name='Tipo mcc',)
-    nummccestado = models.ForeignKey(MccEstado,verbose_name='Mcc Estado',)
+    #nummccestado = models.ForeignKey(MccEstado,verbose_name='Mcc Estado',)
     #region = models.ForeignKey(Region, verbose_name='Region')
     #provincia = models.ForeignKey(Provincia, verbose_name='Provincia')
     descripcionmcc = models.TextField(verbose_name='Breve descripcion y estado actual del mcc',)    
-    propuestamcc = models.TextField(verbose_name='Propuesta del mcc',)
+    #propuestamcc = models.TextField(verbose_name='Propuesta del mcc',)
+    mensajes = models.TextField(verbose_name='Mensajes',)
+    cuestionamientos = models.TextField(verbose_name='Cuestionamientos',)
     idusuario_creac = models.IntegerField(verbose_name='Usuario creador',)
-    fec_creac = models.DateTimeField(verbose_name='Fecha de creación del registro',auto_now_add=True)
+    fec_creac = models.DateTimeField(verbose_name='Fecha de creaciï¿½n del registro',auto_now_add=True)
     idusuario_mod = models.IntegerField(verbose_name='Usuario modifico', null=True, blank=True)
     fec_mod = models.DateTimeField(verbose_name='Fecha modifico', null=True, blank=True)
     idadministrador_mod	= models.IntegerField(verbose_name='Usuario modifico', null=True, blank=True)
@@ -322,6 +324,7 @@ class MccLugar(models.Model):
     item = models.IntegerField(verbose_name='Items',)
     region = models.ForeignKey(Region, verbose_name='Region')
     provincia = models.ForeignKey(Provincia, verbose_name='Provincia')
+    distrito = models.ForeignKey(Distrito, verbose_name='Distrito')
     lugar = models.CharField(verbose_name='Lugar',max_length=120)
     auditoria = models.IntegerField(verbose_name='Auditoria',choices=AUDITORIA)
 
