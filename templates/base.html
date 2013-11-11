@@ -1,168 +1,263 @@
 {% load static %}
 {% load cache %}
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
-<html><head>
-  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-  {% block css %}  
-  <link href="{{ STATIC_URL  }}bootstrap/css/bootstrap.css" rel="stylesheet" type="text/css"/>
-  <link href="{{ STATIC_URL  }}bootstrap/css/bootstrap-responsive.min.css" rel="stylesheet" type="text/css"/>
-  <link href="{{ STATIC_URL  }}bootstrap/datepicker/css/datepicker.css" rel="stylesheet" type="text/css"/>
-  <link href="{{ STATIC_URL  }}prettify/prettify.css" rel="stylesheet" type="text/css"/>
-  <link href="{{ STATIC_URL  }}css/estilo.css" rel="stylesheet" type="text/css"/>
-  <link href="{{ STATIC_URL  }}images/favicon.ico" rel="shortcut icon" type="image/x-icon" />
-  <!--<link href="{{ STATIC_URL  }}css/jquery-ui.css" rel="stylesheet" type="text/css"/>-->
-  <style type="text/css">
-  .fondo{background:#FFFFFF}
-.menublanco {
-	font-family: Verdana, Arial, Helvetica, sans-serif;
-	color: #ffffff;
-	font-weight: bold;
-	font-size: 12px;
-}#alert, #alert1, #alert2, #alert3, #alert4, #alert5, #alert6, #alert7  {
-		display: none;
-	}
-table tr td{padding-left:10px;}
-</style>
-  <meta content="text/html; charset=UTF-8" http-equiv="content-type">
-  {% endblock %}
-  {% block csspage %}
-  {% endblock %}
-  <title>{% block title %}{% endblock %}</title></head>
-  <body>
-  <div id="contenedor" class="corners_5">
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    {% block css %}
+    <link href="{{ STATIC_URL  }}bootstrap/css/bootstrap.css" rel="stylesheet" type="text/css"/>
+    <link href="{{ STATIC_URL  }}bootstrap/css/bootstrap-responsive.min.css" rel="stylesheet" type="text/css"/>
+    <link href="{{ STATIC_URL  }}bootstrap/datepicker/css/datepicker.css" rel="stylesheet" type="text/css"/>
+    <link href="{{ STATIC_URL  }}prettify/prettify.css" rel="stylesheet" type="text/css"/>
+    <link href="{{ STATIC_URL  }}css/estilo.css" rel="stylesheet" type="text/css"/>
+    <link href="{{ STATIC_URL  }}images/favicon.ico" rel="shortcut icon" type="image/x-icon"/>
+    <!--<link href="{{ STATIC_URL  }}css/jquery-ui.css" rel="stylesheet" type="text/css"/>-->
+    <style type="text/css">
+        .fondo {
+            background: #FFFFFF
+        }
+
+        .menublanco {
+            font-family: Verdana, Arial, Helvetica, sans-serif;
+            color: #ffffff;
+            font-weight: bold;
+            font-size: 12px;
+        }
+
+        #alert, #alert1, #alert2, #alert3, #alert4, #alert5, #alert6, #alert7 {
+            display: none;
+        }
+
+        table tr td {
+            padding-left: 10px;
+        }
+    </style>
+    <meta content="text/html; charset=UTF-8" http-equiv="content-type">
+    {% endblock %}
+    {% block csspage %}
+    {% endblock %}
+    <title>{% block title %}{% endblock %}</title></head>
+<body>
+<div id="contenedor" class="corners_5">
     <div id="cabecera">
-    	<div id="cabecera_izq">
-    		<a href="{% url ogcs-index %}"><img height="71" width="342" src="{{ STATIC_URL  }}images/logo.png"></a>
-    	</div>
+        <div id="cabecera_izq">
+            <a href="{% url ogcs-index %}"><img height="71" width="342" src="{{ STATIC_URL  }}images/logo.png"></a>
+        </div>
         {% if login %}
         <div id="cabecera_der">
-        	<img height="60" width="207" src="{{ STATIC_URL  }}images/logopcm.png" />
+            <img height="60" width="207" src="{{ STATIC_URL  }}images/logopcm.png"/>
         </div>
-    	{% else %}
+        {% else %}
         {% cache 5 cabecera request.user.username %}
         {% with USUARIO=request.user.get_profile %}
-        <div id="cabecera_der">       	
+        <div id="cabecera_der">
             <table width="356" border="0" cellspacing="0" cellpadding="0" style="margin:12px 8px 0 0">
-             <tr>
-               <td width="200" valign="top" class="ministerio">{{ USUARIO.get_dependencia }}</td>
-               <td width="49" rowspan="2"><img src="{% if USUARIO.foto %}{{ USUARIO.foto.url }} {% else %} {{ STATIC_URL }}images/varon.png {% endif %}" width="50" height="50" style="border:2px #999 solid;padding:1px"></td>               
-               <td width="178" class="gris2">Bienvenido</td>
-             </tr>
-             <tr>
-               <td width="50" valign="top" class="fecha">FECHA: {{ request.user.last_login|date:"d-m-y" }}<br>HORA: {{ user.last_login|date:"H:i:s" }}</td>
-               <td width="178" class="azul">{{ user.get_full_name }}</td>
-             </tr>
-           </table>
+                <tr>
+                    <td width="200" valign="top" class="ministerio">{{ USUARIO.get_dependencia }}</td>
+                    <td width="49" rowspan="2"><img
+                            src="{% if USUARIO.foto %}{{ USUARIO.foto.url }} {% else %} {{ STATIC_URL }}images/varon.png {% endif %}"
+                            width="50" height="50" style="border:2px #999 solid;padding:1px"></td>
+                    <td width="178" class="gris2">Bienvenido</td>
+                </tr>
+                <tr>
+                    <td width="50" valign="top" class="fecha">FECHA: {{ request.user.last_login|date:"d-m-y" }}<br>HORA:
+                        {{ user.last_login|date:"H:i:s" }}
+                    </td>
+                    <td width="178" class="azul">{{ user.get_full_name }}</td>
+                </tr>
+            </table>
         </div>
-       {% endwith %}
-       {% endcache %}
-       {% endif %}</div>
-    <div class="clear"></div>   
-    {% if login %}   
-    <div id="menu"> </div>
+        {% endwith %}
+        {% endcache %}
+        {% endif %}
+    </div>
+    <div class="clear"></div>
+    {% if login %}
+    <div id="menu"></div>
     {% else %}
-<div id="menu">  
+    <div id="menu">
         <ul id="nave">
-           {% if user.get_profile.nivel.codigo == 2 %}
-            <li class="dropdown principal"><a class="dropdown-toggle menublanco" data-toggle="dropdown" href="">Mantenimiento<b class="caret"></b></a>
-                <ul class="dropdown-menu">                  
-                 <li class="opcion"><a href="{% url ogcs-mantenimiento-region-add %}" data-toggle="modal">Regi&oacute;n</a></li>                
-		  <li class="opcion"><a href="{% url ogcs-mantenimiento-provincia-add %}" data-toggle="modal">Provincia</a></li>
-          <li><a href="{% url ogcs-mantenimiento-distrito-add %}" data-toggle="modal">Distrito</a></li>
-		  <li class="opcion"><a href="{% url ogcs-mantenimiento-ministerio-add %}" data-toggle="modal">Ministerio</a></li>
-		  <li class="opcion"><a href="{% url ogcs-mantenimiento-odp-add %}" data-toggle="modal">OPD</a></li>		  
-<li class="opcion"><a href="{% url ogcs-mantenimiento-categoria-add %}" data-toggle="modal">Categoría</a></li>
-<li class="opcion"><a href="{% url ogcs-mantenimiento-foro-add %}" data-toggle="modal">Foro</a></li>
-<li class="opcion"><a href="{% url ogcs-mantenimiento-tema-add %}" data-toggle="modal">Tema</a></li>
-		  <li class="opcion"><a href="{% url ogcs-mantenimiento-usuario-add 1 %}" data-toggle="modal">Usuario</a></li>
-                  <li class="opcion">
-                    <a href="{% url ogcs-mantenimiento-usuario-add 2 %}" data-toggle="modal">Administrador</a></li>
-                  <li class="opcion">
-                    <a href="{% url ogcs-usuario-auditoria %}" data-toggle="modal">Auditoria</a></li>
-                </ul></li>
-            {% endif %}<!--data-content="Los OAC se utilizan para..." rel="popover" data-original-title="Organigrama del Área de Comunicaciones"  rel="tooltip" data-original-title="first tooltip"  <div class="popover-content"><p></p></div>--> 
-            <li class="dropdown principal"><a class="dropdown-toggle menublanco" data-toggle="dropdown" data-content="Los OAC se utilizan para..." rel="popover" data-original-title="Organigrama del Área de Comunicaciones" href="">OAC<b class="caret"></b></a>
+            {% if user.get_profile.nivel.codigo == 2 %}
+            <li class="dropdown principal"><a class="dropdown-toggle menublanco" data-toggle="dropdown" href="">Mantenimiento<b
+                    class="caret"></b></a>
                 <ul class="dropdown-menu">
-                                     
-                  <li><a href="{% url ogcs-mantenimiento-oac-add %}" data-toggle="modal">Nuevo Organigrama del Área de Comunicaciones</a></li> 
-                  
-		  <li><a href="{% url ogcs-mantenimiento-oac-query %}" data-toggle="modal">Consultar Organigrama del Área de Comunicaciones</a></li>		  
-		</ul></li>
-            <li class="dropdown principal"><a class="dropdown-toggle menublanco" data-toggle="dropdown" data-content="Los OAC se utilizan para..." rel="popover" data-original-title="Plan General de Comunicacion del Sector" href="">PGCS<b class="caret"></b></a>
+                    <li class="opcion"><a href="{% url ogcs-mantenimiento-region-add %}" data-toggle="modal">Regi&oacute;n</a>
+                    </li>
+                    <li class="opcion"><a href="{% url ogcs-mantenimiento-provincia-add %}" data-toggle="modal">Provincia</a>
+                    </li>
+                    <li><a href="{% url ogcs-mantenimiento-distrito-add %}" data-toggle="modal">Distrito</a></li>
+                    <li class="opcion"><a href="{% url ogcs-mantenimiento-ministerio-add %}" data-toggle="modal">Ministerio</a>
+                    </li>
+                    <li class="opcion"><a href="{% url ogcs-mantenimiento-odp-add %}" data-toggle="modal">OPD</a></li>
+                    <li class="opcion"><a href="{% url ogcs-mantenimiento-categoria-add %}" data-toggle="modal">Categoría</a>
+                    </li>
+                    <li class="opcion"><a href="{% url ogcs-mantenimiento-foro-add %}" data-toggle="modal">Foro</a></li>
+                    <li class="opcion"><a href="{% url ogcs-mantenimiento-tema-add %}" data-toggle="modal">Tema</a></li>
+                    <li class="opcion"><a href="{% url ogcs-mantenimiento-usuario-add 1 %}"
+                                          data-toggle="modal">Usuario</a></li>
+                    <li class="opcion">
+                        <a href="{% url ogcs-mantenimiento-usuario-add 2 %}" data-toggle="modal">Administrador</a></li>
+                    <li class="opcion">
+                        <a href="{% url ogcs-usuario-auditoria %}" data-toggle="modal">Auditoria</a></li>
+                </ul>
+            </li>
+            {% endif %}
+            {% if user.get_profile.organismo_id == 1 and user.get_profile.dependencia == 1 %}
+            <li class="dropdown principal"><a class="dropdown-toggle menublanco" data-toggle="dropdown"
+                                              data-content="Los OAC se utilizan para..." rel="popover"
+                                              data-original-title="Organigrama del Área de Comunicaciones" href="">OAC<b
+                    class="caret"></b></a>
                 <ul class="dropdown-menu">
-     {% if user.get_profile.nivel.codigo == 1 %}
-     <li><a href="{% url ogcs-mantenimiento-pgcs-add %}" data-toggle="modal">Nuevo Plan General de Comunicacion del Sector - OGCS</a><li>{% endif %}                
-     <li><a href="{% url ogcs-mantenimiento-pgcs-query %}" data-toggle="modal">Consulta Plan General de Comunicacion del Sector - OGCS</a><li>
-     {% if user.get_profile.nivel.codigo == 2 %}
-     <li><a href="{% url ogcs-mantenimiento-pgcs-aporte-add %}" data-toggle="modal">Nuevo Plan General de Comunicacion del Sector - APORTE</a></li>		  {% endif %}
-     <li><a href="{% url ogcs-mantenimiento-pgcs-aporte-query %}" data-toggle="modal">Consulta Plan General de Comunicacion del Sector - APORTE</a></li>		  
-		</ul></li>
-            <li class="dropdown principal"><a class="dropdown-toggle menublanco" data-toggle="dropdown" data-content="Los OAC se utilizan para..." rel="popover" data-original-title="Matriz de Campaña de Comunicaciones Anuales" href="">MCCA<b class="caret"></b></a>
-                <ul class="dropdown-menu">                  
-                  <li><a href="{% url ogcs-mantenimiento-mcca-add %}" data-toggle="modal">Nuevo Matriz de Campaña de Comunicaciones Anuales</a></li>                
-		  <li><a href="{% url ogcs-mantenimiento-mcca-query %}" data-toggle="modal">Consultar Matriz de Campaña de Comunicaciones Anuales</a></li>		  
-		</ul></li>
-            <li class="dropdown principal"><a class="dropdown-toggle menublanco" data-toggle="dropdown" data-content="Los OAC se utilizan para..." rel="popover" data-original-title="Matriz de Comunicacion de Crisis" href="">MCC<b class="caret"></b></a>
-                <ul class="dropdown-menu">                  
-                  <li><a href="{% url ogcs-mantenimiento-mcc-add %}" data-toggle="modal">Nuevo Matriz de Comunicacion de Crisis</a></li>                
-		  <li><a href="{% url ogcs-mantenimiento-mcc-query %}" data-toggle="modal">Consultar Matriz de Comunicacion de Crisis</a></li>		  
-		</ul></li>
-            <li class="dropdown principal"><a class="dropdown-toggle menublanco" data-toggle="dropdown"  rel="popover" data-original-title="Material Gráfico" href="">MG<b class="caret"></b></a>
-                <ul class="dropdown-menu">                  
-                  {% if user.get_profile.nivel.codigo == 1 %}<li><a href="{% url ogcs-mantenimiento-mg-add %}" data-toggle="modal">Nuevo Material Gráfico</a></li>  {% endif %}              
-		  <li><a href="{% url ogcs-mantenimiento-mg-query %}" data-toggle="modal">Consultar Material Gráfico</a></li>		  
-		</ul></li>
-           
-            <li class="dropdown principal"><a class="dropdown-toggle menublanco" data-toggle="dropdown" rel="popover" data-original-title="Acta de Reunión Intersectorial" href="">ARI<b class="caret"></b></a>
-                <ul class="dropdown-menu">                  
-                  {% if user.get_profile.nivel.codigo == 2 %}<li><a href="{% url ogcs-mantenimiento-ari-add %}" data-toggle="modal">Nuevo Acta de Reunión Intersectorial</a></li>      {% endif %}          
-		  <li><a href="{% url ogcs-mantenimiento-ari-query %}" data-toggle="modal">Consultar Acta de Reunión Intersectorial</a></li>		  
-		</ul></li>
-    <!------------------------------------------------NUEVOS MODULOS ---------------------------------------->
-        <li class="dropdown principal"><a class="dropdown-toggle menublanco" data-toggle="dropdown" rel="popover" data-original-title="Resumenes de Prensa" href="">REP<b class="caret"></b></a>
-                <ul class="dropdown-menu">                  
-                <li><a href="{% url ogcs-mantenimiento-prensa-rep-add %}" data-toggle="modal">Nuevo Resumen de Prensa</a></li>
-      <li><a href="{% url ogcs-mantenimiento-prensa-rep-query %}" data-toggle="modal">Consultar Resumen de Prensa</a></li>      
-    </ul></li>
-<li class="dropdown principal"><a class="dropdown-toggle menublanco" data-toggle="dropdown" rel="popover" data-original-title="Casos de Éxito" href="">CE<b class="caret"></b></a>
-                <ul class="dropdown-menu">                  
-                  <li><a href="{% url ogcs-mantenimiento-prensa-ce-add %}" data-toggle="modal">Nuevo Caso de Éxito</a></li>
-      <li><a href="{% url ogcs-mantenimiento-prensa-ce-query %}" data-toggle="modal">Consultar Caso de Éxito</a></li>      
-    </ul></li>
-    <!------------------------------------------------FIN NUEVOS MODULOS ------------------------------------>
+
+                    <li><a href="{% url ogcs-mantenimiento-oac-add %}" data-toggle="modal">Nuevo Organigrama del Área de
+                        Comunicaciones</a></li>
+
+                    <li><a href="{% url ogcs-mantenimiento-oac-query %}" data-toggle="modal">Consultar Organigrama del
+                        Área de Comunicaciones</a></li>
+                </ul>
+            </li>
+            {% endif %}
+            <li class="dropdown principal"><a class="dropdown-toggle menublanco" data-toggle="dropdown"
+                                              data-content="Los OAC se utilizan para..." rel="popover"
+                                              data-original-title="Plan General de Comunicacion del Sector" href="">PGCS<b
+                    class="caret"></b></a>
+                <ul class="dropdown-menu">
+                    {% if user.get_profile.nivel.codigo == 1 %}
+                    <li>
+                        <a href="{% url ogcs-mantenimiento-pgcs-add %}" data-toggle="modal">Nuevo Plan General de
+                        Comunicacion del Sector - OGCS</a>
+                    </li>
+                    {% endif %}
+                    {% if user.get_profile.organismo_id == 1 and user.get_profile.dependencia == 1 %}
+                    <li>
+                        <a href="{% url ogcs-mantenimiento-pgcs-query %}" data-toggle="modal">Consulta Plan General de
+                        Comunicacion del Sector - OGCS</a>
+                    </li>
+                    {% endif %}
+                    {% if user.get_profile.nivel.codigo == 2 %}
+                    <li><a href="{% url ogcs-mantenimiento-pgcs-aporte-add %}" data-toggle="modal">Nuevo Plan General de
+                        Comunicacion del Sector - APORTE</a></li>
+                    {% endif %}
+                    <li>
+                        <a href="{% url ogcs-mantenimiento-pgcs-aporte-query %}" data-toggle="modal">Consulta Plan
+                        General de Comunicacion del Sector - APORTE</a>
+                    </li>
+                </ul>
+            </li>
+            <li class="dropdown principal"><a class="dropdown-toggle menublanco" data-toggle="dropdown"
+                                              data-content="Los OAC se utilizan para..." rel="popover"
+                                              data-original-title="Matriz de Campaña de Comunicaciones Anuales" href="">MCCA<b
+                    class="caret"></b></a>
+                <ul class="dropdown-menu">
+                    <li><a href="{% url ogcs-mantenimiento-mcca-add %}" data-toggle="modal">Nuevo Matriz de Campaña de
+                        Comunicaciones Anuales</a></li>
+                    <li><a href="{% url ogcs-mantenimiento-mcca-query %}" data-toggle="modal">Consultar Matriz de
+                        Campaña de Comunicaciones Anuales</a></li>
+                </ul>
+            </li>
+            <li class="dropdown principal"><a class="dropdown-toggle menublanco" data-toggle="dropdown" rel="popover"
+                                              data-original-title="Material Gráfico" href="">MG<b class="caret"></b></a>
+                <ul class="dropdown-menu">
+                    {% if user.get_profile.nivel.codigo == 1 %}
+                    <li><a href="{% url ogcs-mantenimiento-mg-add %}" data-toggle="modal">Nuevo Material Gráfico</a>
+                    </li>
+                    {% endif %}
+                    <li><a href="{% url ogcs-mantenimiento-mg-query %}" data-toggle="modal">Consultar Material
+                        Gráfico</a></li>
+                </ul>
+            </li>
+            <li class="dropdown principal"><a class="dropdown-toggle menublanco" data-toggle="dropdown" rel="popover"
+                                              data-original-title="Logros Sectoriales" href="">LS<b class="caret"></b></a>
+                <ul class="dropdown-menu">
+                    <li><a href="{% url ogcs-mantenimiento-prensa-ce-add %}" data-toggle="modal">Nuevo Caso de Éxito</a>
+                    </li>
+                    <li><a href="{% url ogcs-mantenimiento-prensa-ce-query %}" data-toggle="modal">Consultar Caso de
+                        Éxito</a></li>
+                </ul>
+            </li>
+            <li class="dropdown principal"><a class="dropdown-toggle menublanco" data-toggle="dropdown" rel="popover"
+                                              data-original-title="Registro de Situaciones de crisis" href="">RSIC<b class="caret"></b></a>
+                <ul class="dropdown-menu">
+
+                </ul>
+            </li>
+            <li class="dropdown principal"><a class="dropdown-toggle menublanco" data-toggle="dropdown" rel="popover"
+                                              data-original-title="Acta de Reunión Intersectorial" href="">ARI<b
+                    class="caret"></b></a>
+                <ul class="dropdown-menu">
+                    {% if user.get_profile.nivel.codigo == 2 %}
+                    <li><a href="{% url ogcs-mantenimiento-ari-add %}" data-toggle="modal">Nuevo Acta de Reunión
+                        Intersectorial</a></li>
+                    {% endif %}
+                    <li><a href="{% url ogcs-mantenimiento-ari-query %}" data-toggle="modal">Consultar Acta de Reunión
+                        Intersectorial</a></li>
+                </ul>
+            </li>
+            {% comment %}
+            <li class="dropdown principal"><a class="dropdown-toggle menublanco" data-toggle="dropdown"
+                                              data-content="Los OAC se utilizan para..." rel="popover"
+                                              data-original-title="Matriz de Comunicacion de Crisis" href="">MCC<b
+                    class="caret"></b></a>
+                <ul class="dropdown-menu">
+                    <li><a href="{% url ogcs-mantenimiento-mcc-add %}" data-toggle="modal">Nuevo Matriz de Comunicacion
+                        de Crisis</a></li>
+                    <li><a href="{% url ogcs-mantenimiento-mcc-query %}" data-toggle="modal">Consultar Matriz de
+                        Comunicacion de Crisis</a></li>
+                </ul>
+            </li>
+            <!------------------------------------------------NUEVOS MODULOS ---------------------------------------->
+            <li class="dropdown principal"><a class="dropdown-toggle menublanco" data-toggle="dropdown" rel="popover"
+                                              data-original-title="Resumenes de Prensa" href="">REP<b class="caret"></b></a>
+                <ul class="dropdown-menu">
+                    <li><a href="{% url ogcs-mantenimiento-prensa-rep-add %}" data-toggle="modal">Nuevo Resumen de
+                        Prensa</a></li>
+                    <li><a href="{% url ogcs-mantenimiento-prensa-rep-query %}" data-toggle="modal">Consultar Resumen de
+                        Prensa</a></li>
+                </ul>
+            </li>
+            <!------------------------------------------------FIN NUEVOS MODULOS ------------------------------------>
+            {% endcomment %}
         </ul>
         <div id="cerrar_sesion">
-        <a class="menublanco" href="{% url ogcs-logout %}"> Cerrar sesión&nbsp;<img width="20" height="19" src="{{ STATIC_URL }}images/sesion.png" align="absmiddle"></a>
-        </div></div>
-{% endif %} 
-    
-{% if not login %} <div id="contenido"> {% endif %}
-  {% block content %}
-  {% endblock %}
-  
-{% if not login %}<div id="contenido_der">
+            <a class="menublanco" href="{% url ogcs-logout %}"> Cerrar sesión&nbsp;<img width="20" height="19"
+                                                                                        src="{{ STATIC_URL }}images/sesion.png"
+                                                                                        align="absmiddle"></a>
+        </div>
+    </div>
+    {% endif %}
+
+    {% if not login %}
+    <div id="contenido"> {% endif %}
+        {% block content %}
+        {% endblock %}
+
+        {% if not login %}
+        <div id="contenido_der">
             <div id="foros">
-           	<div class="links"><a href="/foro/">Foro OGCS</a> </div>
+                <div class="links"><a href="/foro/">Foro OGCS</a></div>
                 <div class="links"><a href="{% url jqchat_test_window 1 %}"> Chat OGCS </a></div>
                 <div class="links"><a href="{% url ogcs-mantenimiento-doc-add %}">Documentos</a></div>
                 <div class="links"><a href="{% url ogcs-calendar %}">Actividades</a></div>
             </div>
-        </div>  </div>{% endif %}
+        </div>
+    </div>
+    {% endif %}
 </div>
-  {% block js %}  
-  <script src="{{ STATIC_URL }}bootstrap/js/jquery.js" type="text/javascript"></script>
-  <script src="{{ STATIC_URL }}js/jquery.corner.js" type="text/javascript"></script>
-  <script src="{{ STATIC_URL }}js/publico.js" type="text/javascript"></script>
-  <!--<script src="{{ STATIC_URL }}bootstrap/js/jquery-ui.js" type="text/javascript"></script>-->
-  <!--<script src="{{ STATIC_URL }}bootstrap/js/jquery.validate.js" type="text/javascript"></script>-->
-  <script src="{{ STATIC_URL }}prettify/prettify.js" type="text/javascript"></script>
-  <script src="{{ STATIC_URL }}bootstrap/js/application.js" type="text/javascript"></script>
-  <script src="{{ STATIC_URL }}bootstrap/js/bootstrap.js" type="text/javascript"></script>  
-  <script src="{{ STATIC_URL }}bootstrap/datepicker/js/bootstrap-datepicker.js" type="text/javascript"></script>
-  <script src="{{ STATIC_URL }}bootstrap/datepicker/js/locales/bootstrap-datepicker.es.js" type="text/javascript"></script>
-  <script src="{{ STATIC_URL }}js/general.js" type="text/javascript"></script>
-  {% endblock %}
-  {% block scriptjs %}
-  {% endblock %}
+{% block js %}
+<script src="{{ STATIC_URL }}bootstrap/js/jquery.js" type="text/javascript"></script>
+<script src="{{ STATIC_URL }}js/jquery.corner.js" type="text/javascript"></script>
+<script src="{{ STATIC_URL }}js/publico.js" type="text/javascript"></script>
+<!--<script src="{{ STATIC_URL }}bootstrap/js/jquery-ui.js" type="text/javascript"></script>-->
+<!--<script src="{{ STATIC_URL }}bootstrap/js/jquery.validate.js" type="text/javascript"></script>-->
+<script src="{{ STATIC_URL }}prettify/prettify.js" type="text/javascript"></script>
+<script src="{{ STATIC_URL }}bootstrap/js/application.js" type="text/javascript"></script>
+<script src="{{ STATIC_URL }}bootstrap/js/bootstrap.js" type="text/javascript"></script>
+<script src="{{ STATIC_URL }}bootstrap/datepicker/js/bootstrap-datepicker.js" type="text/javascript"></script>
+<script src="{{ STATIC_URL }}bootstrap/datepicker/js/locales/bootstrap-datepicker.es.js"
+        type="text/javascript"></script>
+<script src="{{ STATIC_URL }}js/general.js" type="text/javascript"></script>
+{% endblock %}
+{% block scriptjs %}
+{% endblock %}
 </body>
 </html>
