@@ -121,16 +121,11 @@ class MccaForm_LugarTable(tables.Table):
 class MccaForm_Estado(forms.ModelForm):
     class Meta:
         model = MccaEstado
-        fields = ('organismo', 'dependencia')
-        widgets = {
-            'organismo': forms.Select(attrs={'onChange':'dependencias(0);', }),
-            'dependencia':forms.Select(attrs={'disabled':'disabled', }),
-        }
+        fields = ('estado', )
 
 class MccaForm_EstadoTable(tables.Table):
     item = tables.Column()
-    organismo = tables.TemplateColumn('<input type="hidden" name="corg" value="{{ record.organismo_id }}">{{ record.organismo }}')
-    dependencia = tables.TemplateColumn('<input type="hidden" name="cdep" value="{{ record.dependencia }}">{{ record.nomdependecia }}')
+    estado = tables.TemplateColumn('<input type="hidden" name="cpest" value="{{ record.estado }}">{{ record.estado }}')
     eliminar = tables.TemplateColumn("{% if user.get_profile.nivel.codigo == 1 %}<a href='javascript: removedetalle(0,{{ record.item }})'><div id='delete'></div></a>{% endif %}")
     
     class Meta:

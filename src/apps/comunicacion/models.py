@@ -95,7 +95,6 @@ class Mcca(models.Model):
     codigo = models.AutoField(verbose_name='Codigo Autoincrementado',primary_key=True)
     nummcca = models.IntegerField(verbose_name='Numero de la mcca', unique=True)
     organismo = models.ForeignKey(Organismo, verbose_name='Organismo')
-    #organismo = models.IntegerField(verbose_name='Organismo')
     dependencia = models.IntegerField(verbose_name='Dependencia',)
     nombremmca = models.CharField(verbose_name='Nombre de la mmca',max_length=70)
     fechaini = models.DateTimeField(verbose_name='Fecha de inicio de la campana',)
@@ -138,8 +137,9 @@ class MccaLugar(models.Model):
 class MccaEstado(models.Model):
     nummcca = models.ForeignKey(Mcca,verbose_name='Codigo mcca',to_field='nummcca')
     item = models.IntegerField(verbose_name='Items',)
-    organismo = models.ForeignKey(Organismo, verbose_name='Organismo')
-    dependencia = models.IntegerField(verbose_name='Dependencia',)
+    estado = models.CharField(verbose_name='Nombre de los sectores involucrados', max_length=250)
+    #organismo = models.ForeignKey(Organismo, verbose_name='Organismo')
+    #dependencia = models.IntegerField(verbose_name='Dependencia',)
 
     class Meta:
         db_table = u'mccaestado'
@@ -152,7 +152,7 @@ class MccaEstado(models.Model):
 class MccaPrivado(models.Model):
     nummcca = models.ForeignKey(Mcca,verbose_name='Codigo mcca',to_field='nummcca')
     item = models.IntegerField(verbose_name='Items',)
-    privado = models.CharField(verbose_name='Nombre de los sectores involucrados', max_length=150)
+    privado = models.CharField(verbose_name='Nombre de las instituciones involucradas', max_length=150)
     auditoria = models.IntegerField(verbose_name='Auditoria',choices=AUDITORIA)
 
     class Meta:

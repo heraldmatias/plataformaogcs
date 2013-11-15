@@ -274,8 +274,7 @@ def mccaadd(request):
     mensaje = ""
     if request.method == 'POST':
         #sectores_estado
-        corg = request.POST.getlist('corg')
-        cdep = request.POST.getlist('cdep')
+        corg = request.POST.getlist('cpest')
         #lugares
         col_reg = request.POST.getlist('col_reg')
         col_pro = request.POST.getlist('col_pro')
@@ -313,7 +312,7 @@ def mccaadd(request):
         obj.save()
         #sectores_Estado_save
         for c in range(len(corg)):
-            MccaEstado(nummcca=obj, item=c + 1, organismo=Organismo.objects.get(codigo=corg[c]), dependencia=cdep[c]).save()
+            MccaEstado(nummcca=obj, item=c+1, estado=corg[c]).save()
         #lugares_save
         for c in range(len(col_reg)):
             MccaLugar(nummcc=obj, item=c+1, region = Region.objects.get(codigo=col_reg[c]),provincia= Provincia.objects.get(codigo=col_pro[c]),lugar=col_lug[c],auditoria=1).save()
@@ -370,8 +369,7 @@ def mccaedit(request, nummcca):
     mensaje = ""
     if request.method == 'POST':
         #sectores_estado
-        corg = request.POST.getlist('corg')
-        cdep = request.POST.getlist('cdep')
+        corg = request.POST.getlist('cpest')
         #lugares
         col_reg = request.POST.getlist('col_reg')
         col_pro = request.POST.getlist('col_pro')
@@ -417,11 +415,10 @@ def mccaedit(request, nummcca):
         for c in range(len(corg)):
             try:
                 row = MccaEstado.objects.get(nummcca=obj,item=c+1)
-                row.organismo = Organismo.objects.get(codigo=corg[c])
-                row.dependencia = cdep[c]
+                row.estado = corg[c]
                 row.save()
             except MccaEstado.DoesNotExist:
-                MccaEstado(nummcca=obj, item=c+1, organismo=Organismo.objects.get(codigo=corg[c]), dependencia=cdep[c]).save()
+                MccaEstado(nummcca=obj, item=c+1, estado=corg[c]).save()
         resto= len(corg)
         while resto < len(query):
             row = MccaEstado.objects.get(nummcca=obj,item=resto+1)
@@ -551,14 +548,6 @@ def mccaedit(request, nummcca):
     formmcca = MccaForm(instance=mcca)
     nomdependecia = ''
     query1 = MccaEstado.objects.filter(nummcca=mcca).order_by("item",)
-    for row in query1:
-        if row.organismo.codigo == 1:
-            nomdependecia = Ministerio.objects.get(codigo=row.dependencia).ministerio
-        if row.organismo.codigo == 2:
-            nomdependecia = Odp.objects.get(codigo=row.dependencia).odp
-        if row.organismo.codigo == 3:
-            nomdependecia = Gobernacion.objects.get(codigo=row.dependencia).gobernacion
-        row.nomdependecia = nomdependecia
     tabla = MccaForm_EstadoTable(query1)
 
     query2 = MccaPrivado.objects.filter(nummcca=mcca).order_by("item",)

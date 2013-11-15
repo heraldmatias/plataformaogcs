@@ -95,46 +95,36 @@ function lugares(){
 }
 
 function sectores_estado(){
-    var organismo=$('#id_organismo');
-    var norganismo=$("#id_organismo option:selected").text();
-    var dependencia=$('#id_dependencia');
-    var ndependencia=$("#id_dependencia option:selected").text();
+    var estado=$('#id_estado');
     var tabla= $(tablas[0]).find("tbody");
     var n= tabla.find("tr").length;
     var ok=true;
-    if ($.trim(organismo.val())==''){
-        $("#id_organismo").focus();
-		$('#alert1').show().find('strong').text('Debe elegir un Organismo.');
-		return;
-    }else {
-		$('#alert1').hide();
-	}
-	
-	if ($.trim(dependencia.val())==''){
-        $("#id_dependencia").focus();
-		$('#alert1').show().find('strong').text('Debe elegir dependencia.')
+    if ($.trim(estado.val())==''){
+        $('#alert1').show().find('strong').text('Debe ingresar el sector estado.');
+		$("#id_estado").focus();
         return false;
-    }
-	else{
+    }else{
 		$('#alert1').hide();
 	}
     $.each(tabla.find("tr"),function(){
-        var idorg =$(this).find("td:eq(1) input:hidden").val();
-        var iddep =$(this).find("td:eq(2) input:hidden").val();    
-        if (organismo.val()==idorg & dependencia.val()==iddep){
+        if ($(this).find("td:eq(1) input:hidden").val()==estado.val()){
             ok=false;
             return false;
         }
-    });//<a href='javascript: removedetalle(0,"+n+")'><div id='delete'></div></a>
+    });
     if(ok==true){
         n+=1;
-        fila="<tr class='"+n+"'><td>"+n+"</td><td><input type='hidden' name='corg' value='"+organismo.val()+"'>"+norganismo+"</td><td><input type='hidden' name='cdep' value='"+dependencia.val()+"'>"+ndependencia+"</td><td><a href='javascript: removedetalle(0,"+n+")'><div id='delete'></div></a></td></tr>"
+        fila="<tr class='"+n+"'><td>"+n+"</td><td><input type='hidden' name='cpest' value='"+estado.val()+"'>"+estado.val()+"</td><td> <a href='javascript: removedetalle(0,"+n+")'><div id='delete'></div></a></td></tr>"
         tabla.append(fila);
 		$('#alert1').hide();
     }else{
-		$('#alert1').show().find('strong').text('El sector ya ha sido agregado. Escoja otro porfavor!')
+		$('#alert1').show().find('strong').text('El sector ya ha sido agregado. Ingrese otro porfavor!')
+        estado.select();
+        estado.focus();
         return false;
     }
+    estado.val('');
+    estado.focus();
 }
 function sectores_privado(){
     var privado=$('#id_privado');

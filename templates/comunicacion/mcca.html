@@ -12,7 +12,7 @@
 	#id_nombremmca{width:535px}
 	
 	#id_fechaini_mcca,#id_fechafin_mcca,#id_fechafin_acc,#id_fechaini_acc{width:100px}
-	#id_privado{width:389px}
+	#id_privado{width:300px}
 	#id_acciones{width:392px}
 	#id_indicador{width:547px}
 	#id_mensaje{width:553px}
@@ -76,7 +76,7 @@
       	</div>
     	<div class="row-fluid">
        		<div class="alert alert-error" id="alert1"><strong></strong><!--<a class="close" data-dismiss="alert">×</a>--></div>
-    		<label>{{ form_estado.organismo.label_tag }}: {{ form_estado.organismo }}</label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<label>{{ form_estado.dependencia.label_tag }}: {{ form_estado.dependencia }}</label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{% if user.get_profile.nivel.codigo == 1 %}<input class="btn-primary" name="agregar" value="Agregar" type="button" onclick="sectores_estado()">{% endif %}
+    		{{ form_estado}}&nbsp;&nbsp;&nbsp;&nbsp;{% if user.get_profile.nivel.codigo == 1 %}<input class="btn-primary" name="agregar" value="Agregar" type="button" onclick="sectores_estado();">{% endif %}<br /><br />
     	</div>
       
         <br><input type="hidden" value="{{ dependencia }}" id="id_dep" name="id_dep">
@@ -153,7 +153,7 @@
        <!------------------------------------------------------- accion  ---------------------------------------------->
              
             <div class="modal-header">
-      		<h3>Aciones planteadas</h3>
+      		<h3>Acciones planteadas</h3>
       	</div>
     	<div class="row-fluid"><br />
     		<div class="alert alert-error" id="alert6"><strong></strong><!--<a class="close" data-dismiss="alert">×</a>--></div>
@@ -204,15 +204,14 @@
 <script src="{{ STATIC_URL  }}js/mcca.js" type="text/javascript"></script>
 <script>
 /****************************************************************************************************************/
-comboelegir('id_organismo');comboelegir('id_tipommca');
+/*comboelegir('id_organismo');comboelegir('id_tipommca');*/
 
 {% if user.get_profile.nivel.codigo == 2 %}
  $("#id_observacion").removeAttr("readonly");
  $("#id_nombremmca").attr('readonly', 'readonly'); //Nombre de la Campaña.
  $("#id_fechaini_mcca").attr('readonly', 'readonly');//   Fecha Inicial.
  $("#id_fechafin_mcca").attr('readonly', 'readonly');//    Fecha Final.
- $("#id_organismo").attr('disabled', 'disabled');//   Sectores involucrados Estado con sus campos: Organismo, Dependencia.
- $("#id_dependencia").attr('disabled', 'disabled');//   Sectores involucrados Estado con sus campos: Organismo, Dependencia.
+ $("#id_estado").attr('readonly', 'readonly');//   Sectores involucrados Estado con sus campos: Nombre de sectores involucrados.
  $("#id_privado").attr('readonly', 'readonly');//   Sectores involucrados Privado con sus campos: Nombre de sectores involucrados.
  $("#id_indicador").attr('readonly', 'readonly');//   Indicador con sus campos: Indicador.
  $("#id_mensaje").attr('readonly', 'readonly');//   Mensajes con sus campos: Mensaje.
