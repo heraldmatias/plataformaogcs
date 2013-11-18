@@ -168,7 +168,7 @@ function lideres(){
     });
     if(ok==true){
         n+=1;
-        fila="<tr class='"+n+"'><td>"+n+"</td><td><input type='hidden' name='numtvli' value='"+numtv.val()+"'>"+nnumtv+"</td><td><input type='hidden' name='listlider' value='"+lider.val()+"'>"+lider.val()+"</td><td><input type='hidden' name='instli' value='"+inst.val()+"'>"+inst.val()+"</td><td> <a href='javascript: removedetalle(1,"+n+")'><div id='delete'></div></a></td></tr>"
+        fila="<tr class='"+n+"'><td>"+n+"</td><td><input type='hidden' name='numtvli' value='"+numtv.val()+"'>"+nnumtv+"</td><td ><input type='hidden' name='listlider' value='"+lider.val()+"'>"+lider.val()+"</td><td><input type='hidden' name='instli' value='"+inst.val()+"'>"+inst.val()+"</td><td> <a href='javascript: removedetalle(1,"+n+")'><div id='delete'></div></a></td></tr>"
         tabla.append(fila);
 		$('#alert2').hide();
     }else{
