@@ -115,7 +115,7 @@ function actores(){
     });
     if(ok==true){
         n+=1;
-        fila="<tr class='"+n+"'><td>"+n+"</td><td><input type='hidden' name='numtvac' value='"+numtv.val()+"'>"+nnumtv+"</td><td><input type='hidden' name='listactor' value='"+actor.val()+"'>"+actor.val()+"</td><td><input type='hidden' name='instac' value='"+inst.val()+"'>"+inst.val()+"</td><td> <a href='javascript: removedetalle(0,"+n+")'><div id='delete'></div></a></td></tr>"
+        fila="<tr class='"+n+"'><td>"+n+"</td><td><input type='hidden' name='numtvac' value='"+numtv.val()+"'>"+nnumtv+"</td><td style='display: none;'><input type='hidden' name='listactor' value='"+actor.val()+"'>"+actor.val()+"</td><td><input type='hidden' name='instac' value='"+inst.val()+"'>"+inst.val()+"</td><td> <a href='javascript: removedetalle(0,"+n+")'><div id='delete'></div></a></td></tr>"
         tabla.append(fila);
 		$('#alert1').hide();
     }else{
@@ -168,7 +168,7 @@ function lideres(){
     });
     if(ok==true){
         n+=1;
-        fila="<tr class='"+n+"'><td>"+n+"</td><td><input type='hidden' name='numtvli' value='"+numtv.val()+"'>"+nnumtv+"</td><td><input type='hidden' name='listlider' value='"+lider.val()+"'>"+lider.val()+"</td><td><input type='hidden' name='instli' value='"+inst.val()+"'>"+inst.val()+"</td><td> <a href='javascript: removedetalle(1,"+n+")'><div id='delete'></div></a></td></tr>"
+        fila="<tr class='"+n+"'><td>"+n+"</td><td><input type='hidden' name='numtvli' value='"+numtv.val()+"'>"+nnumtv+"</td><td style='display: none;'><input type='hidden' name='listlider' value='"+lider.val()+"'>"+lider.val()+"</td><td><input type='hidden' name='instli' value='"+inst.val()+"'>"+inst.val()+"</td><td> <a href='javascript: removedetalle(1,"+n+")'><div id='delete'></div></a></td></tr>"
         tabla.append(fila);
 		$('#alert2').hide();
     }else{
