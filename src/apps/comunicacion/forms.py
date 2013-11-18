@@ -338,8 +338,8 @@ class MccForm_Actor(forms.ModelForm):
         }
 class MccForm_ActorTable(tables.Table):
     item = tables.Column()
-    numtipovarios = tables.TemplateColumn('<input type="hidden" name="numtvac" value="{{ record.numtipovarios_id }}">{{ record.numtipovarios }}', verbose_name='Actores')
-    actor = tables.TemplateColumn('<input type="hidden" name="listactor" value="{{ record.actor }}">{{ record.actor }}',)
+    numtipovarios = tables.TemplateColumn('<input type="hidden" name="numtvac" value="{{ record.numtipovarios_id }}">{{ record.numtipovarios }}', verbose_name='Posición')
+    actor = tables.TemplateColumn('<input type="hidden" name="listactor" value="{{ record.actor }}">{{ record.actor }}', verbose_name='Actores')
     institucion = tables.TemplateColumn('<input type="hidden" name="instac" value="{{ record.institucion }}">{{ record.institucion }}')
     eliminar = tables.TemplateColumn("{% if user.get_profile.nivel.codigo == 1 %}<a href='javascript: removedetalle(0,{{ record.item }})'><div id='delete'></div></a>{% endif %}")
 
@@ -361,8 +361,8 @@ class MccForm_Lider(forms.ModelForm):
 
 class MccForm_LiderTable(tables.Table):
     item = tables.Column()
-    numtipovarios = tables.TemplateColumn('<input type="hidden" name="numtvli" value="{{ record.numtipovarios_id }}">{{ record.numtipovarios }}', verbose_name='Actores')
-    lider = tables.TemplateColumn('<input type="hidden" name="listlider" value="{{ record.lider }}">{{ record.lider }}')
+    numtipovarios = tables.TemplateColumn('<input type="hidden" name="numtvli" value="{{ record.numtipovarios_id }}">{{ record.numtipovarios }}', verbose_name='Posición')
+    lider = tables.TemplateColumn('<input type="hidden" name="listlider" value="{{ record.lider }}">{{ record.lider }}', verbose_name='Actores')
     institucion = tables.TemplateColumn('<input type="hidden" name="instli" value="{{ record.institucion }}">{{ record.institucion }}')
     eliminar = tables.TemplateColumn("{% if user.get_profile.nivel.codigo == 1 %}<a href='javascript: removedetalle(1,{{ record.item }})'><div id='delete'></div></a>{% endif %}")
 
