@@ -12,7 +12,7 @@ class Evento(models.Model):
     organismo = models.ForeignKey(Organismo, verbose_name='Organismo')
     dependencia = models.IntegerField(verbose_name='Dependencia',)
     titulo = models.CharField(verbose_name='Titulo', max_length=200)
-    descripcion = models.TextField()
+    descripcion = models.TextField(verbose_name=u'Mensajes Fuerza')
     region = models.ForeignKey(Region, verbose_name=u'Región')
     provincia = models.ForeignKey(Provincia, verbose_name='Provincia')
     distrito = models.ForeignKey(Distrito, verbose_name='Distrito')

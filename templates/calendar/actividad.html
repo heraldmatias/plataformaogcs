@@ -32,29 +32,29 @@
       <div class="row-fluid">
       {{ form.titulo.errors }}
       <div class="row-fluid">        
-      <div class="span2">{{ form.titulo.label_tag }}:</div><div class="span9">{{ form.titulo }}</div></div><br>
+      <div class="span3">{{ form.titulo.label_tag }}:</div><div class="span9">{{ form.titulo }}</div></div><br>
       <div class="row-fluid">
         {{ form.fec_inicio.errors }}
-      <div class="span2"><label>Fecha Inicio:</label></div> <div class="span2"><label class="input-append date" style="display:inline" id="dp1" data-date-format="dd/mm/yyyy" > {{ form.fec_inicio }}</label> </div>
-      <div class="span2"> {{ form.hor_inicio }} </div>
+      <div class="span3"><label>Fecha Inicio:</label></div> <div class="span2"><label class="input-append date" style="display:inline" id="dp1" data-date-format="dd/mm/yyyy" > {{ form.fec_inicio }}</label> </div>
+      <div class="span3"> {{ form.hor_inicio }} </div>
       <br><br><br>
       <!-- ULTIMO AGREGADO -->
       {{ form.region.errors }}
       <div class="row-fluid">
-      <div class="span2">{{ form.region.label_tag }}:</div><div class="span9">{{ form.region }}</div></div><br>
+      <div class="span3">{{ form.region.label_tag }}:</div><div class="span9">{{ form.region }}</div></div><br>
       <div class="row-fluid">
-      <div class="span2">{{ form.provincia.label_tag }}:</div><div class="span9">{{ form.provincia }}</div></div><br>
+      <div class="span3">{{ form.provincia.label_tag }}:</div><div class="span9">{{ form.provincia }}</div></div><br>
       <div class="row-fluid">
-      <div class="span2">{{ form.distrito.label_tag }}:</div><div class="span9">{{ form.distrito }}</div></div>
+      <div class="span3">{{ form.distrito.label_tag }}:</div><div class="span9">{{ form.distrito }}</div></div>
       <br>
       </div>
       <!-- FIN DE ULTIMO AGREGADO -->
       {{ form.lugar.errors }}
       <div class="row-fluid">        
-      <div class="span2">{{ form.lugar.label_tag }}:</div><div class="span9">{{ form.lugar }}</div></div><br>
+      <div class="span3">{{ form.lugar.label_tag }}:</div><div class="span9">{{ form.lugar }}</div></div><br>
       {{ form.descripcion.errors }}
       <div class="row-fluid">        
-      <div class="span2">{{ form.descripcion.label_tag }}:</div><div class="span9">{{ form.descripcion }}</div></div><br>
+      <div class="span3">{{ form.descripcion.label_tag }}:</div><div class="span9">{{ form.descripcion }}</div></div><br>
     </div></div>
     <div class="modal-footer">
      <input class="btn-primary" name="grabar" value="{% if opcion == 'add' %}Guardar {% else %} Modificar {% endif %}" type="submit">
