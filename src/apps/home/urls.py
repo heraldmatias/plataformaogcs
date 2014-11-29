@@ -11,4 +11,5 @@ urlpatterns = patterns('home.views',
     url(r'^accounts/password/reset/(?P<uidb36>[0-9A-Za-z]+)-(?P<token>.+)/$', password_reset_confirm,{'template_name':'home/cambiar_clave_confirma.html','extra_context':{'login':'login'}},name='ogcs-reset-confirm'),
     url(r'^accounts/password/done/$', password_reset_complete,{'template_name':'home/cambiar_clave_completado.html','extra_context':{'login':'login'}},name='ogcs-reset-complete'),
     url(r'^calendar/$','view_calendar', name='ogcs-calendar'),
+    url(r'^calendar-events/$', 'load_events', name='ogcs-calendar-events'),
 )

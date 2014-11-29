@@ -1,48 +1,113 @@
- {% extends 'base.html' %}
-  {% load static %}
-  {% block title %} Plataforma Intersectorial de Comunicaci&oacute;n OGCS {% endblock %}
-  {% block content %}
-  {% if mensaje %}
-<h4><div class="alert alert-success"><a class="close" data-dismiss="alert">×</a><strong>Mensaje:</strong>
-<p>{{ mensaje }}</p></div></h4>
+{% extends 'base.html' %}
+{% load static %}
+{% block title %} Plataforma Intersectorial de Comunicaci&oacute;n OGCS {% endblock %}
+
+{% block csspage %}
+    <link rel="stylesheet" href="{{ STATIC_URL }}full-calendar/fullcalendar.css">
+    <style type="text/css">
+        .fc-event-container {
+            cursor: pointer;
+        }
+        .fc-event-container .fc-content {
+            padding: 3px;
+            font-size: 13px;
+        }
+    </style>
+{% endblock %}
+
+{% block content %}
+{% if mensaje %}
+<h4>
+    <div class="alert alert-success">
+        <a class="close" data-dismiss="alert">×</a>
+        <strong>Mensaje:</strong><p>{{ mensaje }}</p>
+    </div>
+</h4>
 {% endif %}
+
 <ul class="nav nav-tabs">
-    
-    <li ><a href="{% url ogcs-mantenimiento-evento-add %}">Nuevo</a></li>
-    <li ><a href="{% url ogcs-mantenimiento-evento-query %}" >Consultar</a></li>
-    <li class="active"><a href="{% url ogcs-calendar %}" >Calendario</a></li>
+    <li><a href="{% url ogcs-mantenimiento-evento-add %}">Nuevo</a></li>
+    <li><a href="{% url ogcs-mantenimiento-evento-query %}">Consultar</a></li>
+    <li class="active"><a href="{% url ogcs-calendar %}">Calendario</a></li>
 </ul>
 <div class="tab-content" id="contenido_izq">
 
-  
-             <form class="form-inline fondo" name="login" method="get" action="{% url ogcs-calendar %}">                   
-                 <div id="frmprovincia" class="modal" style="position: relative; top: auto; left: auto; margin: 0 auto auto 20px; z-index: 1;width:720px;height:auto">
-		    <div class="modal-header">             
-			<a class="close" data-dismiss="modal" >&times;</a>
-			<h3>Calendario de Actividades</h3>         
-                   </div>
-		   <div class="modal-body">
-        <input type="hidden" value="{{ dependencia }}" id="id_dep" name="id_dep"> 
-         <div class="row-fluid">
-        <div class="span2" >{{ form.organismo.label_tag }}:</div><div class="span4">{{ form.organismo }}</div>
-        <div class="span2" >{{ form.dependencia.label_tag }}:</div><div class="span4">{{ form.dependencia }}</div></div><br /> 
-         <div class="row-fluid">
-         <div style="float:right;"> <input  class="btn-primary" name="grabar" value="Consultar" type="submit"> </div></div>
-         <br /><br />
-                      {{frame}}
 
-                  </div>
-                    <div class="modal-footer">
-                  <a class="btn btn-primary" href="{% url ogcs-index %}"><i class="icon-user icon-white"></i>Aceptar</a>		     
-		    </div>
+    <form class="form-inline fondo" name="login" method="get" action="{% url ogcs-calendar %}">
+        <div id="frmprovincia" class="modal"
+             style="position: relative; top: auto; left: auto; margin: 0 auto auto 20px; z-index: 1;width:720px;height:auto">
+            <div class="modal-header">
+                <a class="close" data-dismiss="modal">&times;</a>
+
+                <h3>Calendario de Actividades</h3>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" value="{{ dependencia }}" id="id_dep" name="id_dep">
+
+                <div class="row-fluid">
+                    <div class="span2">{{ form.organismo.label_tag }}:</div>
+                    <div class="span4">{{ form.organismo }}</div>
+                    <div class="span2">{{ form.dependencia.label_tag }}:</div>
+                    <div class="span4">{{ form.dependencia }}</div>
                 </div>
-             </form>
-       </div>  
+                <br/>
+
+                <div class="row-fluid">
+                    <div style="float:right;"><input class="btn-primary" name="grabar" value="Consultar" type="submit">
+                    </div>
+                </div>
+                <br/><br/>
+
+                <div id='calendar'></div>
+
+            </div>
+            <div class="modal-footer">
+                <a class="btn btn-primary" href="{% url ogcs-index %}"><i class="icon-user icon-white"></i>Aceptar</a>
+            </div>
+        </div>
+    </form>
+    <div id="fullCalModal" class="modal fade">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span> <span class="sr-only"></span></button>
+                    <h4 id="modalTitle" class="modal-title"></h4>
+                </div>
+                <div id="modalBody" class="modal-body"></div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 {% endblock %}
- {% block scriptjs %}  
- <script type="text/javascript">
-$(document).ready(function() {
-  dependencias(0); combotodos('id_organismo');
-});
- </script> 
-  {% endblock %}
+{% block scriptjs %}
+<script type="text/javascript" src="{{ STATIC_URL }}full-calendar/lib/moment.min.js"></script>
+<script type="text/javascript" src="{{ STATIC_URL }}full-calendar/fullcalendar.js"></script>
+<script type="text/javascript" src="{{ STATIC_URL }}full-calendar/lang-all.js"></script>
+<script type="text/javascript" src="{{ STATIC_URL }}full-calendar/jquery.qtip-1.0.0-rc3.min.js"></script>
+<script type="text/javascript">
+    $(document).ready(function () {
+        dependencias(0);
+        combotodos('id_organismo');
+
+        $('#calendar').fullCalendar({
+            lang: 'es',
+            events: '{% url ogcs-calendar-events %}',
+            eventRender: function(event, element) {
+                element.qtip({
+                    content: event.description
+                });
+            },
+            eventClick:  function(event, jsEvent, view) {
+                $('#modalTitle').html(event.title);
+                $('#modalBody').html(event.description);
+                $('#eventUrl').attr('href',event.url);
+                $('#fullCalModal').modal();
+            }
+        });
+
+    });
+</script>
+{% endblock %}
