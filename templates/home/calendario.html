@@ -12,6 +12,12 @@
             padding: 3px;
             font-size: 13px;
         }
+        #modalTitle {
+            font-size: 16px;
+        }
+        #modalBody {
+            font-size: 13px;
+        }
     </style>
 {% endblock %}
 
@@ -94,7 +100,7 @@
 
         $('#calendar').fullCalendar({
             lang: 'es',
-            events: '{% url ogcs-calendar-events %}',
+            events: '{% url ogcs-calendar-events %}?organismo={{ organismo }}&dependencia={{ dependencia }}',
             eventRender: function(event, element) {
                 element.qtip({
                     content: event.description

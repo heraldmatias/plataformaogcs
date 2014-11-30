@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 import json
+import random
+from calendario.models import Evento
 from django.http import HttpResponse
 from django.shortcuts import render, render_to_response, redirect
 from forms import LoginForm
@@ -16,12 +18,20 @@ from django.conf import settings
 from calendario import calendar
 from calendario.forms import CalendarConsultaForm
 
-color=['#23A32929','#23B1365F','#237A367A','#235229A3','#2329527A','#232952A3','#231B887A',
-    '#2328754E','#230D7813','#23528800','#2388880E','#23AB8B00','#23BE6D00','#23B1440E','#23865A5A',
-    '#23705770','#234E5D6C','#235A6986','#234A716C','#236E6E41','#238D6F47','#23853104','#23691426',
-    '#235C1158','#2323164E','#23182C57','#23060D5E','#23125A12','#232F6213','#232F6309','#235F6B02',
-    '#23875509','#238C500B','#23754916','#236B3304','#235B123B','#2342104A','#23113F47','#23333333',
-    '#230F4B38','#23856508','#23711616']
+cnames = [
+   "#a4bdfc",
+   "#7ae7bf",
+   "#1d1d1d",
+   "#dbadff",
+   "#ff887c",
+   "#fbd75b",
+   "#ffb878",
+   "#46d6db",
+   "#e1e1e1",
+   "#5484ed",
+   "#51b749",
+   "#dc2127",
+]
 
 def _get_dependencia(organismo_id, dependencia_id):
     ini = None
@@ -50,8 +60,8 @@ def index(request):
 @login_required()
 def view_calendar(request):
     form = CalendarConsultaForm(request.GET)
-    dependencia_id = request.GET.get('dependencia')
-    organismo_id = request.GET.get('organismo')
+    dependencia_id = request.GET.get('dependencia', '')
+    organismo_id = request.GET.get('organismo', '')
     dependencia = _get_dependencia(organismo_id,dependencia_id)
     #frame = (dependencia is None) and calendar.getinframe() or calendar.getinframe(dependencia)
     frame = None
@@ -62,22 +72,46 @@ def view_calendar(request):
                                   'frame':frame,
                                   'form':form,
                                   'dependencia':dependencia_id,
+                                  'organismo': organismo_id
                               },context_instance=RequestContext(request),)
 
 @login_required()
 def load_events(request):
     events = list()
 
-    for i in range(6):
+    organismo = request.GET.get('organismo')
+    dependencia = request.GET.get('dependencia')
+
+    list_events = list()
+
+    if not organismo and not dependencia:
+        list_events = Evento.objects.all().order_by('hor_inicio')
+    elif organismo and not dependencia:
+        list_events = Evento.objects.filter(organismo=organismo).order_by('hor_inicio')
+    elif organismo and dependencia:
+        list_events = Evento.objects.filter(organismo=organismo, dependencia=dependencia).order_by('hor_inicio')
+
+    for evento in list_events:
         data_event = dict()
+        title = evento.titulo
+        start = '%sT%s' % (evento.fec_inicio.__str__(), evento.hor_inicio.__str__())
+        description = '<strong>%s - %s</strong><br/> %s %s <br/> %s - %s - %s <br/> %s <br/> %s' % (
+            evento.organismo.nombre,
+            Ministerio.objects.get(pk=evento.dependencia).ministerio,
+            evento.fec_inicio.strftime("%d/%m/%Y"),
+            evento.hor_inicio,
+            evento.region.region,
+            evento.provincia.provincia,
+            evento.distrito.distrito,
+            evento.lugar,
+            evento.descripcion)
+
         data_event.update({
-            'title': 'testing ajax',
-            'start': '2014-11-29',
-            'description': 'in home :)',
-            'color': '#ff0000'
+            'title': title,
+            'start': start,
+            'description': description
         })
         events.append(data_event)
-
     events = json.dumps(events)
     return HttpResponse(events, content_type="application/json")
 

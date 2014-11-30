@@ -1,4 +1,3 @@
-# Create your views here.
 # -*- coding: utf-8 -*-
 from django.contrib import messages
 from calendar import insert_or_update_event, delete_calendar
@@ -11,22 +10,23 @@ from django_tables2.config import RequestConfig
 from scripts.scripts import DivErrorList
 from django.utils import simplejson
 from django.http import HttpResponse
+
+
 def eventoadd(request, codigo=None):
     evento = None
     url_edit = None
     if codigo:
         evento = Evento.objects.get(pk=codigo)
-        url_edit = evento.url_edit
     if request.method == 'POST':
-        form = EventoForm(request.POST,error_class=DivErrorList,instance = evento)
+        form = EventoForm(request.POST,error_class=DivErrorList, instance=evento)
         if form.is_valid():
             messages.add_message(request, messages.SUCCESS, 
                    'Registro %s exitosamente!' % ((codigo)and'Modificado'or'Grabado') )         
             if codigo:
                 evento.idusuario_mod = request.user.get_profile()
-                evento.fec_mod = datetime.today()                
-                insert_or_update_event(evento,url_edit)
-                
+                evento.fec_mod = datetime.today()
+                evento.save()
+                #insert_or_update_event(evento,url_edit)
                 return redirect('ogcs-mantenimiento-evento-query') 
             else:
                 evento = form.save(commit=False)
@@ -34,12 +34,18 @@ def eventoadd(request, codigo=None):
                 evento.fec_creac = datetime.today()
                 evento.organismo_id = evento.idusuario_creac.organismo_id
                 evento.dependencia = evento.idusuario_creac.dependencia
-                insert_or_update_event(evento)
+                evento.save()
+                #insert_or_update_event(evento)
             form = EventoForm()
     else:        
         form = EventoForm(instance = evento)
-    return render_to_response('calendar/actividad.html',{'form':form,
-        'opcion':'add','codigo':codigo,'evento': evento if evento else ''},context_instance=RequestContext(request))
+    return render_to_response('calendar/actividad.html',
+                              {
+                                  'form':form,
+                                  'opcion':'add',
+                                  'codigo':codigo,
+                                  'evento': evento if evento else ''
+                              }, context_instance=RequestContext(request))
 
 
 def eventoquery(request):
