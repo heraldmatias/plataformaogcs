@@ -6,12 +6,17 @@ import time
 import gdata.calendar.data
 import gdata.calendar.client
 import atom
-import random 
+import random
+import httplib2
 from models import Evento
+from reportlab.lib.validators import _isCallable
 from ubigeo.models import Region, Provincia, Distrito
 from datetime import datetime
 from django.utils.safestring import mark_safe
-email = "plataformaintersectorial@gmail.com"
+
+from oauth2client import gce
+
+email = "plataformaogcs@gmail.com"
 password="cubilfelino!!"
 #calendar_client = None
 calendar_client = gdata.calendar.client.CalendarClient(source='Google-Calendar_Python_Sample-1.0')
@@ -179,7 +184,7 @@ def getinframe(calendar_name = None):
     l=len(color)
     if calendar_name:
         result+='src='+get_or_create(dependencia=calendar_name)+"&amp;color="+color[i]+'&amp;'+end
-    else:        
+    else:
         for co, entry in enumerate(feed.entry):
             if co == 0:
                 continue
@@ -189,5 +194,5 @@ def getinframe(calendar_name = None):
                 i=i+1
             else:
                 i=0
-        result+=end    
+        result+=end
     return mark_safe(result)

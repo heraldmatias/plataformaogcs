@@ -94,13 +94,17 @@
 <script type="text/javascript" src="{{ STATIC_URL }}full-calendar/lang-all.js"></script>
 <script type="text/javascript" src="{{ STATIC_URL }}full-calendar/jquery.qtip-1.0.0-rc3.min.js"></script>
 <script type="text/javascript">
-    $(document).ready(function () {
-        dependencias(0);
-        combotodos('id_organismo');
 
+    function load_data(){
+        $.getJSON('{% url ogcs-calendar-events %}?organismo={{ organismo }}&dependencia={{ dependencia }}', function(data){
+            load_calendar(data);
+        });
+    }
+
+    function load_calendar(data_calendar){
         $('#calendar').fullCalendar({
             lang: 'es',
-            events: '{% url ogcs-calendar-events %}?organismo={{ organismo }}&dependencia={{ dependencia }}',
+            events: data_calendar,
             eventRender: function(event, element) {
                 element.qtip({
                     content: event.description
@@ -113,7 +117,12 @@
                 $('#fullCalModal').modal();
             }
         });
+    }
 
+    $(document).ready(function () {
+        dependencias(0);
+        combotodos('id_organismo');
+        load_data();
     });
 </script>
 {% endblock %}

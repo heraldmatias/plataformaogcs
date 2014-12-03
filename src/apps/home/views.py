@@ -66,7 +66,6 @@ def view_calendar(request):
     #frame = (dependencia is None) and calendar.getinframe() or calendar.getinframe(dependencia)
     frame = None
 
-
     return render_to_response('home/calendario.html',
                               {
                                   'frame':frame,
@@ -91,13 +90,18 @@ def load_events(request):
     elif organismo and dependencia:
         list_events = Evento.objects.filter(organismo=organismo, dependencia=dependencia).order_by('hor_inicio')
 
+    list_events = list_events.extra(select={
+        'start': 'select CONCAT(eventos.fec_inicio, "T", eventos.hor_inicio)',
+        'ministerio': 'select m.ministerio from ministerio m where m.codigo = eventos.dependencia'
+    }).select_related('region', 'provincia', 'distrito')
+
     for evento in list_events:
         data_event = dict()
         title = evento.titulo
-        start = '%sT%s' % (evento.fec_inicio.__str__(), evento.hor_inicio.__str__())
+        start = evento.start
         description = '<strong>%s - %s</strong><br/> %s %s <br/> %s - %s - %s <br/> %s <br/> %s' % (
             evento.organismo.nombre,
-            Ministerio.objects.get(pk=evento.dependencia).ministerio,
+            evento.ministerio,
             evento.fec_inicio.strftime("%d/%m/%Y"),
             evento.hor_inicio,
             evento.region.region,
